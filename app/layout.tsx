@@ -1,6 +1,10 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
+const repositoryName = process.env.GITHUB_REPOSITORY?.split("/")[1] ?? "ysda-website";
+const basePath = process.env.GITHUB_ACTIONS === "true" ? `/${repositoryName}` : "";
+const logoPath = `${basePath}/brand/ysda-logo-white.png`;
+
 export const metadata: Metadata = {
   title: "Youth Sports Development Academy | YSDA Indore",
   description:
@@ -21,8 +25,8 @@ export const metadata: Metadata = {
     locale: "en_IN"
   },
   icons: {
-    icon: "/brand/ysda-logo-white.png",
-    apple: "/brand/ysda-logo-white.png"
+    icon: logoPath,
+    apple: logoPath
   }
 };
 
