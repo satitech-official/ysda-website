@@ -1,0 +1,176 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-inter: "Inter", system-ui, sans-serif;
+  --font-display: "Sora", "Inter", system-ui, sans-serif;
+  --blue: #0b5cff;
+  --sky: #20b7ff;
+  --red: #ef233c;
+  --orange: #ff7a1a;
+  --yellow: #ffd23f;
+  --green: #20b15a;
+  --ink: #172033;
+  --muted: #657084;
+  --line: rgba(23, 32, 51, 0.12);
+  --glass: rgba(255, 255, 255, 0.78);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 96px;
+}
+
+body {
+  margin: 0;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at 12% 0%, rgba(32, 183, 255, 0.22), transparent 30%),
+    radial-gradient(circle at 90% 10%, rgba(255, 210, 63, 0.22), transparent 28%),
+    linear-gradient(180deg, #ffffff 0%, #f7fbff 42%, #fffaf4 100%);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body::selection {
+  background: var(--yellow);
+  color: var(--ink);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media (pointer: fine) {
+  body.ysda-custom-cursor,
+  body.ysda-custom-cursor a,
+  body.ysda-custom-cursor button,
+  body.ysda-custom-cursor input,
+  body.ysda-custom-cursor textarea,
+  body.ysda-custom-cursor select {
+    cursor: none;
+  }
+}
+
+img,
+video,
+iframe {
+  max-width: 100%;
+}
+
+.site-shell {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.section-wrap {
+  width: min(1180px, calc(100% - 32px));
+  margin-inline: auto;
+}
+
+.glass {
+  background: var(--glass);
+  border: 1px solid rgba(255, 255, 255, 0.68);
+  box-shadow: 0 22px 70px rgba(18, 43, 87, 0.12);
+  backdrop-filter: blur(18px);
+}
+
+.sport-grid-bg {
+  background-image:
+    linear-gradient(rgba(11, 92, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(11, 92, 255, 0.08) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.text-gradient {
+  background: linear-gradient(120deg, var(--blue), var(--sky), var(--orange), var(--red));
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer 9s ease infinite;
+}
+
+.cta-gradient {
+  background: linear-gradient(135deg, var(--blue), var(--sky) 44%, var(--orange));
+  background-size: 180% 180%;
+}
+
+.warm-gradient {
+  background: linear-gradient(135deg, var(--red), var(--orange), var(--yellow));
+}
+
+.field-gradient {
+  background:
+    radial-gradient(circle at 20% 18%, rgba(255, 210, 63, 0.26), transparent 22%),
+    radial-gradient(circle at 82% 20%, rgba(32, 177, 90, 0.18), transparent 26%),
+    linear-gradient(135deg, rgba(11, 92, 255, 0.96), rgba(32, 183, 255, 0.82) 46%, rgba(255, 122, 26, 0.86));
+}
+
+.masonry {
+  columns: 1;
+  column-gap: 18px;
+}
+
+.masonry-item {
+  display: inline-block;
+  width: 100%;
+  break-inside: avoid;
+  margin-bottom: 18px;
+}
+
+.swiper {
+  width: 100%;
+}
+
+.swiper-pagination-bullet {
+  background: var(--blue) !important;
+}
+
+.hide-scrollbar {
+  scrollbar-width: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.map-frame {
+  border: 0;
+  filter: saturate(1.2) contrast(1.02);
+}
+
+@media (min-width: 700px) {
+  .masonry {
+    columns: 2;
+  }
+}
+
+@media (min-width: 1024px) {
+  .masonry {
+    columns: 3;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
