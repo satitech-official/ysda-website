@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import VideoPosterPathFix from "../components/VideoPosterPathFix";
 import "./globals.css";
 
 const repositoryName = process.env.GITHUB_REPOSITORY?.split("/")[1] ?? "ysda-website";
@@ -49,7 +50,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <VideoPosterPathFix basePath={basePath} />
+        {children}
+      </body>
     </html>
   );
 }
