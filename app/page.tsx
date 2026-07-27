@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -50,20 +50,26 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import {
+  academyInfo,
+  achievementCards,
   achievementTimeline,
   achievements,
+  certificateCategories,
   coaches,
   coachingPrograms,
+  coreValues,
   events,
   footballPrograms,
   gallery,
   galleryCategories,
   heroStats,
+  leadershipMessages,
   links,
   media,
   navItems,
   news,
   newsCategories,
+  objectives,
   partners,
   sports,
   successStories,
@@ -303,33 +309,46 @@ function CustomCursor() {
   const ringY = useSpring(cursorY, { stiffness: 260, damping: 28, mass: 0.45 });
 
   useEffect(() => {
-    const finePointer = window.matchMedia("(pointer: fine)").matches;
-    if (!finePointer) return;
+    const finePointer = window.matchMedia("(pointer: fine)");
 
-    setEnabled(true);
-    document.body.classList.add("ysda-custom-cursor");
+    const updateAvailability = () => {
+      const shouldUseAnimatedCursor = finePointer.matches && navigator.onLine;
+      setEnabled(shouldUseAnimatedCursor);
+      setActive(false);
+      document.body.classList.toggle("ysda-custom-cursor", shouldUseAnimatedCursor);
+    };
 
     const move = (event: MouseEvent) => {
+      if (!navigator.onLine || !finePointer.matches) return;
       cursorX.set(event.clientX);
       cursorY.set(event.clientY);
     };
-    const activate = () => setActive(true);
-    const deactivate = () => setActive(false);
-    const interactiveElements = Array.from(document.querySelectorAll("a, button, input, textarea, select"));
 
+    const updateActiveTarget = (event: MouseEvent) => {
+      if (!navigator.onLine || !finePointer.matches) {
+        setActive(false);
+        return;
+      }
+      const target = event.target;
+      setActive(target instanceof Element && Boolean(target.closest("a, button, input, textarea, select")));
+    };
+
+    updateAvailability();
+    window.addEventListener("online", updateAvailability);
+    window.addEventListener("offline", updateAvailability);
     window.addEventListener("mousemove", move);
-    interactiveElements.forEach((element) => {
-      element.addEventListener("mouseenter", activate);
-      element.addEventListener("mouseleave", deactivate);
-    });
+    document.addEventListener("mouseover", updateActiveTarget);
+    document.addEventListener("mouseout", updateActiveTarget);
+    finePointer.addEventListener?.("change", updateAvailability);
 
     return () => {
       document.body.classList.remove("ysda-custom-cursor");
+      window.removeEventListener("online", updateAvailability);
+      window.removeEventListener("offline", updateAvailability);
       window.removeEventListener("mousemove", move);
-      interactiveElements.forEach((element) => {
-        element.removeEventListener("mouseenter", activate);
-        element.removeEventListener("mouseleave", deactivate);
-      });
+      document.removeEventListener("mouseover", updateActiveTarget);
+      document.removeEventListener("mouseout", updateActiveTarget);
+      finePointer.removeEventListener?.("change", updateAvailability);
     };
   }, [cursorX, cursorY]);
 
@@ -511,42 +530,49 @@ function Hero() {
   return (
     <section id="home" className="relative min-h-[100svh] overflow-hidden">
       <div className="absolute inset-0">
+        <SmartImage
+          src={media.heroPoster}
+          alt="YSDA football training poster"
+          className="object-cover"
+          sizes="100vw"
+          priority
+        />
         <video
-          className="h-full w-full object-cover"
+          className="absolute inset-0 h-full w-full object-cover"
           autoPlay
           muted
           loop
           playsInline
           preload="metadata"
           poster={media.heroPoster}
-          aria-label="Football and sports training video"
+          aria-label="YSDA football and multi-sports training background video"
         >
           <source src={media.heroVideo} type="video/mp4" />
         </video>
-        <div className="absolute inset-0 bg-[linear-gradient(110deg,rgba(11,92,255,0.84),rgba(32,183,255,0.52)_36%,rgba(255,122,26,0.64)_74%,rgba(255,210,63,0.52))]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_22%_20%,rgba(255,255,255,0.32),transparent_28%),linear-gradient(180deg,rgba(0,0,0,0.05),rgba(23,32,51,0.58))]" />
+        <div className="absolute inset-0 bg-[linear-gradient(110deg,rgba(11,92,255,0.92),rgba(32,183,255,0.58)_36%,rgba(255,122,26,0.44)_74%,rgba(255,210,63,0.28))]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(255,255,255,0.35),transparent_28%),linear-gradient(90deg,rgba(3,25,68,0.42),rgba(23,32,51,0.18)_48%,rgba(23,32,51,0.42))]" />
       </div>
 
-      <div className="pointer-events-none absolute inset-0 sport-grid-bg opacity-50" />
+      <div className="pointer-events-none absolute inset-0 sport-grid-bg opacity-45" />
       <FloatingSportElements />
 
-      <div className="section-wrap relative z-10 flex min-h-[100svh] flex-col justify-end pb-12 pt-32 sm:pb-16 lg:justify-center lg:pt-28">
+      <div className="section-wrap relative z-10 flex min-h-[100svh] flex-col justify-end pb-10 pt-32 sm:pb-14 lg:justify-center lg:pt-28">
         <motion.div
           initial={{ opacity: 0, y: 34 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.75, ease: "easeOut" }}
-          className="max-w-5xl"
+          className="max-w-4xl"
         >
           <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/60 bg-white/20 px-4 py-2 text-sm font-black uppercase tracking-[0.18em] text-white backdrop-blur-md">
             <Flame className="h-4 w-4 text-gold" />
-            Football first, multi-sports strong
+            Established {academyInfo.established} - Associated with YSDFI
           </div>
           <h1 className="font-display text-4xl font-black leading-[1.05] text-white drop-shadow-lg sm:text-6xl lg:text-7xl">
-            Developing Today's Talent, Creating Tomorrow's Champions
+            {academyInfo.tagline}
           </h1>
           <p className="mt-6 max-w-3xl text-base font-semibold leading-8 text-white/94 sm:text-xl">
-            Professional multi-sports coaching, football development, fitness training, tournaments, and youth
-            development programs in Indore.
+            Professional football and multi-sports coaching, structured training, fitness development, tournaments,
+            trials, camps, and youth-development pathways from Mhow, Indore.
           </p>
 
           <div className="mt-8 flex flex-wrap gap-3">
@@ -569,7 +595,7 @@ function Hero() {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.22, duration: 0.7 }}
-          className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4"
+          className="mt-8 grid gap-4 pr-16 sm:grid-cols-2 sm:pr-0 lg:mt-10 lg:grid-cols-4"
         >
           {heroStats.map((stat) => (
             <div key={stat.label} className="glass rounded-3xl p-5">
@@ -612,25 +638,49 @@ function FloatingSportElements() {
 }
 
 function AboutSection() {
+  const focusAreas = [
+    "Professional sports coaching",
+    "Grassroots player development",
+    "Talent identification",
+    "Competitive exposure",
+    "School, district, state, national and international events",
+    "Leadership, teamwork and sportsmanship",
+    "Youth fitness and discipline",
+    "Safe and supportive training environment"
+  ];
+
+  const facts = [
+    `Established: ${academyInfo.established}`,
+    `Location: ${academyInfo.location}`,
+    `Associated with: ${academyInfo.organisation}`,
+    `President: ${academyInfo.president}`,
+    `Secretary: ${academyInfo.secretary}`
+  ];
+
   return (
     <section id="about" className="relative py-20 sm:py-28">
       <div className="section-wrap grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr]">
         <div>
           <SectionHeader
             kicker="About YSDA"
-            title="A professional sports pathway for Indore's young athletes."
-            text="Youth Sports Development Academy blends structured coaching, fitness, discipline, competition exposure, and personal growth. The academy helps players build strong fundamentals, identify talent early, and train inside a safe, supportive, high-energy environment."
+            title="A professionally managed sports-development academy in Mhow, Indore."
+            text={academyInfo.about}
           />
 
+          <p className="mt-6 rounded-3xl border border-blue-100 bg-white p-5 text-sm font-bold leading-7 text-slate-700 shadow-sm">
+            {academyInfo.belief}
+          </p>
+
+          <div className="mt-6 flex flex-wrap gap-2">
+            {facts.map((fact) => (
+              <span key={fact} className="rounded-full bg-blue-50 px-4 py-2 text-xs font-black text-ysdaBlue">
+                {fact}
+              </span>
+            ))}
+          </div>
+
           <div className="mt-8 grid gap-4 sm:grid-cols-2">
-            {[
-              "Professional sports coaching",
-              "Grassroots player development",
-              "Talent identification",
-              "Tournament participation",
-              "Leadership and teamwork",
-              "Youth fitness and discipline"
-            ].map((item) => (
+            {focusAreas.map((item) => (
               <div key={item} className="flex items-center gap-3 rounded-2xl bg-white p-4 shadow-sm">
                 <CheckCircle2 className="h-5 w-5 shrink-0 text-turf" />
                 <span className="text-sm font-extrabold text-slate-700">{item}</span>
@@ -652,9 +702,9 @@ function AboutSection() {
           <div className="absolute bottom-8 right-0 h-72 w-[70%] overflow-hidden rounded-[2rem] border-8 border-white shadow-warm">
             <SmartImage src={media.teamTraining} alt="Multi-sports coaching" className="object-cover" />
           </div>
-          <div className="glass absolute left-8 top-[45%] max-w-xs rounded-3xl p-5">
-            <p className="text-sm font-black uppercase tracking-[0.16em] text-flame">Indore, Madhya Pradesh</p>
-            <p className="mt-2 text-2xl font-black text-ink">Safe coaching. Real exposure. Better habits.</p>
+          <div className="glass absolute left-8 top-[80%] max-w-xs rounded-3xl p-5">
+            <p className="text-sm font-black uppercase tracking-[0.16em] text-flame">{academyInfo.location}</p>
+            <p className="mt-2 text-2xl font-black text-ink">Structured coaching. Fair opportunity. Bigger platforms.</p>
           </div>
         </motion.div>
       </div>
@@ -682,6 +732,80 @@ function AboutSection() {
   );
 }
 
+function ValuesObjectivesSection() {
+  const valueIcons = [Target, ShieldCheck, UsersRound, Award, HeartHandshake, Trophy, BadgeCheck, Sparkles];
+
+  return (
+    <section className="bg-white py-20 sm:py-28">
+      <div className="section-wrap">
+        <SectionHeader
+          kicker="Values and Objectives"
+          title="Skill development backed by discipline, integrity, and fair opportunity."
+          text="YSDA develops athletes through clear values, structured objectives, safe sporting practices, school-level participation, and pathways toward bigger competitive platforms."
+          centered
+        />
+
+        <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {coreValues.map((value, index) => {
+            const Icon = valueIcons[index] ?? CheckCircle2;
+            return (
+              <motion.article
+                key={value.title}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.25 }}
+                transition={{ delay: index * 0.04 }}
+                whileHover={{ y: -7 }}
+                className="rounded-3xl border border-blue-100 bg-slate-50 p-5 shadow-sm"
+              >
+                <span className="grid h-12 w-12 place-items-center rounded-2xl bg-gradient-to-br from-blue-600 via-sky-400 to-orange-400 text-white shadow-glow">
+                  <Icon className="h-6 w-6" />
+                </span>
+                <h3 className="mt-5 font-display text-xl font-black">{value.title}</h3>
+                <p className="mt-3 text-sm leading-7 text-slate-600">{value.text}</p>
+              </motion.article>
+            );
+          })}
+        </div>
+
+        <div className="mt-12 grid gap-8 lg:grid-cols-[0.82fr_1.18fr] lg:items-start">
+          <div className="relative overflow-hidden rounded-[2rem] bg-sport-gradient p-7 text-white shadow-glow">
+            <div className="absolute inset-0 sport-grid-bg opacity-35" />
+            <div className="relative z-10">
+              <p className="text-sm font-black uppercase tracking-[0.16em] text-gold">Our Goal</p>
+              <h3 className="mt-3 font-display text-3xl font-black leading-tight">
+                Build a professional and inclusive sports ecosystem.
+              </h3>
+              <p className="mt-4 text-sm font-semibold leading-7 text-white/90">
+                YSDA aims to help young athletes learn, train, compete, grow, and build long-term sporting careers
+                through partnerships with schools, clubs, academies, officials, and sporting bodies.
+              </p>
+            </div>
+          </div>
+
+          <div className="grid gap-3 sm:grid-cols-2">
+            {objectives.map((objective, index) => (
+              <motion.div
+                key={objective}
+                initial={{ opacity: 0, x: 20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ delay: index * 0.03 }}
+                className="flex gap-3 rounded-3xl border border-slate-200 bg-white p-4 shadow-sm"
+              >
+                <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-gold text-sm font-black text-ink">
+                  {index + 1}
+                </span>
+                <p className="text-sm font-bold leading-6 text-slate-700">{objective}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function SportsSection() {
   const [featured, ...others] = sports;
 
@@ -700,7 +824,7 @@ function SportsSection() {
             whileHover={{ y: -8 }}
             className="relative overflow-hidden rounded-[2rem] bg-white shadow-glow"
           >
-            <div className="relative h-[420px]">
+            <div className="relative h-[400px]">
               <SmartImage src={featured.image} alt="Featured football academy program" className="object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-blue-950/82 via-blue-800/20 to-transparent" />
             </div>
@@ -825,6 +949,9 @@ function FootballAcademySection() {
               <PrimaryButton href="#videos" variant="white" icon={Play}>
                 Watch Highlights
               </PrimaryButton>
+              <PrimaryButton href="#contact" variant="white" icon={Phone}>
+                Contact Academy
+              </PrimaryButton>
             </div>
           </div>
 
@@ -938,8 +1065,8 @@ function WhyChooseSection() {
       <div className="section-wrap">
         <SectionHeader
           kicker="Why Choose YSDA"
-          title="Professional coaching with youth-first care."
-          text="Every session is planned to make athletes stronger, smarter, safer, and more confident."
+          title="A player-focused pathway from grassroots participation to competitive exposure."
+          text="YSDA combines structured coaching, safe training, equal opportunity, school partnerships, competition preparation, and character development for young athletes."
           centered
         />
         <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
@@ -972,12 +1099,12 @@ function CoachingProgramsSection() {
   const [openIndex, setOpenIndex] = useState(0);
 
   return (
-    <section className="bg-white py-20 sm:py-28">
+    <section id="programs" className="bg-white py-20 sm:py-28">
       <div className="section-wrap grid gap-10 lg:grid-cols-[0.9fr_1.1fr]">
         <SectionHeader
-          kicker="Coaching Programs"
-          title="Expandable training pathways for every age and ability."
-          text="Programs can be adapted for beginners, competitive athletes, schools, teams, private sessions, camps, and tournament preparation."
+          kicker="Courses and Training Programmes"
+          title="Structured programmes for beginners, schools, teams, coaches, and competitive athletes."
+          text="Each course can display sport, age group, level, duration, schedule, coach, venue, fee, capacity, equipment, certificate availability, registration, and WhatsApp enquiry details after verification."
         />
         <div className="space-y-3">
           {coachingPrograms.map((program, index) => (
@@ -1000,7 +1127,27 @@ function CoachingProgramsSection() {
                     exit={{ height: 0, opacity: 0 }}
                     transition={{ duration: 0.25 }}
                   >
-                    <p className="px-5 pb-5 text-sm leading-7 text-slate-600">{program.text}</p>
+                    <div className="px-5 pb-5">
+                      <p className="text-sm leading-7 text-slate-600">{program.text}</p>
+                      <div className="mt-4 grid gap-2 sm:grid-cols-3">
+                        {program.details.map((detail) => (
+                          <span
+                            key={detail}
+                            className="rounded-2xl bg-white px-3 py-2 text-xs font-black leading-5 text-slate-600 shadow-sm"
+                          >
+                            {detail}
+                          </span>
+                        ))}
+                      </div>
+                      <div className="mt-5 flex flex-wrap gap-2">
+                        <PrimaryButton href={links.whatsapp} variant="blue" icon={Send}>
+                          Registration
+                        </PrimaryButton>
+                        <PrimaryButton href={links.whatsapp} variant="warm" icon={MessageCircle}>
+                          WhatsApp Enquiry
+                        </PrimaryButton>
+                      </div>
+                    </div>
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -1013,15 +1160,41 @@ function CoachingProgramsSection() {
 }
 
 function CoachesSection() {
+  const coachingApproach = [
+    "Technical skill development",
+    "Tactical awareness",
+    "Strength and conditioning",
+    "Speed, agility, balance and coordination",
+    "Match preparation",
+    "Mental strength and confidence",
+    "Injury-prevention awareness",
+    "Performance evaluation",
+    "Individual player feedback",
+    "Discipline and sportsmanship"
+  ];
+
   return (
     <section id="coaches" className="py-20 sm:py-28">
       <div className="section-wrap">
         <SectionHeader
-          kicker="Coaches"
-          title="Experienced mentors for skill, discipline, and confidence."
-          text="Coach cards include role, specialization, experience, qualification, and quick social contact options."
+          kicker="Coaches and Technical Team"
+          title="Complete athlete development through qualified guidance and structured feedback."
+          text="YSDA publishes only verified coach, certificate and qualification details. The current profiles present the academy's coaching roles and technical philosophy until individual verified records are added."
           centered
         />
+
+        <div className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+          {coachingApproach.map((item, index) => {
+            const Icon = whyIcons[index] ?? CheckCircle2;
+            return (
+              <div key={item} className="rounded-3xl border border-blue-100 bg-white p-4 text-center shadow-sm">
+                <Icon className="mx-auto h-6 w-6 text-flame" />
+                <p className="mt-3 text-xs font-black leading-5 text-slate-700">{item}</p>
+              </div>
+            );
+          })}
+        </div>
+
         <div className="mt-12">
           <Swiper
             modules={[Autoplay, Pagination]}
@@ -1064,6 +1237,75 @@ function CoachesSection() {
               </SwiperSlide>
             ))}
           </Swiper>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function LeadershipMessagesSection() {
+  return (
+    <section className="bg-field-lines py-20 sm:py-28">
+      <div className="section-wrap">
+        <SectionHeader
+          kicker="Leadership"
+          title="Messages from YSDA leadership."
+          text="YSDA is led with a focus on organised planning, transparent coordination, player welfare, school partnerships, event management, and long-term grassroots sports development."
+          centered
+        />
+
+        <div className="mt-12 grid items-stretch gap-6 lg:grid-cols-2">
+          {leadershipMessages.map((leader, index) => {
+            const imageFocus = index === 0 ? "object-[center_42%]" : "object-[62%_42%]";
+
+            return (
+              <motion.article
+                key={leader.name}
+                whileHover={{ y: -8 }}
+                className="flex h-full flex-col overflow-hidden rounded-[2rem] border border-blue-100 bg-white shadow-sm shadow-blue-950/5"
+              >
+                <div className="relative m-4 mb-0 overflow-hidden rounded-[1.6rem] bg-gradient-to-br from-ysdaBlue via-sky to-flame p-1 shadow-xl shadow-blue-950/15">
+                  <div className="relative aspect-[16/10] overflow-hidden rounded-[1.35rem] bg-slate-100">
+                    <SmartImage
+                      src={leader.image}
+                      alt={leader.name}
+                      className={`object-cover ${imageFocus}`}
+                      sizes="(max-width: 1024px) 100vw, 560px"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-ink/68 via-transparent to-transparent" />
+                    <div className="absolute inset-x-4 bottom-4 flex flex-wrap items-end justify-between gap-3">
+                      <span className="rounded-full bg-white/92 px-3 py-2 text-xs font-black uppercase tracking-[0.12em] text-ysdaBlue shadow-sm backdrop-blur">
+                        YSDA Leadership
+                      </span>
+                      <span className="rounded-full bg-gold px-3 py-2 text-xs font-black text-ink shadow-sm">
+                        {index === 0 ? "President" : "Secretary"}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex flex-1 flex-col p-6">
+                  <p className="text-xs font-black uppercase tracking-[0.14em] text-flame">{leader.role}</p>
+                  <h3 className="mt-2 font-display text-2xl font-black text-ink">{leader.name}</h3>
+                  <p className="mt-4 text-sm leading-7 text-slate-600">{leader.message}</p>
+                  <blockquote className="mt-auto rounded-3xl bg-blue-50 p-4 text-sm font-black leading-7 text-ysdaBlue">
+                    {leader.closing}
+                  </blockquote>
+                </div>
+              </motion.article>
+            );
+          })}
+        </div>
+
+        <div className="mt-8 rounded-[2rem] border border-blue-100 bg-white p-6 shadow-sm">
+          <p className="text-sm font-black uppercase tracking-[0.16em] text-flame">
+            Directors, staff and certificates
+          </p>
+          <p className="mt-3 text-sm leading-7 text-slate-600">
+            Director, administrator, team manager, physiotherapist, media coordinator, event coordinator and support
+            staff profiles should be published only after names, qualifications, responsibilities, photographs and
+            certificates are verified by the academy.
+          </p>
         </div>
       </div>
     </section>
@@ -1126,8 +1368,8 @@ function EventsSection() {
         <div className="grid gap-8 lg:grid-cols-[1fr_420px]">
           <SectionHeader
             kicker="Events"
-            title="Tournaments, trials, camps, friendlies, and workshops."
-            text="Event cards show date, time, venue, sport category, age category, status, details, and direct WhatsApp contact."
+            title="Upcoming, ongoing, and completed tournaments, trials, camps, and workshops."
+            text="Event records include official status, date range, venue, sports category, eligible categories, registration details, required documents, and direct WhatsApp enquiry."
           />
           <Countdown />
         </div>
@@ -1158,29 +1400,42 @@ function EventsSection() {
 }
 
 function EventCard({ event }: { event: EventItem }) {
+  const startDate = new Date(event.date).toLocaleDateString("en-IN", { dateStyle: "medium" });
+  const endDate = event.endDate
+    ? new Date(event.endDate).toLocaleDateString("en-IN", { dateStyle: "medium" })
+    : null;
+  const dateText = endDate ? `${startDate} - ${endDate}` : startDate;
+
   return (
-    <motion.article whileHover={{ y: -8 }} className="overflow-hidden rounded-[2rem] bg-white shadow-sm">
+    <motion.article whileHover={{ y: -8 }} className="flex h-full flex-col overflow-hidden rounded-[2rem] bg-white shadow-sm">
       <div className="relative h-56">
         <SmartImage src={event.image} alt={event.title} className="object-cover" />
         <span className="absolute left-4 top-4 rounded-full bg-white px-3 py-1 text-xs font-black text-ysdaBlue">
           {event.status}
         </span>
       </div>
-      <div className="p-5">
+      <div className="flex flex-1 flex-col p-5">
+        <p className="text-xs font-black uppercase tracking-[0.14em] text-flame">{event.type}</p>
         <h3 className="font-display text-xl font-black">{event.title}</h3>
         <p className="mt-3 text-sm leading-7 text-slate-600">{event.description}</p>
         <div className="mt-5 grid gap-3 text-sm text-slate-600">
-          <InfoRow icon={CalendarDays} text={new Date(event.date).toLocaleDateString("en-IN", { dateStyle: "medium" })} />
+          <InfoRow icon={CalendarDays} text={dateText} />
           <InfoRow icon={Clock} text={event.time} />
           <InfoRow icon={MapPin} text={event.venue} />
           <InfoRow icon={Trophy} text={`${event.sport} | ${event.age}`} />
+          <InfoRow icon={Timer} text={`Registration deadline: ${event.deadline}`} />
+          <InfoRow icon={BadgeCheck} text={`Entry fee: ${event.fee}`} />
+          <InfoRow icon={CheckCircle2} text={`Documents: ${event.documents}`} />
         </div>
-        <div className="mt-5 flex flex-wrap gap-2">
+        <div className="mt-auto grid gap-2 pt-5 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
           <PrimaryButton href="#contact" variant="blue">
             View Details
           </PrimaryButton>
+          <PrimaryButton href={links.whatsapp} variant="white" icon={Send}>
+            Register Now
+          </PrimaryButton>
           <PrimaryButton href={links.whatsapp} variant="warm" icon={MessageCircle}>
-            WhatsApp
+            WhatsApp Enquiry
           </PrimaryButton>
         </div>
       </div>
@@ -1215,8 +1470,8 @@ function GallerySection() {
       <div className="section-wrap">
         <SectionHeader
           kicker="Gallery"
-          title="Aligned, responsive, filterable academy moments."
-          text="Football training photos, matches, tournaments, celebrations, camps, other sports activities, and video highlights stay clean across mobile and desktop."
+          title="Filterable YSDA activities with event context and captions."
+          text="Training sessions, match action, championships, trials, camps, awards, team photographs, school programmes, media coverage, and video highlights stay aligned across mobile and desktop."
           centered
         />
         <div className="mt-10 flex gap-2 overflow-x-auto pb-2 hide-scrollbar">
@@ -1263,6 +1518,11 @@ function GallerySection() {
                 <div className="p-4">
                   <p className="text-xs font-black uppercase tracking-[0.14em] text-flame">{item.category}</p>
                   <p className="mt-1 font-display text-lg font-black">{item.title}</p>
+                  <p className="mt-2 text-sm font-black text-ysdaBlue">{item.eventName}</p>
+                  <p className="mt-1 text-xs font-bold text-slate-500">
+                    {item.date} | {item.location}
+                  </p>
+                  <p className="mt-3 text-sm leading-6 text-slate-600">{item.caption}</p>
                 </div>
               </button>
             ))}
@@ -1320,11 +1580,70 @@ function GallerySection() {
               <div className="p-5">
                 <p className="text-xs font-black uppercase tracking-[0.14em] text-flame">{active.category}</p>
                 <h3 className="mt-1 font-display text-2xl font-black">{active.title}</h3>
+                <p className="mt-2 text-sm font-black text-ysdaBlue">{active.eventName}</p>
+                <p className="mt-1 text-xs font-bold uppercase tracking-[0.12em] text-slate-500">
+                  {active.date} | {active.location}
+                </p>
+                <p className="mt-3 text-sm leading-7 text-slate-600">{active.caption}</p>
               </div>
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
+    </section>
+  );
+}
+
+function CertificatesSection() {
+  return (
+    <section className="bg-white py-20 sm:py-28">
+      <div className="section-wrap grid gap-10 lg:grid-cols-[0.86fr_1.14fr] lg:items-center">
+        <div>
+          <SectionHeader
+            kicker="Professional Certificates"
+            title="A dedicated certificate gallery for verified academy records."
+            text="YSDA can display registration documents, affiliation certificates, coaching licences, AIFF certificates, referee records, event authorisations, school partnerships, appreciation certificates, player achievements, and international participation documents."
+          />
+          <p className="mt-6 rounded-3xl border border-orange-100 bg-orange-50 p-5 text-sm font-bold leading-7 text-slate-700">
+            Only clear, valid, and verified certificate images should be uploaded. Sensitive numbers, identity details,
+            signatures, and personal addresses should be hidden where necessary.
+          </p>
+          <div className="mt-7 flex flex-wrap gap-3">
+            <PrimaryButton href={links.whatsapp} variant="blue" icon={MessageCircle}>
+              Submit Certificate
+            </PrimaryButton>
+            <PrimaryButton href="#contact" variant="warm" icon={Award}>
+              Contact Admin
+            </PrimaryButton>
+          </div>
+        </div>
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div className="relative min-h-[360px] overflow-hidden rounded-[2rem] shadow-warm sm:row-span-2">
+            <SmartImage src={media.certificates} alt="YSDA certificate records" className="object-cover" />
+            <div className="absolute inset-0 bg-gradient-to-t from-blue-950/72 via-transparent to-transparent" />
+            <div className="absolute bottom-5 left-5 right-5 rounded-3xl bg-white/88 p-5 backdrop-blur">
+              <p className="text-xs font-black uppercase tracking-[0.16em] text-flame">Verification first</p>
+              <h3 className="mt-2 font-display text-2xl font-black">Clean records. Safe publishing.</h3>
+            </div>
+          </div>
+          {certificateCategories.map((category, index) => (
+            <motion.div
+              key={category}
+              initial={{ opacity: 0, y: 18 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ delay: index * 0.03 }}
+              className="flex items-center gap-3 rounded-3xl border border-slate-200 bg-slate-50 p-4 shadow-sm"
+            >
+              <span className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-gold text-ink">
+                <Award className="h-5 w-5" />
+              </span>
+              <p className="text-sm font-black leading-6 text-slate-700">{category}</p>
+            </motion.div>
+          ))}
+        </div>
+      </div>
     </section>
   );
 }
@@ -1543,8 +1862,8 @@ function AchievementsSection() {
       <div className="section-wrap">
         <SectionHeader
           kicker="Achievements"
-          title="Milestones that show growth, discipline, and opportunity."
-          text="YSDA celebrates tournament performances, player selections, trophies, certificates, successful events, and individual development stories."
+          title="Grassroots growth through training, tournaments, partnerships, and player-development activity."
+          text="Since 2021, YSDA has contributed to grassroots sports through academy training, tournament participation, school partnerships, sports-network activity, and opportunities for state, national, and international exposure."
           centered
         />
         <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
@@ -1575,6 +1894,25 @@ function AchievementsSection() {
             ))}
           </div>
         </div>
+
+        <div className="mt-12 grid gap-6 lg:grid-cols-3">
+          {achievementCards.map((item) => (
+            <motion.article
+              key={item.title}
+              whileHover={{ y: -8 }}
+              className="overflow-hidden rounded-[2rem] bg-white shadow-sm"
+            >
+              <div className="relative h-56">
+                <SmartImage src={item.image} alt={item.title} className="object-cover" />
+              </div>
+              <div className="p-6">
+                <p className="text-xs font-black uppercase tracking-[0.14em] text-flame">{item.category}</p>
+                <h3 className="mt-2 font-display text-2xl font-black">{item.title}</h3>
+                <p className="mt-3 text-sm leading-7 text-slate-600">{item.text}</p>
+              </div>
+            </motion.article>
+          ))}
+        </div>
       </div>
     </section>
   );
@@ -1585,9 +1923,9 @@ function SuccessStoriesSection() {
     <section className="py-20 sm:py-28">
       <div className="section-wrap">
         <SectionHeader
-          kicker="Player Success Stories"
-          title="Real journeys built through small daily improvements."
-          text="Each story highlights player growth, achievement, journey, testimonial, and a related sport moment."
+          kicker="Academy Achievements Gallery"
+          title="Short stories of exposure, participation, and development pathways."
+          text="These cards are ready for verified photographs, event reports, player achievements, certificates, awards, testimonials, and media coverage as official records become available."
           centered
         />
         <div className="mt-12 grid gap-6 lg:grid-cols-3">
@@ -1704,13 +2042,14 @@ function ContactSection() {
           </div>
           <h2 className="mt-5 font-display text-4xl font-black leading-tight sm:text-5xl">Start training with YSDA.</h2>
           <p className="mt-5 text-base font-semibold leading-8 text-white/90">
-            Youth Sports Development Academy, Indore, Madhya Pradesh, India. WhatsApp, call, email, or view location
-            directly from here.
+            Youth Sports Development Academy is based in Mhow, Indore, Madhya Pradesh and associated with the Youth
+            Sports Development Federation of India - YSDFI. WhatsApp, call, email, or view location directly from here.
           </p>
 
           <div className="mt-8 grid gap-4">
-            <ContactInfo icon={MapPinned} title="Academy Name" text="Youth Sports Development Academy" />
-            <ContactInfo icon={MapPin} title="Location" text="Indore, Madhya Pradesh, India" />
+            <ContactInfo icon={MapPinned} title="Academy Name" text={academyInfo.name} />
+            <ContactInfo icon={MapPin} title="Location" text={`${academyInfo.location}, India`} />
+            <ContactInfo icon={UsersRound} title="Associated Organisation" text={academyInfo.organisation} />
             <ContactInfo icon={Phone} title="WhatsApp Number" text="+91 9009071697" />
             <ContactInfo icon={Mail} title="Email" text="Info@ysdasports.com" />
             <ContactInfo icon={Clock} title="Timings" text="Morning and evening batches. Contact for current schedule." />
@@ -1734,11 +2073,11 @@ function ContactSection() {
 
         <div className="glass overflow-hidden rounded-[2rem] p-4">
           <iframe
-            title="YSDA Indore location map"
+            title="YSDA Mhow Indore location map"
             className="map-frame h-[420px] w-full rounded-[1.5rem]"
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
-            src="https://www.google.com/maps?q=Indore%2C%20Madhya%20Pradesh%2C%20India&output=embed"
+            src="https://www.google.com/maps?q=Youth%20Sports%20Development%20Academy%20Mhow%20Indore%20Madhya%20Pradesh&output=embed"
           />
           <div className="grid gap-3 p-4 sm:grid-cols-3">
             <SocialContact href={links.whatsapp} label="WhatsApp" icon={<FaWhatsapp />} />
@@ -1789,13 +2128,13 @@ function Footer() {
             <div>
               <p className="font-display text-xl font-black">YSDA</p>
               <p className="text-xs font-black uppercase tracking-[0.14em] text-slate-500">
-                Youth Sports Development Academy
+                {academyInfo.name}
               </p>
             </div>
           </div>
           <p className="mt-5 max-w-sm text-sm leading-7 text-slate-600">
-            Premium football and multi-sports coaching in Indore, focused on youth development, discipline, fitness,
-            competition, and long-term athlete confidence.
+            {academyInfo.name} is a professionally managed sports academy established in {academyInfo.established},
+            based in {academyInfo.location}, and associated with {academyInfo.organisation}.
           </p>
           <div className="mt-5 flex gap-2">
             <SocialIcon href={links.instagram} label="Instagram" icon={<FaInstagram />} />
@@ -1811,7 +2150,9 @@ function Footer() {
         <div>
           <h3 className="font-display text-lg font-black">Contact Details</h3>
           <div className="mt-4 space-y-3 text-sm font-semibold text-slate-600">
-            <p>Indore, Madhya Pradesh, India</p>
+            <p>{academyInfo.location}, India</p>
+            <p>President: {academyInfo.president}</p>
+            <p>Secretary: {academyInfo.secretary}</p>
             <p>WhatsApp: +91 9009071697</p>
             <p>Email: Info@ysdasports.com</p>
           </div>
@@ -1825,7 +2166,7 @@ function Footer() {
         </div>
       </div>
       <div className="border-t border-slate-100 py-5 text-center text-sm font-bold text-slate-500">
-        © Youth Sports Development Academy, Indore. All Rights Reserved.
+        &copy; Youth Sports Development Academy, Indore. All Rights Reserved.
       </div>
     </footer>
   );
@@ -1857,7 +2198,7 @@ function FloatingActions() {
         target="_blank"
         rel="noreferrer"
         aria-label="Chat with YSDA on WhatsApp"
-        className="group relative grid h-16 w-16 place-items-center rounded-full bg-[#25D366] text-3xl text-white shadow-2xl shadow-green-700/30"
+        className="group relative grid h-14 w-14 place-items-center rounded-full bg-[#25D366] text-2xl text-white shadow-2xl shadow-green-700/30 sm:h-16 sm:w-16 sm:text-3xl"
       >
         <span className="absolute inset-0 rounded-full bg-[#25D366] animate-pulseRing" />
         <FaWhatsapp className="relative z-10" />
@@ -1881,13 +2222,16 @@ export default function Home() {
       <Header />
       <Hero />
       <AboutSection />
+      <ValuesObjectivesSection />
       <SportsSection />
       <FootballAcademySection />
       <WhyChooseSection />
       <CoachingProgramsSection />
       <CoachesSection />
+      <LeadershipMessagesSection />
       <EventsSection />
       <GallerySection />
+      <CertificatesSection />
       <VideoHighlightsSection />
       <NewsSection />
       <AchievementsSection />
@@ -1900,3 +2244,7 @@ export default function Home() {
     </main>
   );
 }
+
+
+
+

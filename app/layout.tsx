@@ -2,21 +2,26 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Youth Sports Development Academy | YSDA Indore",
+  title: "Youth Sports Development Academy | YSDA Mhow Indore",
   description:
-    "Premium multi-sports and football academy in Indore offering youth coaching, fitness, tournaments, events, and player development programs.",
+    "YSDA is a professionally managed sports academy established in 2021 in Mhow, Indore, associated with YSDFI for football, multi-sports coaching, camps, trials, tournaments and youth development.",
   keywords: [
     "YSDA",
     "Youth Sports Development Academy",
+    "YSDA Mhow",
+    "Youth Sports Development Federation of India",
+    "YSDFI",
     "football academy Indore",
+    "football academy Mhow",
     "sports academy Indore",
+    "sports academy Mhow",
     "youth sports coaching",
     "multi sports academy India"
   ],
   openGraph: {
-    title: "Youth Sports Development Academy | YSDA Indore",
+    title: "Youth Sports Development Academy | YSDA Mhow Indore",
     description:
-      "Developing today's talent, creating tomorrow's champions through football and multi-sports coaching in Indore.",
+      "Developing Talent. Building Character. Creating Champions. Professional football and multi-sports development in Mhow, Indore.",
     type: "website",
     locale: "en_IN"
   },

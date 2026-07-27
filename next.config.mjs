@@ -7,6 +7,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const nextConfig = {
   reactStrictMode: true,
   outputFileTracingRoot: __dirname,
+  allowedDevOrigins: ["127.0.0.1"],
   images: {
     remotePatterns: [
       {

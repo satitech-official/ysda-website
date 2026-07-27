@@ -1,79 +1,201 @@
 const photo = (id: number, width = 1400) =>
   `https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg?auto=compress&cs=tinysrgb&w=${width}`;
 
+const ysdfi = (file: string) => `/ysdfi-gallery/${file}`;
+
 export const whatsappMessage =
-  "Hello YSDA, I would like to know more about your sports training programs.";
+  "Hello YSDA, I would like to know more about your sports training programs, admissions, events, and registration process.";
 
 export const links = {
   whatsapp: `https://wa.me/919009071697?text=${encodeURIComponent(whatsappMessage)}`,
   instagram:
-    "https://www.instagram.com/youth_sports_development_india?igsh=b2xpa2E0a3htbmZk",
+    "https://www.instagram.com/ysda_official?igsh=c2F4cGpjZnViMHg=",
   youtube: "https://youtube.com/@ysdfi_india?si=pnIkmhD_cx8Ki-I4",
   email: "mailto:Info@ysdasports.com",
   phone: "tel:+919009071697",
-  maps: "https://www.google.com/maps/search/?api=1&query=Youth%20Sports%20Development%20Academy%20Indore%20Madhya%20Pradesh"
+  maps: "https://www.google.com/maps/search/?api=1&query=Youth%20Sports%20Development%20Academy%20Mhow%20Indore%20Madhya%20Pradesh"
+};
+
+export const academyInfo = {
+  name: "Youth Sports Development Academy",
+  shortName: "YSDA",
+  established: "2021",
+  location: "Mhow, Indore, Madhya Pradesh",
+  organisation: "Youth Sports Development Federation of India - YSDFI",
+  president: "Mr. Rafik Raja",
+  secretary: "Mr. Ramiz Raja",
+  tagline: "Developing Talent. Building Character. Creating Champions.",
+  about:
+    "Youth Sports Development Academy, commonly known as YSDA, is a professionally managed sports academy established in 2021 and based in Mhow, Indore, Madhya Pradesh. YSDA works as a sports-development branch associated with the Youth Sports Development Federation of India - YSDFI. The academy identifies, trains, guides, and promotes talented young athletes through structured coaching, competitive exposure, and opportunities to participate in school, district, state, national, and international sporting events.",
+  belief:
+    "YSDA believes that every talented player deserves professional guidance, the right platform, fair opportunities, and recognition."
 };
 
 export const media = {
   heroVideo: "https://videos.pexels.com/video-files/31370183/13386254_3840_2160_24fps.mp4",
-  heroPoster:
-    "https://images.pexels.com/videos/31370183/pexels-photo-31370183.jpeg?auto=compress&cs=tinysrgb&w=1800",
+  heroPoster: ysdfi("ysdfi-135-gallery2-p18.jpg"),
   fallback: "/brand/ysda-logo-white.png",
-  footballWarmup: photo(34135632, 1600),
-  footballTeam: photo(30726603, 1600),
-  footballCoach: photo(31649722, 1400),
-  cricket: photo(17628651, 1200),
-  cricketWide: photo(28758998, 1400),
-  basketball: photo(37080042, 1400),
-  basketballCourt: photo(974502, 1400),
+  heroAction: ysdfi("ysdfi-135-gallery2-p18.jpg"),
+  heroTeam: ysdfi("ysdfi-088-gallery3-p24.jpg"),
+  heroMultiSport: ysdfi("ysdfi-144-gallery2-p27.jpg"),
+  heroSquad: ysdfi("ysdfi-132-gallery2-p15.jpg"),
+  heroMatch: ysdfi("ysdfi-113-gallery3-p49.jpg"),
+  heroTraining: ysdfi("ysdfi-107-gallery3-p43.jpg"),
+  footballWarmup: ysdfi("ysdfi-107-gallery3-p43.jpg"),
+  footballTeam: ysdfi("ysdfi-132-gallery2-p15.jpg"),
+  footballCoach: ysdfi("ysdfi-141-gallery2-p24.jpg"),
+  cricket: ysdfi("ysdfi-040-gallery4-p40.jpg"),
+  cricketWide: ysdfi("ysdfi-030-gallery4-p30.jpg"),
+  basketball: ysdfi("ysdfi-206-gallery1-p12.jpg"),
+  basketballCourt: ysdfi("ysdfi-210-gallery1-p16.jpg"),
   volleyball: photo(6203581, 1400),
   badminton: photo(8007500, 1400),
-  athletics: photo(15292660, 1400),
+  athletics: ysdfi("ysdfi-226-gallery1-p32.jpg"),
   kabaddi: photo(10347115, 1400),
   skating: photo(30933662, 1400),
   skatingAction: photo(16767210, 1200),
-  fitness: photo(1552242, 1400),
-  teamTraining: photo(3768916, 1400),
-  trophy: photo(7005569, 1200)
+  fitness: ysdfi("ysdfi-199-gallery1-p05.jpg"),
+  teamTraining: ysdfi("ysdfi-144-gallery2-p27.jpg"),
+  trophy: ysdfi("ysdfi-058-gallery4-p58.jpg"),
+  leadership: ysdfi("ysdfi-196-gallery1-p02.jpg"),
+  officials: ysdfi("ysdfi-026-gallery4-p26.jpg"),
+  certificates: ysdfi("ysdfi-061-gallery4-p61.jpg"),
+  awards: ysdfi("ysdfi-030-gallery4-p30.jpg"),
+  girlsTeam: ysdfi("ysdfi-033-gallery4-p33.jpg"),
+  referee: ysdfi("ysdfi-005-gallery4-p05.jpg"),
+  schoolProgram: ysdfi("ysdfi-197-gallery1-p03.jpg"),
+  trials: ysdfi("ysdfi-201-gallery1-p07.jpg"),
+  community: ysdfi("ysdfi-202-gallery1-p08.jpg")
 };
+
+export const heroImages = [
+  {
+    src: media.heroAction,
+    title: "Football match energy",
+    tag: "Match Action",
+    caption: "Young footballers competing with focus and intensity."
+  },
+  {
+    src: media.heroTeam,
+    title: "YSDA football squad",
+    tag: "Team Identity",
+    caption: "A clean academy team portrait with strong sporting presence."
+  },
+  {
+    src: media.heroMultiSport,
+    title: "Multi-sports achievement team",
+    tag: "Multi-Sports",
+    caption: "Players and mentors representing wider academy development."
+  },
+  {
+    src: media.heroSquad,
+    title: "Tournament-ready football unit",
+    tag: "Competition Exposure",
+    caption: "Organised teams, officials, and match-day discipline."
+  },
+  {
+    src: media.heroMatch,
+    title: "Live football environment",
+    tag: "Academy Impact",
+    caption: "Training and match moments with real on-ground energy."
+  },
+  {
+    src: media.heroTraining,
+    title: "Skill-focused football training",
+    tag: "Player Development",
+    caption: "Structured practice, ball control, and tactical awareness."
+  }
+];
 
 export const navItems = [
   ["Home", "#home"],
   ["About Us", "#about"],
   ["Sports", "#sports"],
   ["Football Academy", "#football"],
-  ["Coaches", "#coaches"],
+  ["Courses", "#programs"],
+  ["Team", "#coaches"],
   ["Events", "#events"],
   ["Gallery", "#gallery"],
-  ["News", "#news"],
   ["Achievements", "#achievements"],
   ["Contact Us", "#contact"]
 ] as const;
 
 export const heroStats = [
-  { label: "Trained Players", value: 500, suffix: "+" },
-  { label: "Sports Programs", value: 10, suffix: "+" },
-  { label: "Events Conducted", value: 50, suffix: "+" },
-  { label: "Professional Coaches", value: 12, suffix: "+" }
+  { label: "Players Connected", value: 5000, suffix: "+" },
+  { label: "Championships and Events", value: 50, suffix: "+" },
+  { label: "Clubs, Units and Academies", value: 70, suffix: "+" },
+  { label: "Coaches and Officials", value: 150, suffix: "+" }
 ];
 
 export const valueCards = [
   {
-    title: "Our Vision",
-    text: "To become Indore's most trusted youth sports ecosystem where talent receives professional coaching, discipline, exposure, and a pathway to higher competition."
-  },
-  {
     title: "Our Mission",
-    text: "To deliver structured football and multi-sports training with safe coaching methods, fitness development, tournament readiness, and personal growth."
+    text:
+      "To identify and develop talented athletes by providing professional coaching, structured training, competitive exposure, and a safe and supportive sporting environment."
   },
   {
-    title: "Our Values",
-    text: "Respect, teamwork, consistency, leadership, fairness, hard work, and confidence guide every session, match, camp, and academy interaction."
+    title: "Our Vision",
+    text:
+      "To become one of India's most trusted sports-development academies, recognised for producing disciplined, confident, skilled, and successful athletes."
   },
   {
-    title: "Our Objective",
-    text: "To identify young talent, build strong fundamentals, create competitive opportunities, and help athletes grow on and off the field."
+    title: "Our Goal",
+    text:
+      "To create a professional and inclusive sports ecosystem where young athletes can learn, train, compete, and grow from grassroots to competitive levels."
+  },
+  {
+    title: "Our Belief",
+    text:
+      "Every talented player deserves professional guidance, the right platform, fair opportunities, personal development, and recognition."
   }
+];
+
+export const coreValues = [
+  {
+    title: "Discipline",
+    text: "Punctuality, consistency, commitment, and responsible habits are treated as foundations of sporting success."
+  },
+  {
+    title: "Integrity",
+    text: "YSDA promotes honesty, transparency, fairness, and ethical conduct in training, selection, and competition."
+  },
+  {
+    title: "Teamwork",
+    text: "Athletes learn to respect teammates, coaches, opponents, officials, and support staff."
+  },
+  {
+    title: "Excellence",
+    text: "Every athlete is motivated to improve physical, technical, tactical, and mental abilities."
+  },
+  {
+    title: "Equal Opportunity",
+    text: "YSDA aims to provide fair opportunities regardless of gender, location, background, or financial circumstances."
+  },
+  {
+    title: "Sportsmanship",
+    text: "Winning matters, but respect, character, and responsible behaviour are equally valuable."
+  },
+  {
+    title: "Safety",
+    text: "The physical and emotional safety of players remains a priority during training, travel, and competition."
+  },
+  {
+    title: "Inclusivity",
+    text: "YSDA welcomes players from different communities and encourages participation from both girls and boys."
+  }
+];
+
+export const objectives = [
+  "Identify talented players through trials, school programmes, camps, and tournaments.",
+  "Provide age-appropriate structured training under qualified coaches.",
+  "Improve technical skills, tactical knowledge, fitness, discipline, and confidence.",
+  "Organise local, district, state, national, and international sporting events.",
+  "Conduct inter-school championships and sports-development programmes.",
+  "Support athletes with competition preparation and performance guidance.",
+  "Develop coaches, referees, volunteers, and sports-management professionals.",
+  "Collaborate with schools, academies, clubs, government organisations, and sporting bodies.",
+  "Promote sports awareness, physical fitness, and healthy lifestyles.",
+  "Create opportunities for deserving athletes to participate on bigger sporting platforms."
 ];
 
 export const sports = [
@@ -82,8 +204,8 @@ export const sports = [
     icon: "football",
     image: media.footballWarmup,
     description:
-      "Grassroots to advanced technical training, match practice, conditioning, tactical awareness, and tournament preparation.",
-    level: "Beginner to Advanced",
+      "Football receives the strongest academy focus, with technical training, tactical awareness, match preparation, fitness, goalkeeper development, and tournament exposure.",
+    level: "Foundation to Elite",
     featured: true,
     color: "from-blue-600 via-sky-500 to-orange-400"
   },
@@ -92,8 +214,8 @@ export const sports = [
     icon: "cricket",
     image: media.cricket,
     description:
-      "Batting, bowling, fielding, fitness, nets, match temperament, and age-group competition exposure.",
-    level: "Foundation to Competitive",
+      "Batting, bowling, fielding, fitness, school participation, match temperament, and competitive exposure through camps and events.",
+    level: "School to Competitive",
     color: "from-green-500 via-sky-500 to-blue-600"
   },
   {
@@ -101,8 +223,8 @@ export const sports = [
     icon: "basketball",
     image: media.basketball,
     description:
-      "Ball handling, shooting, movement, court awareness, agility, team play, and confidence under pressure.",
-    level: "School to Club",
+      "Ball handling, shooting, movement, court awareness, agility, team play, confidence, and inter-school development.",
+    level: "Foundation to Team",
     color: "from-orange-500 via-red-500 to-blue-600"
   },
   {
@@ -110,7 +232,7 @@ export const sports = [
     icon: "volleyball",
     image: media.volleyball,
     description:
-      "Serving, receiving, setting, attacking, defensive movement, communication, and game rhythm.",
+      "Serving, receiving, setting, attacking, defensive movement, communication, school competition, and team discipline.",
     level: "Beginner to Team",
     color: "from-sky-500 via-blue-600 to-green-500"
   },
@@ -119,7 +241,7 @@ export const sports = [
     icon: "badminton",
     image: media.badminton,
     description:
-      "Footwork, racket control, shot selection, court coverage, speed, and singles or doubles tactics.",
+      "Footwork, racket control, shot selection, court coverage, speed, singles or doubles tactics, and regular practice.",
     level: "Foundation to Performance",
     color: "from-red-500 via-pink-500 to-orange-400"
   },
@@ -128,7 +250,7 @@ export const sports = [
     icon: "athletics",
     image: media.athletics,
     description:
-      "Sprint mechanics, endurance, jumps, throws, flexibility, power, and event-specific preparation.",
+      "Sprint mechanics, endurance, jumps, throws, flexibility, power, fitness assessment, and event-specific preparation.",
     level: "Age-Group Training",
     color: "from-yellow-400 via-orange-500 to-red-500"
   },
@@ -137,7 +259,7 @@ export const sports = [
     icon: "kabaddi",
     image: media.kabaddi,
     description:
-      "Strength, agility, raiding basics, defensive chains, mat movement, confidence, and team discipline.",
+      "Strength, agility, raiding basics, defensive teamwork, confidence, discipline, and community sports participation.",
     level: "Youth Development",
     color: "from-orange-500 via-green-500 to-blue-600"
   },
@@ -146,7 +268,7 @@ export const sports = [
     icon: "skating",
     image: media.skating,
     description:
-      "Balance, speed control, safe movement, turns, coordination, confidence, and beginner-friendly drills.",
+      "Balance, speed control, safe movement, turns, coordination, confidence, and beginner-friendly skill development.",
     level: "Starter to Skill",
     color: "from-sky-400 via-purple-500 to-orange-400"
   },
@@ -155,426 +277,779 @@ export const sports = [
     icon: "fitness",
     image: media.fitness,
     description:
-      "Strength, mobility, speed, endurance, recovery habits, injury prevention, and athlete-specific conditioning.",
+      "Strength, mobility, speed, agility, balance, coordination, injury-prevention awareness, and athlete conditioning.",
     level: "All Athletes",
     color: "from-green-500 via-yellow-400 to-orange-500"
   }
 ];
 
 export const footballPrograms = [
-  "Grassroots football training",
-  "Beginner football coaching",
-  "Advanced player development",
-  "Technical skill training",
+  "Ball control",
   "Passing and receiving",
-  "Dribbling and ball control",
+  "Dribbling",
   "Shooting and finishing",
+  "Defending",
+  "Positioning",
   "Tactical awareness",
   "Small-sided games",
-  "Match practice",
-  "Goalkeeping training",
+  "Match preparation",
   "Fitness and conditioning",
-  "Tournament preparation",
-  "Player performance assessment"
+  "Goalkeeper handling",
+  "Goalkeeper positioning",
+  "Distribution and communication",
+  "Performance evaluation"
 ];
 
 export const timeline = [
   {
     week: "Phase 01",
-    title: "Foundation and Body Shape",
-    text: "Posture, ball familiarity, movement, warm-up habits, simple passing lanes, and safe training rhythm."
+    title: "Foundation and Movement",
+    text: "Fundamental movement, coordination, balance, discipline, teamwork, and basic sporting skills."
   },
   {
     week: "Phase 02",
-    title: "Technique Under Pressure",
-    text: "First touch, dribbling patterns, passing speed, receiving angles, finishing basics, and 1v1 confidence."
+    title: "Technical Development",
+    text: "Age-appropriate skill development, confidence, game understanding, and regular match practice."
   },
   {
     week: "Phase 03",
-    title: "Game Intelligence",
-    text: "Small-sided games, transition moments, scanning, support runs, defensive shape, and role awareness."
+    title: "Advanced Performance",
+    text: "Advanced techniques, tactical development, conditioning, match analysis, and tournament preparation."
   },
   {
     week: "Phase 04",
-    title: "Competition Readiness",
-    text: "Match practice, tactical review, player assessment, tournament preparation, leadership, and recovery."
+    title: "Exposure and Pathway",
+    text: "Competition exposure, fitness monitoring, feedback, school partnerships, and career guidance."
   }
 ];
 
 export const whyChoose = [
-  "Qualified and experienced coaches",
-  "Professional coaching methods",
-  "Player-focused training",
-  "Modern training equipment",
-  "Safe training environment",
-  "Match and tournament exposure",
-  "Physical fitness development",
-  "Technical and tactical development",
-  "Discipline and leadership",
-  "Individual player assessment"
+  "Associated with YSDFI sports-development network",
+  "Professionally managed academy established in 2021",
+  "Grassroots, school, district, state, national and international pathway",
+  "Structured coaching and age-appropriate training",
+  "Safe, ethical and supportive sporting environment",
+  "Equal participation encouragement for girls and boys",
+  "Talent identification through trials, camps and tournaments",
+  "Connections with schools, clubs, academies and sports organisations",
+  "Competition preparation and performance guidance",
+  "Focus on discipline, confidence, leadership and sportsmanship"
 ];
 
 export const coachingPrograms = [
   {
-    title: "Beginner Development Program",
-    text: "Confidence-building sessions for new athletes with movement, balance, basic techniques, and safe game habits."
+    title: "Foundation Sports Programme",
+    text:
+      "Suitable for beginners and young children. Focuses on fundamental movement, coordination, balance, discipline, teamwork, and basic sporting skills.",
+    details: ["Age group: Young beginners", "Level: Foundation", "Certificate: Available where applicable"]
   },
   {
-    title: "Grassroots Training Program",
-    text: "Age-appropriate coaching that develops fundamentals, discipline, coordination, and love for sport."
+    title: "Junior Development Programme",
+    text:
+      "Suitable for school-level and developing athletes. Covers technical skills, fitness, game understanding, confidence, and regular match practice.",
+    details: ["Age group: School-level athletes", "Level: Junior development", "Schedule: Batch-wise"]
   },
   {
-    title: "Intermediate Player Program",
-    text: "Progressive skill development, competitive drills, match understanding, and improved fitness routines."
+    title: "Advanced Player Development Programme",
+    text:
+      "Suitable for competitive athletes. Focuses on advanced techniques, tactical development, conditioning, match analysis, and tournament preparation.",
+    details: ["Age group: Competitive players", "Level: Advanced", "Coach: Assigned by sport"]
   },
   {
-    title: "Advanced Performance Program",
-    text: "High-intensity technical and tactical training for players preparing for trials, leagues, and tournaments."
+    title: "Elite Performance Programme",
+    text:
+      "For selected high-performing athletes with individual performance plans, advanced training, exposure, fitness monitoring, and career guidance.",
+    details: ["Selection: Performance based", "Level: Elite", "Capacity: Limited batches"]
   },
   {
-    title: "Football Skill Development",
-    text: "Focused football modules covering dribbling, receiving, finishing, passing, defending, and game intelligence."
+    title: "Football Development Programme",
+    text:
+      "Focused football training covering ball control, passing, receiving, dribbling, shooting, defending, positioning, tactical awareness, small-sided games, match preparation, and fitness.",
+    details: ["Sport: Football", "Level: Foundation to Elite", "Venue: Mhow, Indore"]
   },
   {
-    title: "Goalkeeper Training",
-    text: "Handling, diving, positioning, distribution, reaction speed, communication, and match-specific goalkeeper work."
+    title: "Goalkeeper Training Programme",
+    text:
+      "Position-specific goalkeeper development covering handling, catching, positioning, footwork, diving, one-on-one situations, distribution, communication, and decision-making.",
+    details: ["Sport: Football", "Specialisation: Goalkeeping", "Equipment: Gloves recommended"]
   },
   {
-    title: "Holiday Sports Camps",
-    text: "Structured seasonal camps combining fitness, skills, friendly competitions, teamwork, and fun challenges."
+    title: "School Sports Development Programme",
+    text:
+      "Sports-training and event-support for schools, including coaching sessions, inter-house tournaments, talent identification, fitness assessments, sports-day support, and inter-school championship preparation.",
+    details: ["For: Schools", "Services: Coaching and events", "Partnerships: Open"]
   },
   {
-    title: "School Sports Training",
-    text: "Custom school programs for sports days, team preparation, physical education support, and inter-school events."
+    title: "Holiday and Summer Sports Camps",
+    text:
+      "Short-term camps designed to improve sporting skills, fitness, teamwork, confidence, and match experience during school holidays.",
+    details: ["Duration: Short-term", "Level: All abilities", "Registration: Batch-wise"]
   },
   {
-    title: "Personal Coaching",
-    text: "One-to-one or small group training for targeted improvement, personal assessment, and confidence building."
+    title: "Personal Training Programme",
+    text:
+      "Individual or small-group coaching designed around the player's position, ability, weaknesses, and development goals.",
+    details: ["Format: Individual or small group", "Plan: Player-specific", "Enquiry: WhatsApp"]
   },
   {
-    title: "Tournament Preparation",
-    text: "Match scenarios, conditioning, tactical planning, set pieces, team roles, and performance review before events."
+    title: "Coaches and Officials Development Programme",
+    text:
+      "Workshops and certification-support programmes for coaches, referees, volunteers, team managers, and sports officials.",
+    details: ["For: Coaches and officials", "Focus: Workshops", "Certificate support: Available where verified"]
   }
 ];
 
 export const coaches = [
   {
-    name: "Aarav Sharma",
-    role: "Head Football Coach",
-    sport: "Football Development",
-    experience: "9+ years",
-    qualification: "AIFF grassroots licensed coach",
-    image: photo(936075, 900),
+    name: "YSDA Coaching and Technical Team",
+    role: "Multi-Sports Coaching Unit",
+    sport: "Football and multi-sports development",
+    experience: "Profiles published after verification",
+    qualification: "Verified licences and certificates to be displayed when available",
+    image: media.footballCoach,
     intro:
-      "Leads YSDA's football pathway with a focus on first touch, confidence, team habits, and competition readiness."
+      "YSDA coaches focus on complete athlete development through technical skill, tactical awareness, conditioning, match preparation, mental confidence, discipline, sportsmanship, performance evaluation, and individual feedback."
   },
   {
-    name: "Meera Rajput",
-    role: "Fitness and Conditioning Coach",
-    sport: "Strength, speed and mobility",
-    experience: "7+ years",
-    qualification: "Certified youth conditioning specialist",
-    image: photo(3768916, 900),
+    name: "Football Development Staff",
+    role: "Head Coach / Assistant Coach / Goalkeeping Coach",
+    sport: "Football",
+    experience: "Sport-specific experience verified by academy",
+    qualification: "Coaching licence or certificate to be listed after verification",
+    image: media.footballWarmup,
     intro:
-      "Builds safe athlete conditioning plans that improve speed, endurance, recovery, and movement quality."
+      "The football team supports ball control, passing, receiving, dribbling, shooting, defending, positioning, tactical awareness, match preparation, and goalkeeper development."
   },
   {
-    name: "Rohan Verma",
-    role: "Multi-Sports Coach",
-    sport: "Cricket, athletics and camps",
-    experience: "8+ years",
-    qualification: "School sports program coordinator",
-    image: photo(220453, 900),
+    name: "Fitness and Conditioning Staff",
+    role: "Fitness Coach / Sports Trainer",
+    sport: "Strength, speed, agility and injury-prevention awareness",
+    experience: "Trainer details published after verification",
+    qualification: "Fitness or sports-training credentials to be verified",
+    image: media.fitness,
     intro:
-      "Coordinates multi-sports sessions, talent identification, school programs, and event training modules."
+      "Conditioning sessions support strength, speed, agility, balance, coordination, injury-prevention awareness, confidence, and player readiness for competition."
   },
   {
-    name: "Nisha Khan",
-    role: "Youth Skills Coach",
-    sport: "Badminton, skating and beginners",
-    experience: "6+ years",
-    qualification: "Youth sports safety trained",
-    image: photo(774909, 900),
+    name: "School and Event Technical Team",
+    role: "Coaches, Referees, Officials and Volunteers",
+    sport: "School programmes and championship support",
+    experience: "Connected with 150+ coaches and sports officials",
+    qualification: "Includes AIFF-registered professional coaches and officials in the wider network",
+    image: media.teamTraining,
     intro:
-      "Specializes in beginner confidence, discipline, skill foundations, and positive training environments."
+      "The technical network supports trials, school activities, tournaments, camps, event management, player welfare, and competition exposure."
+  }
+];
+
+export const leadershipMessages = [
+  {
+    name: "Mr. Rafik Raja",
+    role: "President, Youth Sports Development Academy",
+    image: media.leadership,
+    message:
+      "YSDA was established with a commitment to providing young athletes with professional guidance, structured training, competitive exposure, and opportunities to achieve their sporting potential. Through our association with YSDFI, schools, clubs, coaches, academies, and sports organisations, we aim to create meaningful pathways for athletes to participate in state, national, and international competitions.",
+    closing:
+      "Together, we will develop talent, strengthen grassroots sports, and create future champions."
+  },
+  {
+    name: "Mr. Ramiz Raja",
+    role: "Secretary, Youth Sports Development Academy",
+    image: media.officials,
+    message:
+      "YSDA is committed to creating an organised, transparent, and player-focused sporting environment. We support the planning and coordination of academy programmes, tournaments, training sessions, school activities, affiliations, camps, and competitive events.",
+    closing:
+      "We welcome schools, coaches, players, academies, clubs, sponsors, and sporting organisations to join our mission of strengthening grassroots sports."
   }
 ];
 
 export const events = [
   {
-    title: "YSDA Indore Youth Football Cup",
-    date: "2026-07-12",
-    time: "7:00 AM",
-    venue: "Indore Sports Ground",
-    sport: "Football",
-    age: "U-10, U-13, U-16",
-    status: "Upcoming",
-    image: media.footballTeam,
-    description:
-      "A high-energy academy tournament with group games, player awards, coach feedback, and parent-friendly scheduling."
-  },
-  {
-    title: "Football Trials and Assessment Day",
-    date: "2026-07-20",
-    time: "6:30 AM",
-    venue: "YSDA Training Field, Indore",
-    sport: "Football",
-    age: "U-12 to U-18",
-    status: "Upcoming",
-    image: media.footballWarmup,
-    description:
-      "Technical, tactical, and fitness assessment for players looking to enter the football development pathway."
-  },
-  {
-    title: "Monsoon Multi-Sports Camp",
-    date: "2026-08-05",
-    time: "5:00 PM",
-    venue: "YSDA Partner School Campus",
+    title: "Mewar Sporting Event - Udaipur",
+    date: "2026-08-07",
+    endDate: "2026-08-09",
+    time: "Schedule to be announced",
+    venue: "Udaipur, Rajasthan",
     sport: "Multi-Sports",
-    age: "8 to 16 years",
+    age: "Official age categories to be announced",
     status: "Upcoming",
+    type: "Tournament / Championship",
+    deadline: "To be announced",
+    fee: "Verified amount to be announced",
+    documents: "Age proof, player photograph, school ID and event-specific documents",
     image: media.teamTraining,
     description:
-      "Rotational football, cricket, basketball, athletics, fitness, leadership, and team-building sessions."
+      "Upcoming Mewar Sporting Event connected with YSDA's wider sports network. Official title, venue, age categories, registration information and participating teams should be verified before publishing final event details."
   },
   {
-    title: "Summer Fitness and Skills Camp",
-    date: "2026-06-21",
-    time: "6:00 AM",
-    venue: "Indore Outdoor Arena",
-    sport: "Fitness",
-    age: "10 to 17 years",
+    title: "YSDA D Licence Certification Courses",
+    date: "2026-08-20",
+    endDate: "2026-08-25",
+    time: "Course schedule to be announced",
+    venue: "Mhow, Indore, Madhya Pradesh",
+    sport: "Football Coaching Certification",
+    age: "Aspiring coaches, trainers and football-development professionals",
+    status: "Upcoming",
+    type: "Certification Course",
+    deadline: "Contact academy for registration",
+    fee: "Contact academy",
+    documents: "Photo ID, passport-size photograph, coaching/player details and applicable certificates",
+    image: media.certificates,
+    description:
+      "YSDA D Licence Certification Courses are scheduled from 20 August to 25 August 2026 for aspiring coaches, trainers and football-development professionals. Interested participants can contact the academy for registration, eligibility, schedule, fee and required documents."
+  },
+  {
+    title: "Regular YSDA Training Batches",
+    date: "2026-07-19",
+    time: "Morning and evening batches",
+    venue: "Mhow, Indore, Madhya Pradesh",
+    sport: "Football and Multi-Sports",
+    age: "Beginner to competitive athletes",
     status: "Ongoing",
-    image: media.fitness,
+    type: "Training Programme",
+    deadline: "Open enquiry",
+    fee: "Contact academy",
+    documents: "Player details and age proof may be required",
+    image: media.footballWarmup,
     description:
-      "A focused conditioning block with sprint mechanics, mobility, strength basics, recovery, and sport-specific drills."
+      "Ongoing academy admissions and training programmes for selected YSDA courses, regular practice, fitness development, match exposure, and academy activities."
   },
   {
-    title: "Inter-Academy Friendly Match Day",
-    date: "2026-05-28",
-    time: "7:30 AM",
-    venue: "YSDA Football Ground",
-    sport: "Football",
-    age: "U-14",
+    title: "Joshua Benjamin Memorial Event - Mhow",
+    date: "2026-05-27",
+    endDate: "2026-05-30",
+    time: "Completed",
+    venue: "Mhow, Indore, Madhya Pradesh",
+    sport: "Sporting Event",
+    age: "Participating categories to be verified",
     status: "Completed",
-    image: media.footballCoach,
-    description:
-      "Friendly match exposure for academy players with match feedback, teamwork review, and sportsmanship awards."
-  },
-  {
-    title: "School Sports Leadership Workshop",
-    date: "2026-04-18",
-    time: "10:00 AM",
-    venue: "Indore School Auditorium",
-    sport: "Workshop",
-    age: "Students and PE teachers",
-    status: "Completed",
+    type: "Memorial Event",
+    deadline: "Closed",
+    fee: "Closed",
+    documents: "Event report, results and certificates to be verified",
     image: media.trophy,
     description:
-      "A workshop on discipline, leadership, tournament readiness, injury awareness, and building a sports culture."
+      "Completed event record. Verified results, participating teams, winners, awards, photographs and event report should be added before publishing final result details."
+  },
+  {
+    title: "Goa Invitational Event",
+    date: "2026-05-04",
+    endDate: "2026-05-09",
+    time: "Completed",
+    venue: "Goa",
+    sport: "Invitational Sports Event",
+    age: "Team details to be verified",
+    status: "Completed",
+    type: "Invitational Event",
+    deadline: "Closed",
+    fee: "Closed",
+    documents: "Team details, results, photographs and player achievements to be verified",
+    image: media.cricketWide,
+    description:
+      "Completed invitational event. Official title, venue, team details, results, photographs and player achievements should be verified before final publication."
+  },
+  {
+    title: "Indo-Nepal Sporting Event - Pokhara",
+    date: "2025-12-31",
+    endDate: "2026-01-03",
+    time: "Completed",
+    venue: "Pokhara, Nepal",
+    sport: "International Sporting Event",
+    age: "Participation details to be verified",
+    status: "Completed",
+    type: "International Exposure",
+    deadline: "Closed",
+    fee: "Closed",
+    documents: "Participation details, certificates, photographs and results to be verified",
+    image: media.footballTeam,
+    description:
+      "Completed international exposure event connected with Indo-Nepal sporting participation. Verified participation details, results, certificates, photographs and international-exposure highlights should be added."
   }
 ];
 
 export const gallery = [
-  { title: "Football warm-up intensity", category: "Football", image: media.footballWarmup },
-  { title: "Match day teamwork", category: "Football", image: media.footballTeam },
-  { title: "Cricket batting drill", category: "Cricket", image: media.cricket },
-  { title: "Basketball shooting focus", category: "Basketball", image: media.basketball },
-  { title: "Volleyball teamwork", category: "Volleyball", image: media.volleyball },
-  { title: "Badminton court movement", category: "Badminton", image: media.badminton },
-  { title: "Track endurance training", category: "Athletics", image: media.athletics },
-  { title: "Kabaddi strength session", category: "Training", image: media.kabaddi },
-  { title: "Skating confidence", category: "Training", image: media.skating },
-  { title: "Fitness and conditioning", category: "Training", image: media.fitness },
-  { title: "Trophy celebration", category: "Events", image: media.trophy },
-  { title: "Academy video highlight", category: "Videos", image: media.heroPoster, video: media.heroVideo }
+  {
+    title: "Training Sessions",
+    category: "Training Sessions",
+    image: media.footballWarmup,
+    eventName: "YSDA Regular Training",
+    date: "2026",
+    location: "Mhow, Indore",
+    caption: "Structured coaching, discipline, fitness and player-development activities."
+  },
+  {
+    title: "Match Action",
+    category: "Match Action",
+    image: media.footballTeam,
+    eventName: "Academy Match Practice",
+    date: "2026",
+    location: "Mhow, Indore",
+    caption: "Competitive match practice and team-building experience."
+  },
+  {
+    title: "National Championships",
+    category: "National Championships",
+    image: media.trophy,
+    eventName: "National-Level Sports Network",
+    date: "2021-2026",
+    location: "India",
+    caption: "YSDA is connected with 15+ national-level championships through its wider network."
+  },
+  {
+    title: "International Championships",
+    category: "International Championships",
+    image: media.teamTraining,
+    eventName: "International Sports Exposure",
+    date: "2021-2026",
+    location: "International network",
+    caption: "Association with 15+ international multi-sports championships."
+  },
+  {
+    title: "Inter-School Championships",
+    category: "Inter-School Championships",
+    image: media.cricketWide,
+    eventName: "School Sports Development",
+    date: "2021-2026",
+    location: "Madhya Pradesh and network states",
+    caption: "School-level training, trials, partnerships and championship preparation."
+  },
+  {
+    title: "Football Development",
+    category: "Football",
+    image: media.footballCoach,
+    eventName: "Football Development Programme",
+    date: "2026",
+    location: "Mhow, Indore",
+    caption: "Ball control, tactical awareness, fitness, match preparation and goalkeeper training."
+  },
+  {
+    title: "Multi-Sports Events",
+    category: "Multi-Sports Events",
+    image: media.basketball,
+    eventName: "YSDA Multi-Sports Network",
+    date: "2021-2026",
+    location: "10+ states",
+    caption: "Collaborations across multi-sports events, camps and championships."
+  },
+  {
+    title: "Awards and Trophies",
+    category: "Awards and Trophies",
+    image: media.trophy,
+    eventName: "Certificate and Award Distribution",
+    date: "Ongoing",
+    location: "YSDA events",
+    caption: "Recognition through certificates, medals, trophies and achievement awards."
+  },
+  {
+    title: "Player Trials",
+    category: "Player Trials",
+    image: media.athletics,
+    eventName: "Talent Identification",
+    date: "Ongoing",
+    location: "Schools, camps and tournaments",
+    caption: "Trials and assessment activities to identify deserving athletes."
+  },
+  {
+    title: "Sports Camps",
+    category: "Sports Camps",
+    image: media.fitness,
+    eventName: "Holiday and Summer Camps",
+    date: "Seasonal",
+    location: "Mhow, Indore",
+    caption: "Short-term camps for skills, fitness, teamwork, confidence and match experience."
+  },
+  {
+    title: "Team Photographs",
+    category: "Team Photographs",
+    image: media.teamTraining,
+    eventName: "YSDA Teams",
+    date: "2026",
+    location: "Academy activities",
+    caption: "Players, coaches, officials and support teams connected with the academy."
+  },
+  {
+    title: "Coaches and Officials",
+    category: "Coaches and Officials",
+    image: media.officials,
+    eventName: "Technical Team Coordination",
+    date: "Ongoing",
+    location: "YSDA network",
+    caption: "Coaches, referees, officials, volunteers and event-management professionals supporting player pathways."
+  },
+  {
+    title: "School Programmes",
+    category: "School Programmes",
+    image: media.cricketWide,
+    eventName: "School Sports Development Programme",
+    date: "Ongoing",
+    location: "Associated schools",
+    caption: "Coaching sessions, inter-house events, talent identification, fitness assessment and championship preparation."
+  },
+  {
+    title: "Certificate Distribution",
+    category: "Certificate Distribution",
+    image: media.certificates,
+    eventName: "Recognition and Records",
+    date: "After verified events",
+    location: "Academy and event venues",
+    caption: "Certificates, medals, trophies and recognition awards should be published after official verification."
+  },
+  {
+    title: "Behind the Scenes",
+    category: "Behind the Scenes",
+    image: media.leadership,
+    eventName: "Academy Operations",
+    date: "Ongoing",
+    location: "Mhow, Indore",
+    caption: "Planning, coordination, partnerships, registrations and player-welfare work behind academy activities."
+  },
+  {
+    title: "Community Activities",
+    category: "Community Activities",
+    image: media.athletics,
+    eventName: "Grassroots Sports Awareness",
+    date: "Ongoing",
+    location: "Schools and community spaces",
+    caption: "Sports awareness, healthy lifestyle promotion and inclusive participation for boys and girls."
+  },
+
+  {
+    title: "Inter-School Champions",
+    category: "Awards and Trophies",
+    image: media.awards,
+    eventName: "3rd Talent Cup Inter School Championship 2026",
+    date: "2026",
+    location: "YSDFI sports network",
+    caption: "Award-stage photo documenting school championship participation and recognition."
+  },
+  {
+    title: "Girls Football Team",
+    category: "Team Photographs",
+    image: media.girlsTeam,
+    eventName: "Girls school championship participation",
+    date: "2026",
+    location: "Inter-school sports event",
+    caption: "A clean team photograph showing equal participation and girls' sports development."
+  },
+  {
+    title: "Basketball Match Action",
+    category: "Multi-Sports Events",
+    image: media.basketball,
+    eventName: "Court sports development",
+    date: "2026",
+    location: "School sports venue",
+    caption: "Fast court movement and competition exposure beyond football."
+  },
+  {
+    title: "Referee and Match Officials",
+    category: "Coaches and Officials",
+    image: media.referee,
+    eventName: "Match official coordination",
+    date: "2026",
+    location: "Championship venue",
+    caption: "Officials and referees supporting structured and fair competition."
+  },
+  {
+    title: "School Player Line-Up",
+    category: "School Programmes",
+    image: media.schoolProgram,
+    eventName: "School sports development",
+    date: "2026",
+    location: "School court venue",
+    caption: "Students prepared for inter-school participation and discipline-led events."
+  },
+  {
+    title: "Player Trial Interaction",
+    category: "Player Trials",
+    image: media.trials,
+    eventName: "Talent-identification activity",
+    date: "2026",
+    location: "YSDA sports network",
+    caption: "Player interaction and assessment moments during academy-connected events."
+  },
+  {
+    title: "Community Sports Interaction",
+    category: "Community Activities",
+    image: media.community,
+    eventName: "Grassroots sports outreach",
+    date: "2026",
+    location: "School and community sports venue",
+    caption: "Community engagement supporting confident participation and sports culture."
+  },
+  {
+    title: "Trophy Display",
+    category: "Awards and Trophies",
+    image: media.trophy,
+    eventName: "Championship awards",
+    date: "2026",
+    location: "YSDFI event network",
+    caption: "Trophies and recognition visuals for academy achievement storytelling."
+  },
+  {
+    title: "Academy Video Highlight",
+    category: "Media Coverage",
+    image: media.heroPoster,
+    video: media.heroVideo,
+    eventName: "YSDA Media",
+    date: "2026",
+    location: "Official channels",
+    caption: "Video highlights and academy media moments."
+  }
 ];
 
 export const videoHighlights = [
   {
-    title: "Football match highlights",
+    title: "Football development highlights",
     tag: "Football",
     image: media.footballTeam,
     video: media.heroVideo
   },
   {
-    title: "Training session energy",
+    title: "Training and fitness sessions",
     tag: "Training",
     image: media.footballWarmup,
     video: media.heroVideo
   },
   {
-    title: "Coach guidance and assessment",
-    tag: "Coaching",
-    image: media.footballCoach,
+    title: "Events, camps and championship exposure",
+    tag: "Events",
+    image: media.teamTraining,
     video: media.heroVideo
   }
 ];
 
 export const news = [
   {
-    title: "Football trials open for July development batch",
-    date: "2026-06-18",
-    category: "Football",
+    title: "Latest Academy Admissions Open",
+    date: "2026-07-19",
+    category: "Admissions",
     image: media.footballWarmup,
     summary:
-      "YSDA is accepting registrations for technical assessment, age-group placement, and the next football training batch."
+      "Admissions are open for selected YSDA training programmes. Young athletes can register for professional coaching, regular practice, fitness development, match exposure and academy activities."
   },
   {
-    title: "Monsoon multi-sports camp schedule announced",
-    date: "2026-06-14",
-    category: "Camps",
+    title: "Upcoming Tournament Registrations",
+    date: "2026-07-18",
+    category: "Events",
     image: media.teamTraining,
     summary:
-      "The upcoming camp will include football, cricket, basketball, athletics, fitness, leadership, and teamwork modules."
+      "Players, teams, schools, clubs and academies can enquire for upcoming tournaments, trials, sports camps and championship events before announced deadlines."
   },
   {
-    title: "U-14 football squad completes friendly match block",
-    date: "2026-06-08",
-    category: "Results",
-    image: media.footballTeam,
+    title: "New School and Academy Partnerships",
+    date: "2026-07-15",
+    category: "Partnerships",
+    image: media.cricketWide,
     summary:
-      "Players gained match exposure, positional feedback, and confidence through inter-academy competitive fixtures."
+      "YSDA welcomes collaborations with schools, sports academies, clubs, coaches and organisations interested in developing grassroots sports."
   },
   {
-    title: "Fitness assessment week begins at YSDA",
-    date: "2026-05-31",
+    title: "Player Selection and Trial Updates",
+    date: "2026-07-12",
+    category: "Trials",
+    image: media.athletics,
+    summary:
+      "Selection updates, reporting times, eligibility conditions and required documents for player trials will be published through official channels."
+  },
+  {
+    title: "Training Schedule Updates",
+    date: "2026-07-10",
     category: "Training",
     image: media.fitness,
     summary:
-      "Coaches are tracking speed, agility, endurance, flexibility, and recovery habits for individual player plans."
+      "Changes to training timings, venues, batches, holidays or match schedules will be announced on the website and official social-media channels."
   },
   {
-    title: "School sports collaboration program expands",
-    date: "2026-05-22",
-    category: "Academy",
+    title: "Championship Results",
+    date: "2026-06-01",
+    category: "Results",
     image: media.trophy,
     summary:
-      "YSDA is building school partnerships for sports days, team training, workshops, and talent identification."
+      "Tournament results, points tables, award winners, photographs, match reports and player achievements will be published after each verified event."
   },
   {
-    title: "Young athletes recognized for discipline and teamwork",
-    date: "2026-05-12",
-    category: "Achievements",
-    image: media.cricketWide,
+    title: "Certificate and Award Distribution",
+    date: "2026-05-31",
+    category: "Awards",
+    image: media.certificates,
     summary:
-      "Monthly recognition celebrates consistency, respect, effort, leadership, and improvement across sports."
+      "Players, coaches, schools, teams, officials and volunteers may receive certificates, medals, trophies and recognition awards according to event rules."
   }
 ];
 
 export const achievements = [
-  { value: 18, suffix: "+", label: "Tournament podium finishes" },
-  { value: 120, suffix: "+", label: "Players assessed this season" },
-  { value: 24, suffix: "+", label: "School and academy collaborations" },
-  { value: 50, suffix: "+", label: "Events and camps conducted" }
+  { value: 9, suffix: "+", label: "Sports promoted" },
+  { value: 50, suffix: "+", label: "Championships and sporting events" },
+  { value: 10, suffix: "+", label: "States reached" },
+  { value: 70, suffix: "+", label: "Clubs, units and academies connected" },
+  { value: 40, suffix: "+", label: "Schools associated" },
+  { value: 150, suffix: "+", label: "Coaches and sports officials connected" },
+  { value: 30, suffix: "+", label: "National and international championships" },
+  { value: 5000, suffix: "+", label: "Players connected" }
 ];
 
 export const achievementTimeline = [
   {
-    year: "2024",
-    title: "Grassroots pathway launched",
-    text: "Structured beginner and age-group training modules were introduced across football and multi-sports."
+    year: "2021",
+    title: "YSDA established",
+    text: "Youth Sports Development Academy was established in Mhow, Indore as a professionally managed sports academy."
   },
   {
-    year: "2025",
-    title: "Competitive exposure expanded",
-    text: "Friendly matches, school tournaments, and sports camps created regular development opportunities."
+    year: "2021-2026",
+    title: "Grassroots network expanded",
+    text: "Training, camps, school programmes, tournaments, trials and player-development activities supported grassroots sports development."
   },
   {
-    year: "2026",
-    title: "Football academy pathway strengthened",
-    text: "Technical assessment, position-specific sessions, and tournament preparation became core program pillars."
+    year: "YSDFI Network",
+    title: "National and international exposure",
+    text: "Through association with YSDFI, YSDA is connected with a growing national and international sports-development network."
   }
+];
+
+export const achievementCards = [
+  {
+    title: "National Championship Participation",
+    category: "National Exposure",
+    image: media.trophy,
+    text:
+      "YSDA players and teams have received opportunities to participate in national-level sporting competitions through the academy's wider sports network."
+  },
+  {
+    title: "International Exposure",
+    category: "International Network",
+    image: media.footballTeam,
+    text:
+      "Selected players and teams have been connected with international sporting events, helping them gain valuable competition experience and cultural exposure."
+  },
+  {
+    title: "School Sports Development",
+    category: "School Partnerships",
+    image: media.cricketWide,
+    text:
+      "YSDA encourages school-level participation through championships, training programmes, trials, sports-day support and partnerships."
+  }
+];
+
+export const certificateCategories = [
+  "Academy registration documents",
+  "Affiliation certificates",
+  "Coaching licences",
+  "AIFF coaching certificates",
+  "Referee and official certificates",
+  "Tournament-participation certificates",
+  "Event-authorisation documents",
+  "School partnership certificates",
+  "Appreciation certificates",
+  "Player-achievement certificates",
+  "International participation certificates",
+  "Awards and recognition documents"
 ];
 
 export const successStories = [
   {
-    name: "Devansh Patel",
-    sport: "Football",
-    achievement: "Selected for inter-school district squad",
+    name: "National Championship Participation",
+    sport: "Achievement Gallery",
+    achievement: "State and national sporting opportunities",
+    image: media.trophy,
+    journey:
+      "YSDA contributes to grassroots sports by connecting players and teams with championship pathways through its wider sports network.",
+    testimonial:
+      "Verified photographs, results and certificates can be added as official records become available."
+  },
+  {
+    name: "International Exposure",
+    sport: "Achievement Gallery",
+    achievement: "International events and cultural exposure",
     image: media.footballTeam,
     journey:
-      "Started as a beginner winger, improved first touch and confidence through small-sided games and match reviews.",
+      "Selected players and teams have been connected with international sporting events, helping athletes experience higher competitive platforms.",
     testimonial:
-      "YSDA helped me understand the game, not just play faster. I feel calmer during matches now."
+      "Sensitive identity details should be hidden before certificate or document publication."
   },
   {
-    name: "Anaya Joshi",
-    sport: "Athletics",
-    achievement: "Improved sprint timing and relay selection",
-    image: media.athletics,
+    name: "Inter-School Development",
+    sport: "Achievement Gallery",
+    achievement: "School participation and talent identification",
+    image: media.cricketWide,
     journey:
-      "Focused on running mechanics, warm-up discipline, strength basics, and consistent attendance.",
+      "YSDA works with school programmes, inter-school championships and talent-identification activities to increase sports participation.",
     testimonial:
-      "The coaches made training clear and exciting. I learned how to prepare like an athlete."
-  },
-  {
-    name: "Kabir Khan",
-    sport: "Cricket",
-    achievement: "School team batting opener",
-    image: media.cricket,
-    journey:
-      "Developed footwork, shot selection, fitness, and patience through regular cricket and conditioning sessions.",
-    testimonial:
-      "The academy gave me confidence and helped me handle pressure in real matches."
+      "Event reports, award winners, media coverage and testimonials can be added after verification."
   }
 ];
 
 export const testimonials = [
   {
-    name: "Ritika Malhotra",
-    role: "Parent",
-    image: photo(774909, 600),
+    name: "Player Community",
+    role: "Athletes",
+    image: media.footballTeam,
     rating: 5,
     text:
-      "YSDA brings discipline and joy together. My son waits for football sessions and has become more confident at school too."
+      "YSDA focuses on professional guidance, structured training, fitness, confidence, teamwork and competitive exposure."
   },
   {
-    name: "Arjun Singh",
-    role: "Football Player",
-    image: photo(220453, 600),
+    name: "Parent Community",
+    role: "Parents",
+    image: media.teamTraining,
     rating: 5,
     text:
-      "The coaches explain small details like body shape and first touch. Training feels professional and motivating."
+      "The academy aims to provide a safe, supportive, transparent and player-focused environment for young athletes."
   },
   {
-    name: "Priya Nair",
-    role: "School Coordinator",
-    image: photo(415829, 600),
+    name: "School Partners",
+    role: "Schools",
+    image: media.cricketWide,
     rating: 5,
     text:
-      "Their sports camp was organized, energetic, and safe. Students enjoyed the coaching and learned real teamwork."
+      "YSDA welcomes school partnerships for training programmes, inter-school championships, sports-day support and talent identification."
   },
   {
-    name: "Vikram Jain",
-    role: "Coach",
-    image: photo(91227, 600),
+    name: "Sports Network",
+    role: "Coaches, clubs and organisations",
+    image: media.officials,
     rating: 5,
     text:
-      "YSDA focuses on long-term development, not shortcuts. The player assessments and session design are thoughtful."
+      "YSDA works with coaches, clubs, academies, officials and sporting organisations to strengthen grassroots sports."
   }
 ];
 
 export const partners = [
-  "Indore Schools Network",
-  "Youth Fitness Forum",
-  "MP Sports Community",
-  "Grassroots Football India",
-  "Academy Events Circle",
-  "Student Athlete Support"
+  "Youth Sports Development Federation of India - YSDFI",
+  "40+ Associated Schools",
+  "70+ Clubs, Units and Academies",
+  "150+ Coaches and Sports Officials",
+  "10+ State Sports Network",
+  "National and International Event Partners"
 ];
 
 export const galleryCategories = [
   "All",
+  "Training Sessions",
+  "Match Action",
+  "National Championships",
+  "International Championships",
+  "Inter-School Championships",
   "Football",
-  "Cricket",
-  "Basketball",
-  "Volleyball",
-  "Badminton",
-  "Athletics",
-  "Events",
-  "Training",
-  "Videos"
+  "Multi-Sports Events",
+  "Awards and Trophies",
+  "Player Trials",
+  "Sports Camps",
+  "Team Photographs",
+  "Coaches and Officials",
+  "School Programmes",
+  "Certificate Distribution",
+  "Behind the Scenes",
+  "Media Coverage",
+  "Community Activities"
 ];
 
-export const newsCategories = ["All", "Football", "Camps", "Results", "Training", "Academy", "Achievements"];
+export const newsCategories = [
+  "All",
+  "Admissions",
+  "Events",
+  "Partnerships",
+  "Trials",
+  "Training",
+  "Results",
+  "Awards"
+];
