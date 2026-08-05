@@ -1,5 +1,8 @@
-const repositoryName = process.env.GITHUB_REPOSITORY?.split("/")[1] ?? "ysda-website";
-const basePath = process.env.GITHUB_ACTIONS === "true" ? `/${repositoryName}` : "";
+const configuredBasePath = String(process.env.GITHUB_PAGES_BASE_PATH ?? "").trim();
+const basePath =
+  !configuredBasePath || configuredBasePath === "/"
+    ? ""
+    : `/${configuredBasePath.replace(/^\/+|\/+$/g, "")}`;
 
 export default function githubPagesImageLoader({ src, width, quality }) {
   if (src.startsWith("http://") || src.startsWith("https://")) {
