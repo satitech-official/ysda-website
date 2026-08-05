@@ -49,7 +49,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <VideoPosterPathFix basePath={basePath} />
+        <VideoPosterPathFix basePath={staticBasePath} />
         {children}
       </body>
     </html>
