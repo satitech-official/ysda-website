@@ -12,7 +12,6 @@ import {
   CheckCircle2,
   ChevronLeft,
   ChevronRight,
-  Circle,
   CircleDot,
   Clock,
   Dumbbell,
@@ -39,7 +38,6 @@ import {
   Trophy,
   UsersRound,
   X,
-  Zap,
   type LucideIcon
 } from "lucide-react";
 import { motion, AnimatePresence, useInView, useMotionValue, useSpring } from "framer-motion";
@@ -82,14 +80,13 @@ import {
 
 const sportIconMap: Record<string, LucideIcon> = {
   football: CircleDot,
-  cricket: Target,
-  basketball: CircleDot,
-  volleyball: Circle,
-  badminton: Activity,
-  athletics: Timer,
-  kabaddi: ShieldCheck,
-  skating: Zap,
-  fitness: Dumbbell
+  target: Target,
+  activity: Activity,
+  goalkeeper: ShieldCheck,
+  fitness: Dumbbell,
+  tournament: Trophy,
+  school: UsersRound,
+  coaching: BadgeCheck
 };
 
 const whyIcons = [
@@ -107,6 +104,41 @@ const whyIcons = [
 
 type GalleryItem = (typeof gallery)[number];
 type EventItem = (typeof events)[number];
+type VideoHighlightItem = (typeof videoHighlights)[number];
+
+const staticBasePath = process.env.NODE_ENV === "production" ? "/ysda-website" : "";
+
+function resolvePublicAssetPath(src: string) {
+  if (!src || /^(https?:|data:|blob:|mailto:|tel:)/.test(src)) {
+    return src;
+  }
+
+  if (staticBasePath) {
+    if (src.startsWith(`${staticBasePath}/`)) return src;
+    return `${staticBasePath}${src.startsWith("/") ? src : `/${src}`}`;
+  }
+
+  if (typeof window === "undefined" || !window.location.hostname.endsWith("github.io")) {
+    return src;
+  }
+
+  const [repoName] = window.location.pathname.split("/").filter(Boolean);
+  if (!repoName || src.startsWith(`/${repoName}/`)) {
+    return src;
+  }
+
+  return `/${repoName}${src.startsWith("/") ? src : `/${src}`}`;
+}
+
+function usePublicAssetPath(src: string) {
+  const [assetPath, setAssetPath] = useState(() => resolvePublicAssetPath(src));
+
+  useEffect(() => {
+    setAssetPath(resolvePublicAssetPath(src));
+  }, [src]);
+
+  return assetPath;
+}
 
 function SmartImage({
   src,
@@ -121,11 +153,12 @@ function SmartImage({
   sizes?: string;
   priority?: boolean;
 }) {
-  const [currentSrc, setCurrentSrc] = useState(src);
+  const publicSrc = usePublicAssetPath(src);
+  const [currentSrc, setCurrentSrc] = useState(publicSrc);
 
   useEffect(() => {
-    setCurrentSrc(src);
-  }, [src]);
+    setCurrentSrc(publicSrc);
+  }, [publicSrc]);
 
   return (
     <Image
@@ -174,11 +207,13 @@ function SectionHeader({
 
 function PrimaryButton({
   href,
+  onClick,
   children,
   variant = "blue",
   icon: Icon = ArrowRight
 }: {
-  href: string;
+  href?: string;
+  onClick?: () => void;
   children: React.ReactNode;
   variant?: "blue" | "warm" | "white";
   icon?: LucideIcon;
@@ -190,6 +225,23 @@ function PrimaryButton({
         ? "bg-white text-ink shadow-glow"
         : "cta-gradient text-white shadow-glow";
 
+  const className = `inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-black transition ${style}`;
+
+  if (!href) {
+    return (
+      <motion.button
+        type="button"
+        onClick={onClick}
+        whileHover={{ y: -3, scale: 1.02 }}
+        whileTap={{ scale: 0.97 }}
+        className={className}
+      >
+        <span>{children}</span>
+        <Icon className="h-4 w-4" />
+      </motion.button>
+    );
+  }
+
   return (
     <motion.a
       href={href}
@@ -197,7 +249,7 @@ function PrimaryButton({
       rel={href.startsWith("http") ? "noreferrer" : undefined}
       whileHover={{ y: -3, scale: 1.02 }}
       whileTap={{ scale: 0.97 }}
-      className={`inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-black transition ${style}`}
+      className={className}
     >
       <span>{children}</span>
       <Icon className="h-4 w-4" />
@@ -245,6 +297,7 @@ function AnimatedCounter({
 
 function LoadingScreen() {
   const [visible, setVisible] = useState(true);
+  const logoSrc = usePublicAssetPath("/brand/ysda-logo-white.png");
 
   useEffect(() => {
     const timeout = window.setTimeout(() => setVisible(false), 1400);
@@ -273,7 +326,7 @@ function LoadingScreen() {
             <div className="mx-auto rounded-[2rem] border border-blue-100 bg-white p-4 shadow-glow">
               <div className="relative mx-auto h-32 w-full overflow-hidden rounded-[1.5rem] bg-white">
                 <Image
-                  src="/brand/ysda-logo-white.png"
+                  src={logoSrc}
                   alt="Youth Sports Development Academy logo"
                   fill
                   priority
@@ -283,7 +336,7 @@ function LoadingScreen() {
               </div>
             </div>
             <p className="mt-6 text-sm font-black uppercase tracking-[0.24em] text-ysdaBlue">
-              Loading Sports Energy
+              Loading Football Energy
             </p>
             <div className="mx-auto mt-4 h-3 max-w-xs overflow-hidden rounded-full bg-blue-100">
               <motion.div
@@ -390,13 +443,14 @@ function BrandLogo({
   priority?: boolean;
 }) {
   const sizeClass = size === "footer" ? "h-20 w-28 sm:w-32" : "h-14 w-20 sm:w-24";
+  const logoSrc = usePublicAssetPath("/brand/ysda-logo-white.png");
 
   return (
     <div
       className={`relative shrink-0 overflow-hidden rounded-2xl border border-white/80 bg-white shadow-glow ${sizeClass}`}
     >
       <Image
-        src="/brand/ysda-logo-white.png"
+        src={logoSrc}
         alt="Youth Sports Development Academy logo"
         fill
         priority={priority}
@@ -527,6 +581,21 @@ function SocialIcon({
 }
 
 function Hero() {
+  const heroPoster = usePublicAssetPath(media.heroPoster);
+  const heroVideo = usePublicAssetPath(media.heroVideo);
+  const [videoReady, setVideoReady] = useState(false);
+  const [videoFailed, setVideoFailed] = useState(false);
+  const heroVideoRef = useRef<HTMLVideoElement | null>(null);
+
+  useEffect(() => {
+    const video = heroVideoRef.current;
+    if (!video) return;
+    video.muted = true;
+    void video.play().catch(() => {
+      // Browsers may defer autoplay until the first user gesture.
+    });
+  }, []);
+
   return (
     <section id="home" className="relative min-h-[100svh] overflow-hidden">
       <div className="absolute inset-0">
@@ -538,16 +607,26 @@ function Hero() {
           priority
         />
         <video
-          className="absolute inset-0 h-full w-full object-cover"
+          ref={heroVideoRef}
+          className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${videoReady && !videoFailed ? "opacity-100" : "opacity-0"}`}
           autoPlay
           muted
           loop
           playsInline
-          preload="metadata"
-          poster={media.heroPoster}
-          aria-label="YSDA football and multi-sports training background video"
+          preload="auto"
+          poster={heroPoster}
+          onCanPlay={() => {
+            setVideoReady(true);
+            setVideoFailed(false);
+          }}
+          onError={() => {
+            setVideoReady(false);
+            setVideoFailed(true);
+          }}
+          aria-label="YSDA football training background video"
         >
-          <source src={media.heroVideo} type="video/mp4" />
+          <source src={heroVideo} type="video/mp4" />
+          <source src={media.heroVideoFallback} type="video/mp4" />
         </video>
         <div className="absolute inset-0 bg-[linear-gradient(110deg,rgba(11,92,255,0.92),rgba(32,183,255,0.58)_36%,rgba(255,122,26,0.44)_74%,rgba(255,210,63,0.28))]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(255,255,255,0.35),transparent_28%),linear-gradient(90deg,rgba(3,25,68,0.42),rgba(23,32,51,0.18)_48%,rgba(23,32,51,0.42))]" />
@@ -571,7 +650,7 @@ function Hero() {
             {academyInfo.tagline}
           </h1>
           <p className="mt-6 max-w-3xl text-base font-semibold leading-8 text-white/94 sm:text-xl">
-            Professional football and multi-sports coaching, structured training, fitness development, tournaments,
+            Professional football coaching, structured training, fitness development, tournaments,
             trials, camps, and youth-development pathways from Mhow, Indore.
           </p>
 
@@ -580,7 +659,7 @@ function Hero() {
               Explore Our Academy
             </PrimaryButton>
             <PrimaryButton href="#sports" variant="blue">
-              View Sports Programs
+              View Football Training
             </PrimaryButton>
             <PrimaryButton href="#events" variant="warm" icon={CalendarDays}>
               Upcoming Events
@@ -639,7 +718,7 @@ function FloatingSportElements() {
 
 function AboutSection() {
   const focusAreas = [
-    "Professional sports coaching",
+    "Professional football coaching",
     "Grassroots player development",
     "Talent identification",
     "Competitive exposure",
@@ -663,7 +742,7 @@ function AboutSection() {
         <div>
           <SectionHeader
             kicker="About YSDA"
-            title="A professionally managed sports-development academy in Mhow, Indore."
+            title="A professionally managed football-development academy in Mhow, Indore."
             text={academyInfo.about}
           />
 
@@ -700,7 +779,7 @@ function AboutSection() {
             <SmartImage src={media.footballTeam} alt="YSDA football training" className="object-cover" />
           </div>
           <div className="absolute bottom-8 right-0 h-72 w-[70%] overflow-hidden rounded-[2rem] border-8 border-white shadow-warm">
-            <SmartImage src={media.teamTraining} alt="Multi-sports coaching" className="object-cover" />
+            <SmartImage src={media.teamTraining} alt="Football coaching" className="object-cover" />
           </div>
           <div className="glass absolute left-8 top-[80%] max-w-xs rounded-3xl p-5">
             <p className="text-sm font-black uppercase tracking-[0.16em] text-flame">{academyInfo.location}</p>
@@ -741,7 +820,7 @@ function ValuesObjectivesSection() {
         <SectionHeader
           kicker="Values and Objectives"
           title="Skill development backed by discipline, integrity, and fair opportunity."
-          text="YSDA develops athletes through clear values, structured objectives, safe sporting practices, school-level participation, and pathways toward bigger competitive platforms."
+          text="YSDA develops footballers through clear values, structured objectives, safe training practices, school-level participation, and pathways toward bigger competitive platforms."
           centered
         />
 
@@ -774,11 +853,11 @@ function ValuesObjectivesSection() {
             <div className="relative z-10">
               <p className="text-sm font-black uppercase tracking-[0.16em] text-gold">Our Goal</p>
               <h3 className="mt-3 font-display text-3xl font-black leading-tight">
-                Build a professional and inclusive sports ecosystem.
+                Build a professional and inclusive football ecosystem.
               </h3>
               <p className="mt-4 text-sm font-semibold leading-7 text-white/90">
-                YSDA aims to help young athletes learn, train, compete, grow, and build long-term sporting careers
-                through partnerships with schools, clubs, academies, officials, and sporting bodies.
+                YSDA aims to help young footballers learn, train, compete, grow, and build long-term football careers
+                through partnerships with schools, clubs, academies, officials, and football bodies.
               </p>
             </div>
           </div>
@@ -813,9 +892,9 @@ function SportsSection() {
     <section id="sports" className="bg-field-lines py-20 sm:py-28">
       <div className="section-wrap">
         <SectionHeader
-          kicker="Sports Programs"
-          title="Football gets the spotlight. Every sport gets a real development plan."
-          text="YSDA trains young athletes across football, cricket, basketball, volleyball, badminton, athletics, kabaddi, skating, fitness and more, using age-wise coaching, clean progressions, and match or event exposure."
+          kicker="Football Training"
+          title="Focused football programmes for every stage of player development."
+          text="YSDA now presents a clear football-only academy pathway: grassroots development, beginner coaching, technical skill work, goalkeeping, football fitness, match practice, school football programmes, and personal coaching."
           centered
         />
 
@@ -915,7 +994,7 @@ function SportCard({ sport }: { sport: (typeof sports)[number] }) {
         <h3 className="font-display text-xl font-black">{sport.name}</h3>
         <p className="mt-3 min-h-24 text-sm leading-7 text-slate-600">{sport.description}</p>
         <a
-          href={sport.name === "Football" ? "#football" : "#contact"}
+          href="#football"
           className="mt-5 inline-flex items-center gap-2 text-sm font-black text-ysdaBlue"
         >
           Learn More <ArrowRight className="h-4 w-4" />
@@ -1103,8 +1182,8 @@ function CoachingProgramsSection() {
       <div className="section-wrap grid gap-10 lg:grid-cols-[0.9fr_1.1fr]">
         <SectionHeader
           kicker="Courses and Training Programmes"
-          title="Structured programmes for beginners, schools, teams, coaches, and competitive athletes."
-          text="Each course can display sport, age group, level, duration, schedule, coach, venue, fee, capacity, equipment, certificate availability, registration, and WhatsApp enquiry details after verification."
+          title="Structured football programmes for beginners, schools, teams, coaches, and competitive players."
+          text="Each course can display football focus, age group, level, duration, schedule, coach, venue, fee, capacity, equipment, certificate availability, registration, and WhatsApp enquiry details after verification."
         />
         <div className="space-y-3">
           {coachingPrograms.map((program, index) => (
@@ -1250,13 +1329,13 @@ function LeadershipMessagesSection() {
         <SectionHeader
           kicker="Leadership"
           title="Messages from YSDA leadership."
-          text="YSDA is led with a focus on organised planning, transparent coordination, player welfare, school partnerships, event management, and long-term grassroots sports development."
+          text="YSDA is led with a focus on organised planning, transparent coordination, player welfare, school partnerships, event management, and long-term grassroots football development."
           centered
         />
 
         <div className="mt-12 grid items-stretch gap-6 lg:grid-cols-2">
           {leadershipMessages.map((leader, index) => {
-            const imageFocus = index === 0 ? "object-[center_42%]" : "object-[62%_42%]";
+            const imageFocus = index === 0 ? "object-[center_42%]" : "object-[center_34%]";
 
             return (
               <motion.article
@@ -1265,7 +1344,7 @@ function LeadershipMessagesSection() {
                 className="flex h-full flex-col overflow-hidden rounded-[2rem] border border-blue-100 bg-white shadow-sm shadow-blue-950/5"
               >
                 <div className="relative m-4 mb-0 overflow-hidden rounded-[1.6rem] bg-gradient-to-br from-ysdaBlue via-sky to-flame p-1 shadow-xl shadow-blue-950/15">
-                  <div className="relative aspect-[16/10] overflow-hidden rounded-[1.35rem] bg-slate-100">
+                  <div className="relative aspect-[4/3] overflow-hidden rounded-[1.35rem] bg-slate-100">
                     <SmartImage
                       src={leader.image}
                       alt={leader.name}
@@ -1360,6 +1439,7 @@ function Countdown() {
 
 function EventsSection() {
   const [status, setStatus] = useState("Upcoming");
+  const [registrationEvent, setRegistrationEvent] = useState<EventItem | null>(null);
   const filtered = events.filter((event) => event.status === status);
 
   return (
@@ -1368,8 +1448,8 @@ function EventsSection() {
         <div className="grid gap-8 lg:grid-cols-[1fr_420px]">
           <SectionHeader
             kicker="Events"
-            title="Upcoming, ongoing, and completed tournaments, trials, camps, and workshops."
-            text="Event records include official status, date range, venue, sports category, eligible categories, registration details, required documents, and direct WhatsApp enquiry."
+            title="Upcoming, ongoing, and completed football tournaments, trials, camps, and workshops."
+            text="Event records include official status, date range, venue, football category, eligible categories, registration details, required documents, and direct WhatsApp enquiry."
           />
           <Countdown />
         </div>
@@ -1391,15 +1471,18 @@ function EventsSection() {
 
         <div className="mt-8 grid gap-6 lg:grid-cols-3">
           {filtered.map((event) => (
-            <EventCard key={event.title} event={event} />
+            <EventCard key={event.title} event={event} onRegister={() => setRegistrationEvent(event)} />
           ))}
         </div>
       </div>
+      {registrationEvent && (
+        <RegistrationModal event={registrationEvent} onClose={() => setRegistrationEvent(null)} />
+      )}
     </section>
   );
 }
 
-function EventCard({ event }: { event: EventItem }) {
+function EventCard({ event, onRegister }: { event: EventItem; onRegister: () => void }) {
   const startDate = new Date(event.date).toLocaleDateString("en-IN", { dateStyle: "medium" });
   const endDate = event.endDate
     ? new Date(event.endDate).toLocaleDateString("en-IN", { dateStyle: "medium" })
@@ -1431,7 +1514,7 @@ function EventCard({ event }: { event: EventItem }) {
           <PrimaryButton href="#contact" variant="blue">
             View Details
           </PrimaryButton>
-          <PrimaryButton href={links.whatsapp} variant="white" icon={Send}>
+          <PrimaryButton onClick={onRegister} variant="white" icon={Send}>
             Register Now
           </PrimaryButton>
           <PrimaryButton href={links.whatsapp} variant="warm" icon={MessageCircle}>
@@ -1440,6 +1523,166 @@ function EventCard({ event }: { event: EventItem }) {
         </div>
       </div>
     </motion.article>
+  );
+}
+
+function RegistrationModal({
+  event,
+  onClose
+}: {
+  event: EventItem;
+  onClose: () => void;
+}) {
+  const [form, setForm] = useState({ name: "", address: "", phone: "", dob: "" });
+  const [error, setError] = useState("");
+
+  const submitRegistration = (submitEvent: React.FormEvent<HTMLFormElement>) => {
+    submitEvent.preventDefault();
+
+    const name = form.name.trim();
+    const address = form.address.trim();
+    const phone = form.phone.trim();
+    const dob = form.dob.trim();
+    const phoneDigits = phone.replace(/\D/g, "");
+
+    if (name.length < 2 || name.length > 80) {
+      setError("Please enter a valid name.");
+      return;
+    }
+    if (address.length < 5 || address.length > 240) {
+      setError("Please enter a complete address.");
+      return;
+    }
+    if (phoneDigits.length < 10 || phoneDigits.length > 15) {
+      setError("Please enter a valid contact number.");
+      return;
+    }
+    if (!dob) {
+      setError("Please select the date of birth.");
+      return;
+    }
+
+    const message = [
+      "Hello YSDA, I would like to register.",
+      `Event: ${event.title}`,
+      `Name: ${name}`,
+      `Address: ${address}`,
+      `Contact number: ${phone}`,
+      `Date of birth: ${dob}`
+    ].join("\n");
+
+    const whatsappUrl = `https://wa.me/919009071697?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+    onClose();
+  };
+
+  return (
+    <div
+      className="fixed inset-0 z-[100] grid place-items-center bg-blue-950/70 p-4 backdrop-blur-md"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="registration-title"
+      onClick={(clickEvent) => {
+        if (clickEvent.target === clickEvent.currentTarget) onClose();
+      }}
+    >
+      <motion.div
+        initial={{ opacity: 0, y: 20, scale: 0.96 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        className="max-h-[92svh] w-full max-w-xl overflow-y-auto rounded-[2rem] bg-white p-5 shadow-2xl sm:p-7"
+      >
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <p className="text-xs font-black uppercase tracking-[0.16em] text-flame">Registration</p>
+            <h2 id="registration-title" className="mt-2 font-display text-2xl font-black text-ink">
+              Register for {event.title}
+            </h2>
+            <p className="mt-2 text-sm leading-6 text-slate-600">
+              Enter your basic details. The form will open WhatsApp with your registration enquiry.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Close registration form"
+            className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-blue-50 text-ink transition hover:bg-blue-100"
+          >
+            <X className="h-5 w-5" />
+          </button>
+        </div>
+
+        <form className="mt-6 grid gap-4" onSubmit={submitRegistration}>
+          <label className="grid gap-2 text-sm font-black text-ink">
+            Full name
+            <input
+              required
+              value={form.name}
+              onChange={(inputEvent) => setForm((current) => ({ ...current, name: inputEvent.target.value }))}
+              maxLength={80}
+              autoComplete="name"
+              className="min-h-12 rounded-2xl border border-blue-100 bg-blue-50/40 px-4 outline-none transition focus:border-ysdaBlue focus:ring-2 focus:ring-blue-100"
+            />
+          </label>
+          <label className="grid gap-2 text-sm font-black text-ink">
+            Address
+            <textarea
+              required
+              value={form.address}
+              onChange={(inputEvent) => setForm((current) => ({ ...current, address: inputEvent.target.value }))}
+              maxLength={240}
+              rows={3}
+              autoComplete="street-address"
+              className="rounded-2xl border border-blue-100 bg-blue-50/40 px-4 py-3 outline-none transition focus:border-ysdaBlue focus:ring-2 focus:ring-blue-100"
+            />
+          </label>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <label className="grid gap-2 text-sm font-black text-ink">
+              Contact number
+              <input
+                required
+                type="tel"
+                value={form.phone}
+                onChange={(inputEvent) => setForm((current) => ({ ...current, phone: inputEvent.target.value }))}
+                maxLength={20}
+                inputMode="tel"
+                autoComplete="tel"
+                className="min-h-12 rounded-2xl border border-blue-100 bg-blue-50/40 px-4 outline-none transition focus:border-ysdaBlue focus:ring-2 focus:ring-blue-100"
+              />
+            </label>
+            <label className="grid gap-2 text-sm font-black text-ink">
+              Date of birth
+              <input
+                required
+                type="date"
+                value={form.dob}
+                onChange={(inputEvent) => setForm((current) => ({ ...current, dob: inputEvent.target.value }))}
+                max={new Date().toISOString().split("T")[0]}
+                className="min-h-12 rounded-2xl border border-blue-100 bg-blue-50/40 px-4 outline-none transition focus:border-ysdaBlue focus:ring-2 focus:ring-blue-100"
+              />
+            </label>
+          </div>
+
+          {error && <p className="rounded-2xl bg-red-50 px-4 py-3 text-sm font-bold text-red-700">{error}</p>}
+
+          <div className="mt-2 grid gap-3 sm:grid-cols-2">
+            <button
+              type="button"
+              onClick={onClose}
+              className="min-h-12 rounded-full bg-slate-100 px-5 py-3 text-sm font-black text-slate-700 transition hover:bg-slate-200"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full cta-gradient px-5 py-3 text-sm font-black text-white shadow-glow transition hover:-translate-y-0.5"
+            >
+              Send on WhatsApp
+              <FaWhatsapp className="h-4 w-4" />
+            </button>
+          </div>
+        </form>
+      </motion.div>
+    </div>
   );
 }
 
@@ -1456,6 +1699,8 @@ function GallerySection() {
   const [category, setCategory] = useState("All");
   const [active, setActive] = useState<GalleryItem | null>(null);
   const filtered = category === "All" ? gallery : gallery.filter((item) => item.category === category);
+  const activePoster = usePublicAssetPath(active?.image ?? media.fallback);
+  const activeVideo = usePublicAssetPath(active?.video ?? "");
 
   const moveLightbox = (direction: 1 | -1) => {
     if (!active) return;
@@ -1470,8 +1715,8 @@ function GallerySection() {
       <div className="section-wrap">
         <SectionHeader
           kicker="Gallery"
-          title="Filterable YSDA activities with event context and captions."
-          text="Training sessions, match action, championships, trials, camps, awards, team photographs, school programmes, media coverage, and video highlights stay aligned across mobile and desktop."
+          title="Filterable YSDA football activities with event context and captions."
+          text="Football training sessions, match action, championships, trials, camps, awards, team photographs, school programmes, media coverage, and video highlights stay aligned across mobile and desktop."
           centered
         />
         <div className="mt-10 flex gap-2 overflow-x-auto pb-2 hide-scrollbar">
@@ -1572,7 +1817,7 @@ function GallerySection() {
               </button>
               <div className="relative aspect-video bg-slate-100">
                 {active.video ? (
-                  <video src={active.video} poster={active.image} controls autoPlay muted className="h-full w-full object-cover" />
+                  <video src={activeVideo} poster={activePoster} controls autoPlay muted playsInline className="h-full w-full object-cover" />
                 ) : (
                   <SmartImage src={active.image} alt={active.title} className="object-cover" priority />
                 )}
@@ -1649,6 +1894,8 @@ function CertificatesSection() {
 }
 
 function VideoHighlightsSection() {
+  const [activeVideo, setActiveVideo] = useState<string | null>(null);
+
   return (
     <section id="videos" className="bg-white py-20 sm:py-28">
       <div className="section-wrap">
@@ -1665,28 +1912,97 @@ function VideoHighlightsSection() {
 
         <div className="mt-10 grid gap-6 lg:grid-cols-3">
           {videoHighlights.map((video) => (
-            <motion.article key={video.title} whileHover={{ y: -8 }} className="overflow-hidden rounded-[2rem] bg-slate-50 shadow-sm">
-              <div className="relative aspect-video overflow-hidden">
-                <video src={video.video} poster={video.image} controls muted playsInline className="h-full w-full object-cover" />
-              </div>
-              <div className="p-5">
-                <p className="text-xs font-black uppercase tracking-[0.14em] text-flame">{video.tag}</p>
-                <h3 className="mt-2 font-display text-xl font-black">{video.title}</h3>
-                <a
-                  href={links.youtube}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="mt-4 inline-flex items-center gap-2 rounded-full bg-red-600 px-4 py-2 text-sm font-black text-white"
-                >
-                  <FaYoutube className="text-lg" />
-                  YouTube Channel
-                </a>
-              </div>
-            </motion.article>
+            <VideoHighlightCard
+              key={video.title}
+              video={video}
+              isPlaying={activeVideo === video.title}
+              onPlay={() => setActiveVideo(video.title)}
+            />
           ))}
         </div>
       </div>
     </section>
+  );
+}
+
+function VideoHighlightCard({
+  video,
+  isPlaying,
+  onPlay
+}: {
+  video: VideoHighlightItem;
+  isPlaying: boolean;
+  onPlay: () => void;
+}) {
+  const coverImage = usePublicAssetPath(video.image);
+  const videoSrc = usePublicAssetPath(video.video);
+  const fallbackCover = usePublicAssetPath(media.heroPoster);
+  const [currentCover, setCurrentCover] = useState(coverImage);
+
+  useEffect(() => {
+    setCurrentCover(coverImage);
+  }, [coverImage]);
+
+  return (
+    <motion.article
+      whileHover={{ y: -8 }}
+      className="overflow-hidden rounded-[2rem] bg-slate-50 shadow-sm"
+    >
+      <div className="relative aspect-video overflow-hidden bg-slate-100">
+        {isPlaying ? (
+          <video
+            src={videoSrc}
+            poster={coverImage}
+            controls
+            autoPlay
+            muted
+            playsInline
+            preload="metadata"
+            className="h-full w-full object-cover"
+          />
+        ) : (
+          <button
+            type="button"
+            onClick={onPlay}
+            className="group absolute inset-0 block w-full overflow-hidden text-left"
+            aria-label={`Play ${video.title}`}
+          >
+            <img
+              src={currentCover}
+              alt={`${video.title} cover`}
+              loading="lazy"
+              onError={() => setCurrentCover(fallbackCover)}
+              className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
+            />
+            <span className="absolute inset-0 bg-gradient-to-t from-ink/72 via-ink/10 to-transparent" />
+            <span className="absolute left-5 top-5 rounded-full bg-white/92 px-3 py-1 text-xs font-black uppercase tracking-[0.12em] text-ysdaBlue shadow-sm backdrop-blur">
+              {video.tag}
+            </span>
+            <span className="absolute inset-0 grid place-items-center">
+              <span className="grid h-16 w-16 place-items-center rounded-full bg-white text-red-600 shadow-2xl shadow-blue-950/25 transition group-hover:scale-110">
+                <Play className="ml-1 h-7 w-7 fill-current" />
+              </span>
+            </span>
+            <span className="absolute inset-x-5 bottom-5 font-display text-xl font-black leading-tight text-white drop-shadow">
+              {video.title}
+            </span>
+          </button>
+        )}
+      </div>
+      <div className="p-5">
+        <p className="text-xs font-black uppercase tracking-[0.14em] text-flame">{video.tag}</p>
+        <h3 className="mt-2 font-display text-xl font-black">{video.title}</h3>
+        <a
+          href={links.youtube}
+          target="_blank"
+          rel="noreferrer"
+          className="mt-4 inline-flex items-center gap-2 rounded-full bg-red-600 px-4 py-2 text-sm font-black text-white"
+        >
+          <FaYoutube className="text-lg" />
+          YouTube Channel
+        </a>
+      </div>
+    </motion.article>
   );
 }
 
@@ -1731,8 +2047,8 @@ function NewsSection() {
       <div className="section-wrap">
         <SectionHeader
           kicker="News and Updates"
-          title="Searchable academy announcements, results, trials, and schedules."
-          text="News cards include images, category filters, dates, recent posts, featured updates, pagination, and sharing actions."
+          title="Searchable football academy announcements, results, trials, and schedules."
+          text="Football news cards include images, category filters, dates, recent posts, featured updates, pagination, and sharing actions."
           centered
         />
 
@@ -1862,8 +2178,8 @@ function AchievementsSection() {
       <div className="section-wrap">
         <SectionHeader
           kicker="Achievements"
-          title="Grassroots growth through training, tournaments, partnerships, and player-development activity."
-          text="Since 2021, YSDA has contributed to grassroots sports through academy training, tournament participation, school partnerships, sports-network activity, and opportunities for state, national, and international exposure."
+          title="Grassroots football growth through training, tournaments, partnerships, and player-development activity."
+          text="Since 2021, YSDA has contributed to grassroots football through academy training, tournament participation, school partnerships, football-network activity, and opportunities for state, national, and international exposure."
           centered
         />
         <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
@@ -2133,7 +2449,7 @@ function Footer() {
             </div>
           </div>
           <p className="mt-5 max-w-sm text-sm leading-7 text-slate-600">
-            {academyInfo.name} is a professionally managed sports academy established in {academyInfo.established},
+            {academyInfo.name} is a professionally managed football academy established in {academyInfo.established},
             based in {academyInfo.location}, and associated with {academyInfo.organisation}.
           </p>
           <div className="mt-5 flex gap-2">
@@ -2144,8 +2460,8 @@ function Footer() {
         </div>
         <FooterList title="Quick Links" items={navItems.slice(0, 6).map(([label, href]) => ({ label, href }))} />
         <FooterList
-          title="Sports Programs"
-          items={sports.slice(0, 7).map((sport) => ({ label: sport.name, href: sport.name === "Football" ? "#football" : "#sports" }))}
+          title="Football Training"
+          items={sports.slice(0, 7).map((sport) => ({ label: sport.name, href: "#football" }))}
         />
         <div>
           <h3 className="font-display text-lg font-black">Contact Details</h3>

@@ -2,9 +2,8 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const repositoryName = process.env.GITHUB_REPOSITORY?.split("/")[1] ?? "ysda-website";
-const isGitHubPagesBuild = process.env.GITHUB_ACTIONS === "true";
-const basePath = isGitHubPagesBuild ? `/${repositoryName}` : "";
+const isGithubPagesBuild = process.env.GITHUB_ACTIONS === "true";
+const basePath = isGithubPagesBuild ? "/ysda-website" : "";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -12,11 +11,11 @@ const nextConfig = {
   output: "export",
   trailingSlash: true,
   basePath,
+  assetPrefix: basePath ? `${basePath}/` : undefined,
   outputFileTracingRoot: __dirname,
   allowedDevOrigins: ["127.0.0.1"],
   images: {
-    loader: "custom",
-    loaderFile: "./github-pages-image-loader.mjs",
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: "https",
