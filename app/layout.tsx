@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import VideoPosterPathFix from "../components/VideoPosterPathFix";
 import "./globals.css";
 
-const staticBasePath = process.env.NODE_ENV === "production" ? "/ysda-website" : "";
+const staticBasePath = "";
 
 export const metadata: Metadata = {
   title: "Youth Sports Development Academy | YSDA Mhow Indore",
