@@ -2,8 +2,11 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const isGithubPagesBuild = process.env.GITHUB_ACTIONS === "true";
-const basePath = isGithubPagesBuild ? "/ysda-website" : "";
+const configuredBasePath = String(process.env.GITHUB_PAGES_BASE_PATH ?? "").trim();
+const basePath =
+  !configuredBasePath || configuredBasePath === "/"
+    ? ""
+    : `/${configuredBasePath.replace(/^\/+|\/+$/g, "")}`;
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
