@@ -35,6 +35,45 @@ jobs:
       - name: Build static website
         run: npm run build
 
+      - name: Normalize legacy asset paths for custom domain
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const path = require('path');
+          const outDir = path.resolve('out');
+          const legacyPrefix = '/ysda-website';
+          const textExtensions = new Set(['.html', '.js', '.css', '.json', '.txt', '.map', '.xml', '.webmanifest']);
+
+          function walk(dir) {
+            return fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
+              const fullPath = path.join(dir, entry.name);
+              return entry.isDirectory() ? walk(fullPath) : [fullPath];
+            });
+          }
+
+          let changed = 0;
+          for (const file of walk(outDir)) {
+            if (!textExtensions.has(path.extname(file).toLowerCase())) continue;
+            const original = fs.readFileSync(file, 'utf8');
+            const updated = original.split(legacyPrefix).join('');
+            if (updated !== original) {
+              fs.writeFileSync(file, updated, 'utf8');
+              changed += 1;
+            }
+          }
+
+          const remaining = walk(outDir).filter((file) => {
+            if (!textExtensions.has(path.extname(file).toLowerCase())) return false;
+            return fs.readFileSync(file, 'utf8').includes(legacyPrefix);
+          });
+
+          if (remaining.length) {
+            throw new Error(`Legacy ${legacyPrefix} references remain in: ${remaining.join(', ')}`);
+          }
+
+          console.log(`Normalized legacy asset paths in ${changed} generated file(s).`);
+          NODE
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
