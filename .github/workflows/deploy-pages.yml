@@ -74,6 +74,27 @@ jobs:
           console.log(`Normalized legacy asset paths in ${changed} generated file(s).`);
           NODE
 
+      - name: Ensure hero stats render correctly on mobile
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const path = require('path');
+          const indexPath = path.resolve('out/index.html');
+          let html = fs.readFileSync(indexPath, 'utf8');
+
+          const script = `<script id="ysda-hero-stats-mobile-fix">(function(){var expected={"Players Connected":"5000+","Championships and Events":"50+","Clubs, Units and Academies":"70+","Coaches and Officials":"150+"};function fix(){var hero=document.getElementById("home");if(!hero)return;hero.querySelectorAll(".glass").forEach(function(card){var p=card.querySelector("p");var span=card.querySelector("span");if(!p||!span)return;var value=expected[p.textContent.trim()];if(value)span.textContent=value;});}[0,250,750,1500,3000].forEach(function(ms){setTimeout(fix,ms)});document.addEventListener("visibilitychange",function(){if(!document.hidden)fix()});})();</script>`;
+
+          if (!html.includes('ysda-hero-stats-mobile-fix')) {
+            html = html.replace('</body>', `${script}</body>`);
+            fs.writeFileSync(indexPath, html, 'utf8');
+          }
+
+          if (!fs.readFileSync(indexPath, 'utf8').includes('ysda-hero-stats-mobile-fix')) {
+            throw new Error('Hero stats mobile fix was not injected into out/index.html');
+          }
+          console.log('Hero stats mobile fallback injected successfully.');
+          NODE
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
