@@ -94,6 +94,10 @@ jobs:
           ].join('\n');
           if (!/export const media = \{[\s\S]*?\n\};/.test(content)) throw new Error('Media block not found');
           content = content.replace(/export const media = \{[\s\S]*?\n\};/, mediaBlock);
+          const galleryNeedle = 'title, category, image, eventName, date: "2026", location: index % 2 === 0 ? "Mhow, Indore" : "YSDA Football Academy", caption\n}));';
+          const galleryFixed = 'title, category, image, eventName, date: "2026", location: index % 2 === 0 ? "Mhow, Indore" : "YSDA Football Academy", caption, video: undefined as string | undefined\n}));';
+          if (content.includes(galleryNeedle)) content = content.replace(galleryNeedle, galleryFixed);
+          if (!content.includes('video: undefined as string | undefined')) throw new Error('Gallery video type fix missing');
           if (!content.includes('heroVideo: "/ysda-hero-football.mp4"')) throw new Error('Hero video not restored');
           if (!content.includes('heroPoster: "/ysda-football-team-award.png"')) throw new Error('Hero poster not restored');
           if (!content.includes('leadership: "/ysda-president-rafik-raja.jpg"')) throw new Error('President photo not restored');
