@@ -25,36 +25,33 @@ export const academyInfo = {
     "YSDA believes that every talented footballer deserves professional guidance, the right platform, fair opportunities, and recognition."
 };
 
-const footballPhoto = (number: 1 | 2) =>
-  `/ysda-football/football-${String(number).padStart(2, "0")}.jpg`;
-
 export const media = {
   heroVideo: "/ysda-hero-football.mp4",
   heroVideoFallback: "https://videos.pexels.com/video-files/31370183/13386254_3840_2160_24fps.mp4",
-  heroPoster: footballPhoto(1),
+  heroPoster: "/ysda-football-team-award.png",
   fallback: "/brand/ysda-logo-white.png",
-  heroAction: footballPhoto(1),
-  heroTeam: footballPhoto(2),
-  heroDevelopment: footballPhoto(1),
-  heroSquad: footballPhoto(2),
-  heroMatch: footballPhoto(1),
-  heroTraining: footballPhoto(2),
-  footballWarmup: footballPhoto(1),
-  footballTeam: footballPhoto(2),
-  footballCoach: footballPhoto(1),
-  fitness: footballPhoto(2),
-  teamTraining: footballPhoto(1),
-  trophy: footballPhoto(2),
+  heroAction: "/ysda-gallery/team-training.jpg",
+  heroTeam: "/ysda-gallery/football-team.jpg",
+  heroDevelopment: "/ysda-gallery/hero-development.jpg",
+  heroSquad: "/ysda-gallery/hero-squad.jpg",
+  heroMatch: "/ysda-gallery/hero-match.jpg",
+  heroTraining: "/ysda-gallery/hero-training.jpg",
+  footballWarmup: "/ysda-football/replacements/pdf-football-01.jpg",
+  footballTeam: "/ysda-gallery/football-team.jpg",
+  footballCoach: "/ysda-gallery/football-coach.jpg",
+  fitness: "/ysda-gallery/fitness.jpg",
+  teamTraining: "/ysda-gallery/team-training.jpg",
+  trophy: "/ysda-football-team-award.png",
   leadership: "/ysda-president-rafik-raja.jpg",
   secretaryPortrait: "/ysda-secretary-ramiz-raja.png",
-  officials: footballPhoto(1),
-  certificates: footballPhoto(2),
-  awards: footballPhoto(1),
-  girlsTeam: footballPhoto(2),
-  referee: footballPhoto(1),
-  schoolProgram: footballPhoto(2),
-  trials: footballPhoto(1),
-  community: footballPhoto(2)
+  officials: "/ysda-football/replacements/pdf-football-02.jpg",
+  certificates: "/ysda-gallery/hero-squad.jpg",
+  awards: "/ysda-football-team-award.png",
+  girlsTeam: "/ysda-football/replacements/pdf-football-02.jpg",
+  referee: "/ysda-football/replacements/pdf-football-06.jpg",
+  schoolProgram: "/ysda-football/replacements/pdf-football-07.jpg",
+  trials: "/ysda-gallery/hero-development.jpg",
+  community: "/ysda-gallery/team-training.jpg"
 };
 
 export const heroImages = [
@@ -192,7 +189,7 @@ const galleryBase = [
 ] as const;
 
 export const gallery = galleryBase.map(([title, category, image, eventName, caption], index) => ({
-  title, category, image, eventName, date: "2026", location: index % 2 === 0 ? "Mhow, Indore" : "YSDA Football Academy", caption
+  title, category, image, eventName, date: "2026", location: index % 2 === 0 ? "Mhow, Indore" : "YSDA Football Academy", caption, video: undefined as string | undefined
 }));
 
 export const videoHighlights = [
