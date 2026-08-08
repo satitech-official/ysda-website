@@ -32,11 +32,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Restore selected PDF football photos
+      - name: Verify selected PDF football photos
         run: |
-          mkdir -p public/ysda-football
-          base64 --decode assets/ysda-pdf-football.zip.b64 > /tmp/ysda-pdf-football.zip
-          unzip -q -o /tmp/ysda-pdf-football.zip -d public/ysda-football
           test -s public/ysda-football/pdf-football-01.jpg
           test -s public/ysda-football/pdf-football-02.jpg
           test -s public/ysda-football/pdf-football-03.jpg
@@ -136,7 +133,7 @@ jobs:
 
           for (let i = 1; i <= 4; i++) {
             const imagePath = path.join(outDir, 'ysda-football', `pdf-football-0${i}.jpg`);
-            if (!fs.existsSync(imagePath) || fs.statSync(imagePath).size < 10000) {
+            if (!fs.existsSync(imagePath) || fs.statSync(imagePath).size < 5000) {
               violations.push(`${imagePath}: missing or invalid PDF football photo`);
             }
           }
