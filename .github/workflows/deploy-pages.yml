@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
   pages: write
   id-token: write
 
@@ -22,8 +22,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -38,16 +36,8 @@ jobs:
         run: |
           node <<'NODE'
           const fs = require('fs');
-
           const pagePath = 'app/page.tsx';
           let page = fs.readFileSync(pagePath, 'utf8');
-          const pageReplacements = [
-            ['Established {academyInfo.established} - Associated with YSDFI', 'Established {academyInfo.established} - Football Development Academy'],
-            ['and associated with the Youth\n            Sports Development Federation of India - YSDFI.', 'and fully focused on professional football development.'],
-            ['Associated Organisation', 'Academy'],
-            ['associated with {academyInfo.organisation}', 'focused on professional football development']
-          ];
-          for (const [from, to] of pageReplacements) page = page.split(from).join(to);
           page = page.replace(/YSDFI/gi, 'YSDA');
           fs.writeFileSync(pagePath, page, 'utf8');
 
@@ -57,21 +47,9 @@ jobs:
             'title, category, image, eventName, date: "2026", location: index % 2 === 0 ? "Mhow, Indore" : "YSDA Football Academy", caption\n}));',
             'title, category, image, eventName, date: "2026", location: index % 2 === 0 ? "Mhow, Indore" : "YSDA Football Academy", caption, video: undefined as string | undefined\n}));'
           );
-          if (/YSDFI/i.test(content)) throw new Error('Legacy federation branding remains in lib/content.ts');
+          if (/YSDFI/i.test(content) || /YSDFI/i.test(page)) throw new Error('Legacy federation branding remains in source');
           fs.writeFileSync(contentPath, content, 'utf8');
           NODE
-
-      - name: Persist cleaned page source
-        run: |
-          if ! git diff --quiet -- app/page.tsx; then
-            git config user.name "SatiTech"
-            git config user.email "www.satitechinfo@gmail.com"
-            git add app/page.tsx
-            git commit -m "Remove final legacy federation references from page source [skip ci]"
-            git push origin HEAD:main
-          else
-            echo "Page source already clean."
-          fi
 
       - name: Build static website
         run: npm run build
@@ -92,21 +70,11 @@ jobs:
             });
           }
 
-          const replacements = [
-            ['Established 2021 - Associated with YSDFI', 'Established 2021 - Football Development Academy'],
-            ['associated with the Youth Sports Development Federation of India - YSDFI', 'focused exclusively on football development'],
-            ['Associated with YSDFI', 'YSDA Football Academy'],
-            ['Youth Sports Development Federation of India - YSDFI', 'YSDA Football Academy'],
-            ['Youth Sports Development Federation of India', 'Youth Sports Development Academy'],
-            ['YSDFI', 'YSDA']
-          ];
-
           let changed = 0;
           for (const file of walk(outDir)) {
             if (!textExtensions.has(path.extname(file).toLowerCase())) continue;
             const original = fs.readFileSync(file, 'utf8');
-            let updated = original.split(legacyPrefix).join('');
-            for (const [from, to] of replacements) updated = updated.split(from).join(to);
+            const updated = original.split(legacyPrefix).join('').replace(/YSDFI/gi, 'YSDA');
             if (updated !== original) {
               fs.writeFileSync(file, updated, 'utf8');
               changed += 1;
@@ -121,7 +89,6 @@ jobs:
             if (/YSDFI/i.test(text)) violations.push(`${file}: legacy federation branding`);
             if (/\b(basketball|volleyball|cricket|skating|karate|kho-kho)\b/i.test(text)) violations.push(`${file}: non-football sport content`);
           }
-
           if (violations.length) throw new Error(`YSDA-only validation failed:\n${violations.join('\n')}`);
           console.log(`Normalized and validated ${changed} generated file(s).`);
           NODE
