@@ -35,7 +35,7 @@ jobs:
       - name: Build static website
         run: npm run build
 
-      - name: Normalize legacy asset paths for custom domain
+      - name: Normalize custom-domain paths and remove legacy branding
         run: |
           node <<'NODE'
           const fs = require('fs');
@@ -51,27 +51,45 @@ jobs:
             });
           }
 
+          const replacements = [
+            ['Established 2021 - Associated with YSDFI', 'Established 2021 - Football Development Academy'],
+            ['associated with the Youth Sports Development Federation of India - YSDFI', 'focused exclusively on football development'],
+            ['Associated with YSDFI', 'YSDA Football Academy'],
+            ['Youth Sports Development Federation of India - YSDFI', 'YSDA Football Academy'],
+            ['Youth Sports Development Federation of India', 'Youth Sports Development Academy'],
+            ['YSDFI', 'YSDA']
+          ];
+
           let changed = 0;
           for (const file of walk(outDir)) {
             if (!textExtensions.has(path.extname(file).toLowerCase())) continue;
             const original = fs.readFileSync(file, 'utf8');
-            const updated = original.split(legacyPrefix).join('');
+            let updated = original.split(legacyPrefix).join('');
+            for (const [from, to] of replacements) {
+              updated = updated.split(from).join(to);
+            }
             if (updated !== original) {
               fs.writeFileSync(file, updated, 'utf8');
               changed += 1;
             }
           }
 
-          const remaining = walk(outDir).filter((file) => {
-            if (!textExtensions.has(path.extname(file).toLowerCase())) return false;
-            return fs.readFileSync(file, 'utf8').includes(legacyPrefix);
-          });
-
-          if (remaining.length) {
-            throw new Error(`Legacy ${legacyPrefix} references remain in: ${remaining.join(', ')}`);
+          const violations = [];
+          for (const file of walk(outDir)) {
+            if (!textExtensions.has(path.extname(file).toLowerCase())) continue;
+            const text = fs.readFileSync(file, 'utf8');
+            if (text.includes(legacyPrefix)) violations.push(`${file}: legacy base path`);
+            if (/YSDFI/i.test(text)) violations.push(`${file}: legacy federation branding`);
+            if (/\b(basketball|volleyball|cricket|skating|karate|kho-kho)\b/i.test(text)) {
+              violations.push(`${file}: non-football sport content`);
+            }
           }
 
-          console.log(`Normalized legacy asset paths in ${changed} generated file(s).`);
+          if (violations.length) {
+            throw new Error(`YSDA-only validation failed:\n${violations.join('\n')}`);
+          }
+
+          console.log(`Normalized and validated ${changed} generated file(s).`);
           NODE
 
       - name: Ensure hero stats render correctly on mobile
@@ -82,7 +100,7 @@ jobs:
           const indexPath = path.resolve('out/index.html');
           let html = fs.readFileSync(indexPath, 'utf8');
 
-          const script = `<script id="ysda-hero-stats-mobile-fix">(function(){var expected={"Players Connected":"5000+","Championships and Events":"50+","Clubs, Units and Academies":"70+","Coaches and Officials":"150+"};function fix(){var hero=document.getElementById("home");if(!hero)return;hero.querySelectorAll(".glass").forEach(function(card){var p=card.querySelector("p");var span=card.querySelector("span");if(!p||!span)return;var value=expected[p.textContent.trim()];if(value)span.textContent=value;});}[0,250,750,1500,3000].forEach(function(ms){setTimeout(fix,ms)});document.addEventListener("visibilitychange",function(){if(!document.hidden)fix()});})();</script>`;
+          const script = `<script id="ysda-hero-stats-mobile-fix">(function(){var expected={"Players Connected":"5000+","Football Events":"50+","Clubs and Academies":"70+","Coaches and Officials":"150+"};function fix(){var hero=document.getElementById("home");if(!hero)return;hero.querySelectorAll(".glass").forEach(function(card){var p=card.querySelector("p");var span=card.querySelector("span");if(!p||!span)return;var value=expected[p.textContent.trim()];if(value)span.textContent=value;});}[0,250,750,1500,3000].forEach(function(ms){setTimeout(fix,ms)});document.addEventListener("visibilitychange",function(){if(!document.hidden)fix()});})();</script>`;
 
           if (!html.includes('ysda-hero-stats-mobile-fix')) {
             html = html.replace('</body>', `${script}</body>`);
