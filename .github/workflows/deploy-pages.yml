@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -22,6 +22,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -58,6 +60,18 @@ jobs:
           if (/YSDFI/i.test(content)) throw new Error('Legacy federation branding remains in lib/content.ts');
           fs.writeFileSync(contentPath, content, 'utf8');
           NODE
+
+      - name: Persist cleaned page source
+        run: |
+          if ! git diff --quiet -- app/page.tsx; then
+            git config user.name "SatiTech"
+            git config user.email "www.satitechinfo@gmail.com"
+            git add app/page.tsx
+            git commit -m "Remove final legacy federation references from page source [skip ci]"
+            git push origin HEAD:main
+          else
+            echo "Page source already clean."
+          fi
 
       - name: Build static website
         run: npm run build
@@ -116,8 +130,7 @@ jobs:
         run: |
           node <<'NODE'
           const fs = require('fs');
-          const path = require('path');
-          const indexPath = path.resolve('out/index.html');
+          const indexPath = require('path').resolve('out/index.html');
           let html = fs.readFileSync(indexPath, 'utf8');
           const script = `<script id="ysda-hero-stats-mobile-fix">(function(){var expected={"Players Connected":"5000+","Football Events":"50+","Clubs and Academies":"70+","Coaches and Officials":"150+"};function fix(){var hero=document.getElementById("home");if(!hero)return;hero.querySelectorAll(".glass").forEach(function(card){var p=card.querySelector("p");var span=card.querySelector("span");if(!p||!span)return;var value=expected[p.textContent.trim()];if(value)span.textContent=value;});}[0,250,750,1500,3000].forEach(function(ms){setTimeout(fix,ms)});document.addEventListener("visibilitychange",function(){if(!document.hidden)fix()});})();</script>`;
           if (!html.includes('ysda-hero-stats-mobile-fix')) {
