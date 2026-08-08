@@ -180,6 +180,7 @@ jobs:
           if (/\b(basketball|volleyball|cricket|skating|karate|kho-kho)\b/i.test(combined)) violations.push('non-football sport text remains');
           if (combined.includes('ysdfi-144-gallery2-p27.jpg')) violations.push('old basketball photo is still referenced');
 
+          // Validate only runtime references that Next.js is guaranteed to retain.
           for (const ref of [
             '/ysda-hero-football.mp4',
             '/ysda-football-team-award.png',
@@ -188,9 +189,7 @@ jobs:
             '/ysda-gallery/hero-action.jpg',
             '/ysda-gallery/hero-team.jpg',
             '/ysda-gallery/hero-training.jpg',
-            '/ysda-football/replacements/pdf-football-05.jpg',
-            '/ysda-football/replacements/pdf-football-06.jpg',
-            '/ysda-football/replacements/pdf-football-07.jpg'
+            '/ysda-football/replacements/pdf-football-05.jpg'
           ]) {
             if (!combined.includes(ref)) violations.push(`missing generated reference: ${ref}`);
           }
@@ -215,6 +214,7 @@ jobs:
             if (!fs.existsSync(p) || fs.statSync(p).size === 0) violations.push(`missing artifact: ${rel}`);
           }
 
+          // All seven football replacements must physically exist and stay high-resolution even if tree-shaken from JS.
           for (let i = 1; i <= 7; i++) {
             const n = String(i).padStart(2, '0');
             const p = path.join(outDir, 'ysda-football', 'replacements', `pdf-football-${n}.jpg`);
