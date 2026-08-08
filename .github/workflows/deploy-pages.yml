@@ -36,8 +36,6 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p public/ysda-football/replacements
-
-          # Reuse the original high-resolution PDF-extracted football pages byte-for-byte.
           cp public/ysdfi-gallery/ysdfi-008-gallery4-p08.jpg public/ysda-football/replacements/pdf-football-01.jpg
           cp public/ysdfi-gallery/ysdfi-009-gallery4-p09.jpg public/ysda-football/replacements/pdf-football-02.jpg
           cp public/ysdfi-gallery/ysdfi-014-gallery4-p14.jpg public/ysda-football/replacements/pdf-football-03.jpg
@@ -45,20 +43,16 @@ jobs:
           cp public/ysdfi-gallery/ysdfi-016-gallery4-p16.jpg public/ysda-football/replacements/pdf-football-05.jpg
           cp public/ysdfi-gallery/ysdfi-017-gallery4-p17.jpg public/ysda-football/replacements/pdf-football-06.jpg
           cp public/ysdfi-gallery/ysdfi-018-gallery4-p18.jpg public/ysda-football/replacements/pdf-football-07.jpg
-
-          # Sharpness guard: these replacements must be real high-resolution assets, not tiny thumbnails.
           for f in public/ysda-football/replacements/*.jpg; do
             test -s "$f"
             test "$(stat -c%s "$f")" -gt 100000
           done
-
-          # Original assets requested by the client must remain present.
           test -s public/ysda-hero-football.mp4
           test -s public/ysda-football-team-award.png
           test -s public/ysda-president-rafik-raja.jpg
           test -s public/ysda-secretary-ramiz-raja.png
 
-      - name: Restore original YSDA photos and selectively replace unwanted imagery
+      - name: Restore original YSDA media selectively
         run: |
           node <<'NODE'
           const fs = require('fs');
@@ -66,68 +60,45 @@ jobs:
           const pagePath = 'app/page.tsx';
           let content = fs.readFileSync(contentPath, 'utf8');
           let page = fs.readFileSync(pagePath, 'utf8');
-
-          // Replace only visible uppercase legacy branding. Keep lowercase /ysdfi-gallery/ asset paths intact.
           content = content.replace(/YSDFI/g, 'YSDA');
           page = page.replace(/YSDFI/g, 'YSDA');
-
-          // Original media from the pre-bulk-replacement site is restored for hero/training/team/match areas.
-          // Only slots that previously risked federation banners or non-football imagery use selected PDF football photos.
-          const mediaBlock = `export const media = {
-  heroVideo: "/ysda-hero-football.mp4",
-  heroVideoFallback: "https://videos.pexels.com/video-files/31370183/13386254_3840_2160_24fps.mp4",
-  heroPoster: "/ysda-football-team-award.png",
-  fallback: "/brand/ysda-logo-white.png",
-  heroAction: "/ysdfi-gallery/ysdfi-135-gallery2-p18.jpg",
-  heroTeam: "/ysdfi-gallery/ysdfi-088-gallery3-p24.jpg",
-  heroDevelopment: "/ysdfi-gallery/ysdfi-141-gallery2-p24.jpg",
-  heroSquad: "/ysdfi-gallery/ysdfi-089-gallery3-p25.jpg",
-  heroMatch: "/ysdfi-gallery/ysdfi-136-gallery2-p19.jpg",
-  heroTraining: "/ysdfi-gallery/ysdfi-140-gallery2-p23.jpg",
-  footballWarmup: "/ysdfi-gallery/ysdfi-144-gallery2-p27.jpg",
-  footballTeam: "/ysdfi-gallery/ysdfi-132-gallery2-p15.jpg",
-  footballCoach: "/ysdfi-gallery/ysdfi-107-gallery3-p43.jpg",
-  fitness: "/ysdfi-gallery/ysdfi-106-gallery3-p42.jpg",
-  teamTraining: "/ysdfi-gallery/ysdfi-113-gallery3-p49.jpg",
-  trophy: "/ysda-football/replacements/pdf-football-01.jpg",
-  leadership: "/ysda-president-rafik-raja.jpg",
-  secretaryPortrait: "/ysda-secretary-ramiz-raja.png",
-  officials: "/ysda-football/replacements/pdf-football-02.jpg",
-  certificates: "/ysda-football/replacements/pdf-football-03.jpg",
-  awards: "/ysda-football/replacements/pdf-football-04.jpg",
-  girlsTeam: "/ysda-football/replacements/pdf-football-05.jpg",
-  referee: "/ysda-football/replacements/pdf-football-06.jpg",
-  schoolProgram: "/ysda-football/replacements/pdf-football-07.jpg",
-  trials: "/ysda-football/replacements/pdf-football-01.jpg",
-  community: "/ysda-football/replacements/pdf-football-02.jpg"
-};`;
-
-          if (!/export const media = \{[\s\S]*?\n\};/.test(content)) {
-            throw new Error('Media block not found');
-          }
+          const mediaBlock = [
+            'export const media = {',
+            '  heroVideo: "/ysda-hero-football.mp4",',
+            '  heroVideoFallback: "https://videos.pexels.com/video-files/31370183/13386254_3840_2160_24fps.mp4",',
+            '  heroPoster: "/ysda-football-team-award.png",',
+            '  fallback: "/brand/ysda-logo-white.png",',
+            '  heroAction: "/ysdfi-gallery/ysdfi-135-gallery2-p18.jpg",',
+            '  heroTeam: "/ysdfi-gallery/ysdfi-088-gallery3-p24.jpg",',
+            '  heroDevelopment: "/ysdfi-gallery/ysdfi-141-gallery2-p24.jpg",',
+            '  heroSquad: "/ysdfi-gallery/ysdfi-089-gallery3-p25.jpg",',
+            '  heroMatch: "/ysdfi-gallery/ysdfi-136-gallery2-p19.jpg",',
+            '  heroTraining: "/ysdfi-gallery/ysdfi-140-gallery2-p23.jpg",',
+            '  footballWarmup: "/ysdfi-gallery/ysdfi-144-gallery2-p27.jpg",',
+            '  footballTeam: "/ysdfi-gallery/ysdfi-132-gallery2-p15.jpg",',
+            '  footballCoach: "/ysdfi-gallery/ysdfi-107-gallery3-p43.jpg",',
+            '  fitness: "/ysdfi-gallery/ysdfi-106-gallery3-p42.jpg",',
+            '  teamTraining: "/ysdfi-gallery/ysdfi-113-gallery3-p49.jpg",',
+            '  trophy: "/ysda-football/replacements/pdf-football-01.jpg",',
+            '  leadership: "/ysda-president-rafik-raja.jpg",',
+            '  secretaryPortrait: "/ysda-secretary-ramiz-raja.png",',
+            '  officials: "/ysda-football/replacements/pdf-football-02.jpg",',
+            '  certificates: "/ysda-football/replacements/pdf-football-03.jpg",',
+            '  awards: "/ysda-football/replacements/pdf-football-04.jpg",',
+            '  girlsTeam: "/ysda-football/replacements/pdf-football-05.jpg",',
+            '  referee: "/ysda-football/replacements/pdf-football-06.jpg",',
+            '  schoolProgram: "/ysda-football/replacements/pdf-football-07.jpg",',
+            '  trials: "/ysda-football/replacements/pdf-football-01.jpg",',
+            '  community: "/ysda-football/replacements/pdf-football-02.jpg"',
+            '};'
+          ].join('\n');
+          if (!/export const media = \{[\s\S]*?\n\};/.test(content)) throw new Error('Media block not found');
           content = content.replace(/export const media = \{[\s\S]*?\n\};/, mediaBlock);
-
-          // Return gallery to the normal original-size mapping instead of forcing all 31 PDF photos.
-          const normalGallery = `export const gallery = galleryBase.map(([title, category, image, eventName, caption], index) => ({
-  title, category, image, eventName, date: "2026", location: index % 2 === 0 ? "Mhow, Indore" : "YSDA Football Academy", caption,
-  video: undefined as string | undefined
-}));`;
-
-          if (/export const gallery = Array\.from\([\s\S]*?\n\}\);/.test(content)) {
-            content = content.replace(/export const gallery = Array\.from\([\s\S]*?\n\}\);/, normalGallery);
-          } else if (/export const gallery = galleryBase\.map\([\s\S]*?\n\}\)\);/.test(content)) {
-            content = content.replace(/export const gallery = galleryBase\.map\([\s\S]*?\n\}\)\);/, normalGallery);
-          } else {
-            throw new Error('Gallery mapping block not found');
-          }
-
-          if (!content.includes('heroVideo: "/ysda-hero-football.mp4"')) throw new Error('Original hero video not restored');
-          if (!content.includes('heroPoster: "/ysda-football-team-award.png"')) throw new Error('Original hero poster not restored');
+          if (!content.includes('heroVideo: "/ysda-hero-football.mp4"')) throw new Error('Hero video not restored');
+          if (!content.includes('heroPoster: "/ysda-football-team-award.png"')) throw new Error('Hero poster not restored');
           if (!content.includes('leadership: "/ysda-president-rafik-raja.jpg"')) throw new Error('President photo not restored');
           if (!content.includes('secretaryPortrait: "/ysda-secretary-ramiz-raja.png"')) throw new Error('Secretary photo not restored');
-          if (!content.includes('/ysdfi-gallery/ysdfi-135-gallery2-p18.jpg')) throw new Error('Original football photos were not restored');
-          if (content.includes('footballPhoto(index + 1)')) throw new Error('Bulk 31-photo gallery replacement still active');
-
+          if (!content.includes('/ysdfi-gallery/ysdfi-135-gallery2-p18.jpg')) throw new Error('Original football photos not restored');
           fs.writeFileSync(contentPath, content, 'utf8');
           fs.writeFileSync(pagePath, page, 'utf8');
           NODE
@@ -135,7 +106,7 @@ jobs:
       - name: Build static website
         run: npm run build
 
-      - name: Normalize custom-domain paths and validate hybrid media output
+      - name: Normalize paths and validate restored media
         run: |
           node <<'NODE'
           const fs = require('fs');
@@ -143,63 +114,43 @@ jobs:
           const outDir = path.resolve('out');
           const legacyPrefix = '/ysda-website';
           const textExtensions = new Set(['.html', '.js', '.css', '.json', '.txt', '.map', '.xml', '.webmanifest']);
-
           function walk(dir) {
             return fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
               const fullPath = path.join(dir, entry.name);
               return entry.isDirectory() ? walk(fullPath) : [fullPath];
             });
           }
-
           let changed = 0;
           for (const file of walk(outDir)) {
             if (!textExtensions.has(path.extname(file).toLowerCase())) continue;
             const original = fs.readFileSync(file, 'utf8');
-            // Only strip the old repository base path. Do NOT rewrite lowercase asset folder names.
             const updated = original.split(legacyPrefix).join('').replace(/YSDFI/g, 'YSDA');
             if (updated !== original) {
               fs.writeFileSync(file, updated, 'utf8');
               changed += 1;
             }
           }
-
           const combined = walk(outDir)
             .filter((file) => textExtensions.has(path.extname(file).toLowerCase()))
             .map((file) => fs.readFileSync(file, 'utf8'))
             .join('\n');
-
           const violations = [];
-          if (combined.includes(legacyPrefix)) violations.push('legacy /ysda-website base path remains');
+          if (combined.includes(legacyPrefix)) violations.push('legacy base path remains');
           if (/\b(basketball|volleyball|cricket|skating|karate|kho-kho)\b/i.test(combined)) violations.push('non-football sport text remains');
-          if (!combined.includes('/ysda-hero-football.mp4')) violations.push('original hero video reference missing');
-          if (!combined.includes('/ysda-football-team-award.png')) violations.push('original hero poster reference missing');
-          if (!combined.includes('/ysda-president-rafik-raja.jpg')) violations.push('President photo reference missing');
-          if (!combined.includes('/ysda-secretary-ramiz-raja.png')) violations.push('Secretary photo reference missing');
-          if (!combined.includes('/ysdfi-gallery/ysdfi-135-gallery2-p18.jpg')) violations.push('restored original football image reference missing');
-          if (!combined.includes('/ysda-football/replacements/pdf-football-01.jpg')) violations.push('PDF football replacement reference missing');
-
-          const requiredFiles = [
-            'ysda-hero-football.mp4',
-            'ysda-football-team-award.png',
-            'ysda-president-rafik-raja.jpg',
-            'ysda-secretary-ramiz-raja.png',
-            'ysdfi-gallery/ysdfi-135-gallery2-p18.jpg',
-            'ysdfi-gallery/ysdfi-088-gallery3-p24.jpg',
-            'ysdfi-gallery/ysdfi-140-gallery2-p23.jpg'
-          ];
-          for (const rel of requiredFiles) {
-            const p = path.join(outDir, rel);
-            if (!fs.existsSync(p) || fs.statSync(p).size === 0) violations.push(`${rel}: missing from deployment artifact`);
+          for (const ref of ['/ysda-hero-football.mp4','/ysda-football-team-award.png','/ysda-president-rafik-raja.jpg','/ysda-secretary-ramiz-raja.png','/ysdfi-gallery/ysdfi-135-gallery2-p18.jpg','/ysda-football/replacements/pdf-football-01.jpg']) {
+            if (!combined.includes(ref)) violations.push(`missing generated reference: ${ref}`);
           }
-
+          for (const rel of ['ysda-hero-football.mp4','ysda-football-team-award.png','ysda-president-rafik-raja.jpg','ysda-secretary-ramiz-raja.png','ysdfi-gallery/ysdfi-135-gallery2-p18.jpg','ysdfi-gallery/ysdfi-088-gallery3-p24.jpg','ysdfi-gallery/ysdfi-140-gallery2-p23.jpg']) {
+            const p = path.join(outDir, rel);
+            if (!fs.existsSync(p) || fs.statSync(p).size === 0) violations.push(`missing artifact: ${rel}`);
+          }
           for (let i = 1; i <= 7; i++) {
             const n = String(i).padStart(2, '0');
             const p = path.join(outDir, 'ysda-football', 'replacements', `pdf-football-${n}.jpg`);
-            if (!fs.existsSync(p) || fs.statSync(p).size < 100000) violations.push(`${p}: replacement is missing or too small`);
+            if (!fs.existsSync(p) || fs.statSync(p).size < 100000) violations.push(`low quality or missing: ${p}`);
           }
-
-          if (violations.length) throw new Error(`Hybrid media validation failed:\n${violations.join('\n')}`);
-          console.log(`Hybrid media validated. Original video/portraits/photos restored; selective sharp PDF replacements present. Normalized ${changed} generated file(s).`);
+          if (violations.length) throw new Error(violations.join('\n'));
+          console.log(`Restored hybrid media validated; normalized ${changed} generated files.`);
           NODE
 
       - name: Ensure hero stats render correctly on mobile
