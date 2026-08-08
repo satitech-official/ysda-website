@@ -32,69 +32,101 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Restore all 31 selected PDF football photos
+      - name: Prepare sharp PDF football replacements
         run: |
           set -euo pipefail
-          mkdir -p public/ysda-football
+          mkdir -p public/ysda-football/replacements
 
-          # 01-04 are already clean PDF football assets in the repository.
-          test -s public/ysda-football/pdf-football-01.jpg
-          test -s public/ysda-football/pdf-football-02.jpg
-          test -s public/ysda-football/pdf-football-03.jpg
-          test -s public/ysda-football/pdf-football-04.jpg
+          # Reuse the original high-resolution PDF-extracted football pages byte-for-byte.
+          cp public/ysdfi-gallery/ysdfi-008-gallery4-p08.jpg public/ysda-football/replacements/pdf-football-01.jpg
+          cp public/ysdfi-gallery/ysdfi-009-gallery4-p09.jpg public/ysda-football/replacements/pdf-football-02.jpg
+          cp public/ysdfi-gallery/ysdfi-014-gallery4-p14.jpg public/ysda-football/replacements/pdf-football-03.jpg
+          cp public/ysdfi-gallery/ysdfi-015-gallery4-p15.jpg public/ysda-football/replacements/pdf-football-04.jpg
+          cp public/ysdfi-gallery/ysdfi-016-gallery4-p16.jpg public/ysda-football/replacements/pdf-football-05.jpg
+          cp public/ysdfi-gallery/ysdfi-017-gallery4-p17.jpg public/ysda-football/replacements/pdf-football-06.jpg
+          cp public/ysdfi-gallery/ysdfi-018-gallery4-p18.jpg public/ysda-football/replacements/pdf-football-07.jpg
 
-          # Selected football-only pages from PDF A, reused from the original PDF extraction.
-          cp public/ysdfi-gallery/ysdfi-005-gallery4-p05.jpg public/ysda-football/pdf-football-05.jpg
-          cp public/ysdfi-gallery/ysdfi-006-gallery4-p06.jpg public/ysda-football/pdf-football-06.jpg
-          cp public/ysdfi-gallery/ysdfi-008-gallery4-p08.jpg public/ysda-football/pdf-football-07.jpg
-          cp public/ysdfi-gallery/ysdfi-009-gallery4-p09.jpg public/ysda-football/pdf-football-08.jpg
-          cp public/ysdfi-gallery/ysdfi-014-gallery4-p14.jpg public/ysda-football/pdf-football-09.jpg
-          cp public/ysdfi-gallery/ysdfi-015-gallery4-p15.jpg public/ysda-football/pdf-football-10.jpg
-          cp public/ysdfi-gallery/ysdfi-016-gallery4-p16.jpg public/ysda-football/pdf-football-11.jpg
-          cp public/ysdfi-gallery/ysdfi-017-gallery4-p17.jpg public/ysda-football/pdf-football-12.jpg
-          cp public/ysdfi-gallery/ysdfi-018-gallery4-p18.jpg public/ysda-football/pdf-football-13.jpg
-
-          # Selected football-only pages from PDFs B and C.
-          unzip -q -o assets/pdf31-bc.zip -d public/ysda-football
-
-          for i in $(seq -w 1 31); do
-            test -s "public/ysda-football/pdf-football-${i}.jpg"
+          # Sharpness guard: these replacements must be real high-resolution assets, not tiny thumbnails.
+          for f in public/ysda-football/replacements/*.jpg; do
+            test -s "$f"
+            test "$(stat -c%s "$f")" -gt 100000
           done
-          echo "All 31 selected PDF football photos restored successfully."
 
-      - name: Prepare YSDA source for all 31 PDF football photos
+          # Original assets requested by the client must remain present.
+          test -s public/ysda-hero-football.mp4
+          test -s public/ysda-football-team-award.png
+          test -s public/ysda-president-rafik-raja.jpg
+          test -s public/ysda-secretary-ramiz-raja.png
+
+      - name: Restore original YSDA photos and selectively replace unwanted imagery
         run: |
           node <<'NODE'
           const fs = require('fs');
-          const pagePath = 'app/page.tsx';
           const contentPath = 'lib/content.ts';
+          const pagePath = 'app/page.tsx';
+          let content = fs.readFileSync(contentPath, 'utf8');
+          let page = fs.readFileSync(pagePath, 'utf8');
 
-          let page = fs.readFileSync(pagePath, 'utf8').replace(/YSDFI/gi, 'YSDA');
-          let content = fs.readFileSync(contentPath, 'utf8').replace(/YSDFI/gi, 'YSDA');
+          // Replace only visible uppercase legacy branding. Keep lowercase /ysdfi-gallery/ asset paths intact.
+          content = content.replace(/YSDFI/g, 'YSDA');
+          page = page.replace(/YSDFI/g, 'YSDA');
 
-          const photoHelper = `const footballPhoto = (number: number) =>\n  \`/ysda-football/pdf-football-\${String(number).padStart(2, "0")}.jpg\`;`;
+          // Original media from the pre-bulk-replacement site is restored for hero/training/team/match areas.
+          // Only slots that previously risked federation banners or non-football imagery use selected PDF football photos.
+          const mediaBlock = `export const media = {
+  heroVideo: "/ysda-hero-football.mp4",
+  heroVideoFallback: "https://videos.pexels.com/video-files/31370183/13386254_3840_2160_24fps.mp4",
+  heroPoster: "/ysda-football-team-award.png",
+  fallback: "/brand/ysda-logo-white.png",
+  heroAction: "/ysdfi-gallery/ysdfi-135-gallery2-p18.jpg",
+  heroTeam: "/ysdfi-gallery/ysdfi-088-gallery3-p24.jpg",
+  heroDevelopment: "/ysdfi-gallery/ysdfi-141-gallery2-p24.jpg",
+  heroSquad: "/ysdfi-gallery/ysdfi-089-gallery3-p25.jpg",
+  heroMatch: "/ysdfi-gallery/ysdfi-136-gallery2-p19.jpg",
+  heroTraining: "/ysdfi-gallery/ysdfi-140-gallery2-p23.jpg",
+  footballWarmup: "/ysdfi-gallery/ysdfi-144-gallery2-p27.jpg",
+  footballTeam: "/ysdfi-gallery/ysdfi-132-gallery2-p15.jpg",
+  footballCoach: "/ysdfi-gallery/ysdfi-107-gallery3-p43.jpg",
+  fitness: "/ysdfi-gallery/ysdfi-106-gallery3-p42.jpg",
+  teamTraining: "/ysdfi-gallery/ysdfi-113-gallery3-p49.jpg",
+  trophy: "/ysda-football/replacements/pdf-football-01.jpg",
+  leadership: "/ysda-president-rafik-raja.jpg",
+  secretaryPortrait: "/ysda-secretary-ramiz-raja.png",
+  officials: "/ysda-football/replacements/pdf-football-02.jpg",
+  certificates: "/ysda-football/replacements/pdf-football-03.jpg",
+  awards: "/ysda-football/replacements/pdf-football-04.jpg",
+  girlsTeam: "/ysda-football/replacements/pdf-football-05.jpg",
+  referee: "/ysda-football/replacements/pdf-football-06.jpg",
+  schoolProgram: "/ysda-football/replacements/pdf-football-07.jpg",
+  trials: "/ysda-football/replacements/pdf-football-01.jpg",
+  community: "/ysda-football/replacements/pdf-football-02.jpg"
+};`;
 
-          content = content.replace(
-            /const footballPhoto = \(number:[\s\S]*?;\n\nexport const media =/,
-            `${photoHelper}\n\nexport const media =`
-          );
-
-          const mediaBlock = `export const media = {\n  heroVideo: "/ysda-hero-football.mp4",\n  heroVideoFallback: "https://videos.pexels.com/video-files/31370183/13386254_3840_2160_24fps.mp4",\n  heroPoster: footballPhoto(1),\n  fallback: "/brand/ysda-logo-white.png",\n  heroAction: footballPhoto(2),\n  heroTeam: footballPhoto(3),\n  heroDevelopment: footballPhoto(4),\n  heroSquad: footballPhoto(5),\n  heroMatch: footballPhoto(6),\n  heroTraining: footballPhoto(7),\n  footballWarmup: footballPhoto(8),\n  footballTeam: footballPhoto(9),\n  footballCoach: footballPhoto(10),\n  fitness: footballPhoto(11),\n  teamTraining: footballPhoto(12),\n  trophy: footballPhoto(13),\n  leadership: footballPhoto(14),\n  secretaryPortrait: footballPhoto(15),\n  officials: footballPhoto(16),\n  certificates: footballPhoto(17),\n  awards: footballPhoto(18),\n  girlsTeam: footballPhoto(19),\n  referee: footballPhoto(20),\n  schoolProgram: footballPhoto(21),\n  trials: footballPhoto(22),\n  community: footballPhoto(23)\n};`;
-
-          if (!/export const media = \{[\s\S]*?\n\};/.test(content)) throw new Error('Media block not found');
+          if (!/export const media = \{[\s\S]*?\n\};/.test(content)) {
+            throw new Error('Media block not found');
+          }
           content = content.replace(/export const media = \{[\s\S]*?\n\};/, mediaBlock);
 
-          const galleryBlock = `export const gallery = Array.from({ length: 31 }, (_, index) => {\n  const [title, category, _originalImage, eventName, caption] = galleryBase[index % galleryBase.length];\n  return {\n    title,\n    category,\n    image: footballPhoto(index + 1),\n    eventName,\n    date: "2026",\n    location: index % 2 === 0 ? "Mhow, Indore" : "YSDA Football Academy",\n    caption,\n    video: undefined as string | undefined\n  };\n});`;
+          // Return gallery to the normal original-size mapping instead of forcing all 31 PDF photos.
+          const normalGallery = `export const gallery = galleryBase.map(([title, category, image, eventName, caption], index) => ({
+  title, category, image, eventName, date: "2026", location: index % 2 === 0 ? "Mhow, Indore" : "YSDA Football Academy", caption,
+  video: undefined as string | undefined
+}));`;
 
-          if (!/export const gallery = galleryBase\.map\([\s\S]*?\n\}\)\);/.test(content)) {
+          if (/export const gallery = Array\.from\([\s\S]*?\n\}\);/.test(content)) {
+            content = content.replace(/export const gallery = Array\.from\([\s\S]*?\n\}\);/, normalGallery);
+          } else if (/export const gallery = galleryBase\.map\([\s\S]*?\n\}\)\);/.test(content)) {
+            content = content.replace(/export const gallery = galleryBase\.map\([\s\S]*?\n\}\)\);/, normalGallery);
+          } else {
             throw new Error('Gallery mapping block not found');
           }
-          content = content.replace(/export const gallery = galleryBase\.map\([\s\S]*?\n\}\)\);/, galleryBlock);
 
-          if (!content.includes('footballPhoto(index + 1)')) throw new Error('31-photo gallery mapping was not applied');
-          if (/images\.pexels\.com/i.test(content)) throw new Error('External Pexels still photo remains');
-          if (/\/ysda-football\/football-0[12]\.jpg/.test(content)) throw new Error('Old broken football photo reference remains');
-          if (/YSDFI/i.test(content) || /YSDFI/i.test(page)) throw new Error('Legacy federation branding remains');
+          if (!content.includes('heroVideo: "/ysda-hero-football.mp4"')) throw new Error('Original hero video not restored');
+          if (!content.includes('heroPoster: "/ysda-football-team-award.png"')) throw new Error('Original hero poster not restored');
+          if (!content.includes('leadership: "/ysda-president-rafik-raja.jpg"')) throw new Error('President photo not restored');
+          if (!content.includes('secretaryPortrait: "/ysda-secretary-ramiz-raja.png"')) throw new Error('Secretary photo not restored');
+          if (!content.includes('/ysdfi-gallery/ysdfi-135-gallery2-p18.jpg')) throw new Error('Original football photos were not restored');
+          if (content.includes('footballPhoto(index + 1)')) throw new Error('Bulk 31-photo gallery replacement still active');
 
           fs.writeFileSync(contentPath, content, 'utf8');
           fs.writeFileSync(pagePath, page, 'utf8');
@@ -103,7 +135,7 @@ jobs:
       - name: Build static website
         run: npm run build
 
-      - name: Normalize paths and validate 31-photo football-only output
+      - name: Normalize custom-domain paths and validate hybrid media output
         run: |
           node <<'NODE'
           const fs = require('fs');
@@ -123,38 +155,51 @@ jobs:
           for (const file of walk(outDir)) {
             if (!textExtensions.has(path.extname(file).toLowerCase())) continue;
             const original = fs.readFileSync(file, 'utf8');
-            const updated = original.split(legacyPrefix).join('').replace(/YSDFI/gi, 'YSDA');
+            // Only strip the old repository base path. Do NOT rewrite lowercase asset folder names.
+            const updated = original.split(legacyPrefix).join('').replace(/YSDFI/g, 'YSDA');
             if (updated !== original) {
               fs.writeFileSync(file, updated, 'utf8');
               changed += 1;
             }
           }
 
+          const combined = walk(outDir)
+            .filter((file) => textExtensions.has(path.extname(file).toLowerCase()))
+            .map((file) => fs.readFileSync(file, 'utf8'))
+            .join('\n');
+
           const violations = [];
-          const refs = new Set();
-          for (const file of walk(outDir)) {
-            if (!textExtensions.has(path.extname(file).toLowerCase())) continue;
-            const text = fs.readFileSync(file, 'utf8');
-            if (text.includes(legacyPrefix)) violations.push(`${file}: legacy base path`);
-            if (/YSDFI/i.test(text)) violations.push(`${file}: legacy federation branding`);
-            if (/\b(basketball|volleyball|cricket|skating|karate|kho-kho)\b/i.test(text)) violations.push(`${file}: non-football sport content`);
-            if (/images\.pexels\.com/i.test(text)) violations.push(`${file}: external Pexels still photo reference`);
-            if (/\/ysda-football\/football-0[12]\.jpg/.test(text)) violations.push(`${file}: old broken football photo reference`);
-            for (const match of text.matchAll(/\/ysda-football\/pdf-football-(\d{2})\.jpg/g)) refs.add(match[1]);
+          if (combined.includes(legacyPrefix)) violations.push('legacy /ysda-website base path remains');
+          if (/\b(basketball|volleyball|cricket|skating|karate|kho-kho)\b/i.test(combined)) violations.push('non-football sport text remains');
+          if (!combined.includes('/ysda-hero-football.mp4')) violations.push('original hero video reference missing');
+          if (!combined.includes('/ysda-football-team-award.png')) violations.push('original hero poster reference missing');
+          if (!combined.includes('/ysda-president-rafik-raja.jpg')) violations.push('President photo reference missing');
+          if (!combined.includes('/ysda-secretary-ramiz-raja.png')) violations.push('Secretary photo reference missing');
+          if (!combined.includes('/ysdfi-gallery/ysdfi-135-gallery2-p18.jpg')) violations.push('restored original football image reference missing');
+          if (!combined.includes('/ysda-football/replacements/pdf-football-01.jpg')) violations.push('PDF football replacement reference missing');
+
+          const requiredFiles = [
+            'ysda-hero-football.mp4',
+            'ysda-football-team-award.png',
+            'ysda-president-rafik-raja.jpg',
+            'ysda-secretary-ramiz-raja.png',
+            'ysdfi-gallery/ysdfi-135-gallery2-p18.jpg',
+            'ysdfi-gallery/ysdfi-088-gallery3-p24.jpg',
+            'ysdfi-gallery/ysdfi-140-gallery2-p23.jpg'
+          ];
+          for (const rel of requiredFiles) {
+            const p = path.join(outDir, rel);
+            if (!fs.existsSync(p) || fs.statSync(p).size === 0) violations.push(`${rel}: missing from deployment artifact`);
           }
 
-          for (let i = 1; i <= 31; i++) {
+          for (let i = 1; i <= 7; i++) {
             const n = String(i).padStart(2, '0');
-            const imagePath = path.join(outDir, 'ysda-football', `pdf-football-${n}.jpg`);
-            if (!fs.existsSync(imagePath) || fs.statSync(imagePath).size < 2000) {
-              violations.push(`${imagePath}: missing or invalid PDF football photo`);
-            }
-            if (!refs.has(n)) violations.push(`PDF football photo ${n} is not referenced in generated site output`);
+            const p = path.join(outDir, 'ysda-football', 'replacements', `pdf-football-${n}.jpg`);
+            if (!fs.existsSync(p) || fs.statSync(p).size < 100000) violations.push(`${p}: replacement is missing or too small`);
           }
 
-          if (refs.size < 31) violations.push(`Only ${refs.size}/31 PDF football photo references found`);
-          if (violations.length) throw new Error(`31-photo validation failed:\n${violations.join('\n')}`);
-          console.log(`31/31 PDF football photos validated; normalized ${changed} generated file(s).`);
+          if (violations.length) throw new Error(`Hybrid media validation failed:\n${violations.join('\n')}`);
+          console.log(`Hybrid media validated. Original video/portraits/photos restored; selective sharp PDF replacements present. Normalized ${changed} generated file(s).`);
           NODE
 
       - name: Ensure hero stats render correctly on mobile
