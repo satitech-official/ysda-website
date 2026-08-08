@@ -644,7 +644,7 @@ function Hero() {
         >
           <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/60 bg-white/20 px-4 py-2 text-sm font-black uppercase tracking-[0.18em] text-white backdrop-blur-md">
             <Flame className="h-4 w-4 text-gold" />
-            Established {academyInfo.established} - Associated with YSDFI
+            Established {academyInfo.established} - Football Development Academy
           </div>
           <h1 className="font-display text-4xl font-black leading-[1.05] text-white drop-shadow-lg sm:text-6xl lg:text-7xl">
             {academyInfo.tagline}
@@ -2358,14 +2358,13 @@ function ContactSection() {
           </div>
           <h2 className="mt-5 font-display text-4xl font-black leading-tight sm:text-5xl">Start training with YSDA.</h2>
           <p className="mt-5 text-base font-semibold leading-8 text-white/90">
-            Youth Sports Development Academy is based in Mhow, Indore, Madhya Pradesh and associated with the Youth
-            Sports Development Federation of India - YSDFI. WhatsApp, call, email, or view location directly from here.
+            Youth Sports Development Academy is based in Mhow, Indore, Madhya Pradesh and fully focused on professional football development. WhatsApp, call, email, or view location directly from here.
           </p>
 
           <div className="mt-8 grid gap-4">
             <ContactInfo icon={MapPinned} title="Academy Name" text={academyInfo.name} />
             <ContactInfo icon={MapPin} title="Location" text={`${academyInfo.location}, India`} />
-            <ContactInfo icon={UsersRound} title="Associated Organisation" text={academyInfo.organisation} />
+            <ContactInfo icon={UsersRound} title="Academy" text={academyInfo.organisation} />
             <ContactInfo icon={Phone} title="WhatsApp Number" text="+91 9009071697" />
             <ContactInfo icon={Mail} title="Email" text="Info@ysdasports.com" />
             <ContactInfo icon={Clock} title="Timings" text="Morning and evening batches. Contact for current schedule." />
@@ -2450,7 +2449,7 @@ function Footer() {
           </div>
           <p className="mt-5 max-w-sm text-sm leading-7 text-slate-600">
             {academyInfo.name} is a professionally managed football academy established in {academyInfo.established},
-            based in {academyInfo.location}, and associated with {academyInfo.organisation}.
+            based in {academyInfo.location}, and focused on professional football development.
           </p>
           <div className="mt-5 flex gap-2">
             <SocialIcon href={links.instagram} label="Instagram" icon={<FaInstagram />} />
