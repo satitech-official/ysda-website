@@ -32,10 +32,21 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Prepare YSDA-only football source and verified images
+      - name: Restore selected PDF football photos
+        run: |
+          mkdir -p public/ysda-football
+          base64 --decode assets/ysda-pdf-football.zip.b64 > /tmp/ysda-pdf-football.zip
+          unzip -q -o /tmp/ysda-pdf-football.zip -d public/ysda-football
+          test -s public/ysda-football/pdf-football-01.jpg
+          test -s public/ysda-football/pdf-football-02.jpg
+          test -s public/ysda-football/pdf-football-03.jpg
+          test -s public/ysda-football/pdf-football-04.jpg
+
+      - name: Prepare YSDA football-only source with PDF photos
         run: |
           node <<'NODE'
           const fs = require('fs');
+
           const pagePath = 'app/page.tsx';
           let page = fs.readFileSync(pagePath, 'utf8');
           page = page.replace(/YSDFI/gi, 'YSDA');
@@ -45,35 +56,25 @@ jobs:
           let content = fs.readFileSync(contentPath, 'utf8');
 
           const oldPhotoHelper = `const footballPhoto = (number: 1 | 2) =>\n  \`/ysda-football/football-\${String(number).padStart(2, "0")}.jpg\`;`;
-          const newPhotoHelper = `const footballPhotos = {\n  1: "https://images.pexels.com/photos/30585018/pexels-photo-30585018.jpeg?cs=srgb&dl=pexels-franco-monsalvo-252430633-30585018.jpg&fm=jpg",\n  2: "https://images.pexels.com/photos/30585023/pexels-photo-30585023.jpeg?cs=srgb&dl=pexels-franco-monsalvo-252430633-30585023.jpg&fm=jpg",\n  3: "https://images.pexels.com/photos/30612718/pexels-photo-30612718.jpeg?cs=srgb&dl=pexels-franco-monsalvo-252430633-30612718.jpg&fm=jpg",\n  4: "https://images.pexels.com/photos/15153169/pexels-photo-15153169.jpeg?cs=srgb&dl=pexels-hardy-pictures-423932717-15153169.jpg&fm=jpg",\n  5: "https://images.pexels.com/photos/15789902/pexels-photo-15789902.jpeg?cs=srgb&dl=pexels-laura-rincon-318039951-15789902.jpg&fm=jpg",\n  6: "https://images.pexels.com/photos/9501976/pexels-photo-9501976.jpeg?cs=srgb&dl=pexels-anastasia-shuraeva-9501976.jpg&fm=jpg"\n} as const;\n\nconst footballPhoto = (number: keyof typeof footballPhotos) => footballPhotos[number];`;
+          const pdfPhotoHelper = `const footballPhotos = {\n  1: "/ysda-football/pdf-football-01.jpg",\n  2: "/ysda-football/pdf-football-02.jpg",\n  3: "/ysda-football/pdf-football-03.jpg",\n  4: "/ysda-football/pdf-football-04.jpg"\n} as const;\n\nconst footballPhoto = (number: keyof typeof footballPhotos) => footballPhotos[number];`;
 
           if (content.includes(oldPhotoHelper)) {
-            content = content.replace(oldPhotoHelper, newPhotoHelper);
-          } else if (!content.includes('const footballPhotos = {')) {
-            throw new Error('Could not replace football photo helper');
+            content = content.replace(oldPhotoHelper, pdfPhotoHelper);
+          } else if (/const footballPhotos = \{[\s\S]*?const footballPhoto =/.test(content)) {
+            content = content.replace(/const footballPhotos = \{[\s\S]*?const footballPhoto = \(number:[\s\S]*?;\n/, `${pdfPhotoHelper}\n`);
+          } else {
+            throw new Error('Could not locate football photo helper');
           }
 
-          const mediaReplacements = [
-            ['heroDevelopment: footballPhoto(1)', 'heroDevelopment: footballPhoto(3)'],
-            ['heroSquad: footballPhoto(2)', 'heroSquad: footballPhoto(4)'],
-            ['heroMatch: footballPhoto(1)', 'heroMatch: footballPhoto(4)'],
-            ['heroTraining: footballPhoto(2)', 'heroTraining: footballPhoto(3)'],
-            ['footballWarmup: footballPhoto(1)', 'footballWarmup: footballPhoto(6)'],
-            ['footballTeam: footballPhoto(2)', 'footballTeam: footballPhoto(1)'],
-            ['footballCoach: footballPhoto(1)', 'footballCoach: footballPhoto(2)'],
-            ['fitness: footballPhoto(2)', 'fitness: footballPhoto(3)'],
-            ['teamTraining: footballPhoto(1)', 'teamTraining: footballPhoto(6)'],
-            ['trophy: footballPhoto(2)', 'trophy: footballPhoto(4)'],
-            ['officials: footballPhoto(1)', 'officials: footballPhoto(2)'],
-            ['certificates: footballPhoto(2)', 'certificates: footballPhoto(5)'],
-            ['awards: footballPhoto(1)', 'awards: footballPhoto(4)'],
-            ['girlsTeam: footballPhoto(2)', 'girlsTeam: footballPhoto(6)'],
-            ['referee: footballPhoto(1)', 'referee: footballPhoto(5)'],
-            ['schoolProgram: footballPhoto(2)', 'schoolProgram: footballPhoto(6)'],
-            ['trials: footballPhoto(1)', 'trials: footballPhoto(3)'],
-            ['community: footballPhoto(2)', 'community: footballPhoto(1)']
-          ];
-          for (const [from, to] of mediaReplacements) content = content.replace(from, to);
+          const mediaBlock = `export const media = {\n  heroVideo: "/ysda-hero-football.mp4",\n  heroVideoFallback: "https://videos.pexels.com/video-files/31370183/13386254_3840_2160_24fps.mp4",\n  heroPoster: footballPhoto(1),\n  fallback: "/brand/ysda-logo-white.png",\n  heroAction: footballPhoto(2),\n  heroTeam: footballPhoto(1),\n  heroDevelopment: footballPhoto(4),\n  heroSquad: footballPhoto(1),\n  heroMatch: footballPhoto(3),\n  heroTraining: footballPhoto(4),\n  footballWarmup: footballPhoto(4),\n  footballTeam: footballPhoto(1),\n  footballCoach: footballPhoto(4),\n  fitness: footballPhoto(2),\n  teamTraining: footballPhoto(4),\n  trophy: footballPhoto(1),\n  leadership: footballPhoto(4),\n  secretaryPortrait: footballPhoto(1),\n  officials: footballPhoto(4),\n  certificates: footballPhoto(1),\n  awards: footballPhoto(1),\n  girlsTeam: footballPhoto(3),\n  referee: footballPhoto(4),\n  schoolProgram: footballPhoto(2),\n  trials: footballPhoto(2),\n  community: footballPhoto(3)\n};`;
+
+          if (!/export const media = \{[\s\S]*?\n\};/.test(content)) throw new Error('Media block not found');
+          content = content.replace(/export const media = \{[\s\S]*?\n\};/, mediaBlock);
+
+          content = content.replace(
+            /image: footballPhoto\(\(\(index % 2\) \+ 1\) as 1 \| 2\)/g,
+            'image: footballPhoto(((index % 4) + 1) as 1 | 2 | 3 | 4)'
+          );
 
           content = content.replace(
             'title, category, image, eventName, date: "2026", location: index % 2 === 0 ? "Mhow, Indore" : "YSDA Football Academy", caption\n}));',
@@ -81,15 +82,19 @@ jobs:
           );
 
           if (/YSDFI/i.test(content) || /YSDFI/i.test(page)) throw new Error('Legacy federation branding remains in source');
-          if (/\/ysda-football\/football-0[12]\.jpg/.test(content)) throw new Error('Broken local football assets still referenced in source');
-          if (!content.includes('images.pexels.com/photos/30585018')) throw new Error('Verified football images were not injected');
+          if (/images\.pexels\.com/i.test(content)) throw new Error('External Pexels photo remains in content');
+          if (/\/ysda-football\/football-0[12]\.jpg/.test(content)) throw new Error('Old local football photos still referenced');
+          for (let i = 1; i <= 4; i++) {
+            const ref = `/ysda-football/pdf-football-0${i}.jpg`;
+            if (!content.includes(ref)) throw new Error(`Missing PDF football photo reference: ${ref}`);
+          }
           fs.writeFileSync(contentPath, content, 'utf8');
           NODE
 
       - name: Build static website
         run: npm run build
 
-      - name: Normalize custom-domain paths and validate YSDA-only output
+      - name: Normalize custom-domain paths and validate PDF-football-only output
         run: |
           node <<'NODE'
           const fs = require('fs');
@@ -117,19 +122,27 @@ jobs:
           }
 
           const violations = [];
-          let verifiedImageRefs = 0;
+          let pdfPhotoRefs = 0;
           for (const file of walk(outDir)) {
             if (!textExtensions.has(path.extname(file).toLowerCase())) continue;
             const text = fs.readFileSync(file, 'utf8');
             if (text.includes(legacyPrefix)) violations.push(`${file}: legacy base path`);
             if (/YSDFI/i.test(text)) violations.push(`${file}: legacy federation branding`);
             if (/\b(basketball|volleyball|cricket|skating|karate|kho-kho)\b/i.test(text)) violations.push(`${file}: non-football sport content`);
-            if (/\/ysda-football\/football-0[12]\.jpg/.test(text)) violations.push(`${file}: broken local football image reference`);
-            if (text.includes('images.pexels.com/photos/30585018') || text.includes('images.pexels.com/photos/30585023')) verifiedImageRefs += 1;
+            if (/images\.pexels\.com/i.test(text)) violations.push(`${file}: external Pexels photo reference`);
+            if (/\/ysda-football\/football-0[12]\.jpg/.test(text)) violations.push(`${file}: old football photo reference`);
+            if (/\/ysda-football\/pdf-football-0[1-4]\.jpg/.test(text)) pdfPhotoRefs += 1;
           }
-          if (!verifiedImageRefs) violations.push('No verified football image references found in generated output');
-          if (violations.length) throw new Error(`YSDA-only/image validation failed:\n${violations.join('\n')}`);
-          console.log(`Normalized and validated ${changed} generated file(s); working football photos detected.`);
+
+          for (let i = 1; i <= 4; i++) {
+            const imagePath = path.join(outDir, 'ysda-football', `pdf-football-0${i}.jpg`);
+            if (!fs.existsSync(imagePath) || fs.statSync(imagePath).size < 10000) {
+              violations.push(`${imagePath}: missing or invalid PDF football photo`);
+            }
+          }
+          if (!pdfPhotoRefs) violations.push('No PDF football photo references found in generated output');
+          if (violations.length) throw new Error(`PDF-football-only validation failed:\n${violations.join('\n')}`);
+          console.log(`Validated PDF football photos successfully; normalized ${changed} generated file(s).`);
           NODE
 
       - name: Ensure hero stats render correctly on mobile
