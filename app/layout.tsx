@@ -9,24 +9,24 @@ const staticBasePath =
     : `/${configuredBasePath.replace(/^\/+|\/+$/g, "")}`;
 
 export const metadata: Metadata = {
-  title: "Youth Sports Development Academy | YSDA Mhow Indore",
+  title: "Youth Sports Development Academy | YSDA Football Academy Mhow Indore",
   description:
-    "YSDA is a professionally managed football academy established in 2021 in Mhow, Indore, associated with YSDFI for football coaching, camps, trials, tournaments and youth development.",
+    "Youth Sports Development Academy (YSDA) is a football-focused academy in Mhow, Indore offering structured football coaching, grassroots development, technical training, goalkeeping, fitness, trials, camps and competitive exposure.",
   keywords: [
     "YSDA",
     "Youth Sports Development Academy",
+    "YSDA Football Academy",
     "YSDA Mhow",
-    "Youth Sports Development Federation of India",
-    "YSDFI",
     "football academy Indore",
     "football academy Mhow",
     "football coaching Indore",
     "football coaching Mhow",
     "youth football coaching",
-    "football academy India"
+    "grassroots football India",
+    "football training academy"
   ],
   openGraph: {
-    title: "Youth Sports Development Academy | YSDA Mhow Indore",
+    title: "Youth Sports Development Academy | YSDA Football Academy",
     description:
       "Developing Talent. Building Character. Creating Champions. Professional football development in Mhow, Indore.",
     type: "website",
