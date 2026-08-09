@@ -30,13 +30,13 @@ const footballPhoto = (name: string) => `/ysda-football/photos/${name}.jpg`;
 export const media = {
   heroVideo: "/ysda-hero-football.mp4",
   heroVideoFallback: "https://videos.pexels.com/video-files/31370183/13386254_3840_2160_24fps.mp4",
-  heroPoster: footballPhoto("team-blue-white"),
+  heroPoster: footballPhoto("small-sided-match"),
   fallback: "/brand/ysda-logo-white.png",
-  aboutPrimary: footballPhoto("small-sided-match"),
-  aboutSecondary: footballPhoto("girls-match-duel"),
-  footballFeature: footballPhoto("ball-control-drill"),
+  aboutPrimary: footballPhoto("girls-match-duel"),
+  aboutSecondary: footballPhoto("girls-training"),
+  footballFeature: footballPhoto("passing-drill"),
   certificatePhoto: footballPhoto("coach-course-group"),
-  achievementHero: footballPhoto("academy-team-group"),
+  achievementHero: footballPhoto("training-observation"),
   leadership: "/ysda-president-rafik-raja.jpg",
   secretaryPortrait: "/ysda-secretary-ramiz-raja.png"
 };
@@ -86,15 +86,15 @@ export const objectives = [
 ];
 
 export const sports = [
-  { name: "Football Academy", icon: "football", image: footballPhoto("team-blue-white"), description: "Professional football coaching with technical training, tactical awareness, match preparation, fitness, goalkeeper development, and competition exposure.", level: "Foundation to Elite", featured: true, color: "from-blue-600 via-sky-500 to-orange-400" },
-  { name: "Grassroots Football", icon: "football", image: footballPhoto("yellow-team-lineup"), description: "Age-wise foundation training covering movement, ball familiarity, discipline, teamwork, and confidence.", level: "Foundation", color: "from-green-500 via-sky-500 to-blue-600" },
-  { name: "Beginner Football Coaching", icon: "target", image: footballPhoto("youth-player"), description: "Beginner sessions for passing, receiving, dribbling, first touch, body shape, simple decisions, and regular practice habits.", level: "Beginner", color: "from-orange-500 via-red-500 to-blue-600" },
-  { name: "Technical Skills Training", icon: "activity", image: footballPhoto("ball-control-drill"), description: "Focused football skill work for ball control, scanning, turning, shooting, finishing, defending, and decision-making under pressure.", level: "Skill Development", color: "from-sky-500 via-blue-600 to-green-500" },
-  { name: "Goalkeeper Training", icon: "goalkeeper", image: footballPhoto("goalkeeping-practice"), description: "Position-specific football coaching for handling, catching, positioning, footwork, diving, one-on-one situations, distribution, and communication.", level: "Specialised", color: "from-red-500 via-pink-500 to-orange-400" },
-  { name: "Football Fitness and Conditioning", icon: "fitness", image: footballPhoto("agility-training"), description: "Football-specific strength, speed, agility, balance, mobility, injury-prevention awareness, and match-readiness conditioning.", level: "All Players", color: "from-yellow-400 via-orange-500 to-red-500" },
-  { name: "Match Practice and Tournaments", icon: "tournament", image: footballPhoto("small-sided-match"), description: "Small-sided football games, friendly matches, tournament preparation, match temperament, team shape, and competitive exposure.", level: "Competitive", color: "from-orange-500 via-green-500 to-blue-600" },
-  { name: "School Football Programme", icon: "school", image: footballPhoto("academy-team-group"), description: "Football coaching for schools, including trials, fitness assessments, inter-house matches, and championship preparation.", level: "School Level", color: "from-sky-400 via-purple-500 to-orange-400" },
-  { name: "Personal Football Coaching", icon: "coaching", image: footballPhoto("football-coaches-field"), description: "Individual or small-group football training designed around a player's position, ability, weaknesses, and development goals.", level: "Custom Plan", color: "from-green-500 via-yellow-400 to-orange-500" }
+  { name: "Football Academy", icon: "football", image: footballPhoto("youth-player"), description: "Professional football coaching with technical training, tactical awareness, match preparation, fitness, goalkeeper development, and competition exposure.", level: "Foundation to Elite", featured: true, color: "from-blue-600 via-sky-500 to-orange-400" },
+  { name: "Grassroots Football", icon: "football", image: footballPhoto("movement-drill"), description: "Age-wise foundation training covering movement, ball familiarity, discipline, teamwork, and confidence.", level: "Foundation", color: "from-green-500 via-sky-500 to-blue-600" },
+  { name: "Beginner Football Coaching", icon: "target", image: footballPhoto("warmup-team-wide"), description: "Beginner sessions for passing, receiving, dribbling, first touch, body shape, simple decisions, and regular practice habits.", level: "Beginner", color: "from-orange-500 via-red-500 to-blue-600" },
+  { name: "Technical Skills Training", icon: "activity", image: footballPhoto("training-lineup-wide"), description: "Focused football skill work for ball control, scanning, turning, shooting, finishing, defending, and decision-making under pressure.", level: "Skill Development", color: "from-sky-500 via-blue-600 to-green-500" },
+  { name: "Goalkeeper Training", icon: "goalkeeper", image: null, description: "Position-specific football coaching for handling, catching, positioning, footwork, diving, one-on-one situations, distribution, and communication.", level: "Specialised", color: "from-red-500 via-pink-500 to-orange-400" },
+  { name: "Football Fitness and Conditioning", icon: "fitness", image: null, description: "Football-specific strength, speed, agility, balance, mobility, injury-prevention awareness, and match-readiness conditioning.", level: "All Players", color: "from-yellow-400 via-orange-500 to-red-500" },
+  { name: "Match Practice and Tournaments", icon: "tournament", image: null, description: "Small-sided football games, friendly matches, tournament preparation, match temperament, team shape, and competitive exposure.", level: "Competitive", color: "from-orange-500 via-green-500 to-blue-600" },
+  { name: "School Football Programme", icon: "school", image: null, description: "Football coaching for schools, including trials, fitness assessments, inter-house matches, and championship preparation.", level: "School Level", color: "from-sky-400 via-purple-500 to-orange-400" },
+  { name: "Personal Football Coaching", icon: "coaching", image: null, description: "Individual or small-group football training designed around a player's position, ability, weaknesses, and development goals.", level: "Custom Plan", color: "from-green-500 via-yellow-400 to-orange-500" }
 ];
 
 export const footballPrograms = [
@@ -132,10 +132,10 @@ export const coachingPrograms = [
 ];
 
 export const coaches = [
-  { name: "YSDA Football Coaching and Technical Team", role: "Football Coaching Unit", sport: "Football", experience: "Player-development and academy training", qualification: "Verified football coaching credentials published when available", image: footballPhoto("coach-course-group"), intro: "YSDA coaches focus on technical skill, tactical awareness, conditioning, match preparation, confidence, discipline, sportsmanship, performance evaluation, and individual feedback." },
+  { name: "YSDA Football Coaching and Technical Team", role: "Football Coaching Unit", sport: "Football", experience: "Player-development and academy training", qualification: "Verified football coaching credentials published when available", image: footballPhoto("football-team-briefing"), intro: "YSDA coaches focus on technical skill, tactical awareness, conditioning, match preparation, confidence, discipline, sportsmanship, performance evaluation, and individual feedback." },
   { name: "Football Development Staff", role: "Head Coach / Assistant Coach / Goalkeeping Coach", sport: "Football", experience: "Football-specific development", qualification: "Football coaching credentials published after verification", image: footballPhoto("coach-team-talk"), intro: "The football team supports ball control, passing, receiving, dribbling, shooting, defending, positioning, tactical awareness, match preparation, and goalkeeper development." },
   { name: "Football Fitness Staff", role: "Football Fitness Coach / Trainer", sport: "Football conditioning", experience: "Strength, speed, agility and mobility", qualification: "Fitness credentials published after verification", image: footballPhoto("coach-demonstration"), intro: "Conditioning sessions support strength, speed, agility, balance, coordination, injury-prevention awareness, and football match readiness." },
-  { name: "Football Match Technical Team", role: "Coaches, Referees and Match Officials", sport: "Football", experience: "Training, trials and football events", qualification: "Relevant football credentials published after verification", image: footballPhoto("football-team-briefing"), intro: "The technical team supports football trials, training sessions, matches, tournaments, camps, player welfare, and competitive exposure." }
+  { name: "Football Match Technical Team", role: "Coaches, Referees and Match Officials", sport: "Football", experience: "Training, trials and football events", qualification: "Relevant football credentials published after verification", image: footballPhoto("course-team-secondary"), intro: "The technical team supports football trials, training sessions, matches, tournaments, camps, player welfare, and competitive exposure." }
 ];
 
 export const leadershipMessages = [
@@ -144,11 +144,11 @@ export const leadershipMessages = [
 ];
 
 export const events = [
-  { title: "YSDA Football Coach Development Course", date: "2026-08-20", endDate: "2026-08-25", time: "Course schedule to be announced", venue: "Mhow, Indore, Madhya Pradesh", sport: "Football Coaching", age: "Aspiring football coaches and trainers", status: "Upcoming", type: "Football Development Course", deadline: "Contact academy for registration", fee: "Contact academy", documents: "Photo ID and applicable football coaching details", image: footballPhoto("coach-course-group"), description: "A football-focused development course for aspiring coaches and trainers. Contact YSDA for registration, eligibility, schedule, fee, and required documents." },
+  { title: "YSDA Football Coach Development Course", date: "2026-08-20", endDate: "2026-08-25", time: "Course schedule to be announced", venue: "Mhow, Indore, Madhya Pradesh", sport: "Football Coaching", age: "Aspiring football coaches and trainers", status: "Upcoming", type: "Football Development Course", deadline: "Contact academy for registration", fee: "Contact academy", documents: "Photo ID and applicable football coaching details", image: footballPhoto("coach-greeting"), description: "A football-focused development course for aspiring coaches and trainers. Contact YSDA for registration, eligibility, schedule, fee, and required documents." },
   { title: "Regular YSDA Football Training Batches", date: "2026-07-19", time: "Morning and evening batches", venue: "Mhow, Indore, Madhya Pradesh", sport: "Football", age: "Beginner to competitive footballers", status: "Ongoing", type: "Football Training", deadline: "Open enquiry", fee: "Contact academy", documents: "Player details and age proof may be required", image: footballPhoto("warmup-circle"), description: "Ongoing YSDA football admissions and training covering regular practice, technical development, fitness, match preparation, and academy activities." },
   { title: "Football Memorial Match Programme - Mhow", date: "2026-05-27", endDate: "2026-05-30", time: "Completed", venue: "Mhow, Indore, Madhya Pradesh", sport: "Football", age: "Participating football categories", status: "Completed", type: "Football Event", deadline: "Closed", fee: "Closed", documents: "Event records to be verified", image: footballPhoto("small-sided-game"), description: "Completed football event record featuring match participation, team activity, and academy competition experience." },
-  { title: "Goa Football Invitational Exposure", date: "2026-05-04", endDate: "2026-05-09", time: "Completed", venue: "Goa", sport: "Football", age: "Football team categories", status: "Completed", type: "Football Invitational", deadline: "Closed", fee: "Closed", documents: "Team and event records to be verified", image: footballPhoto("boys-match-action"), description: "Football invitational exposure for player development, team experience, and competitive learning." },
-  { title: "International Football Exposure - Pokhara", date: "2025-12-31", endDate: "2026-01-03", time: "Completed", venue: "Pokhara, Nepal", sport: "Football", age: "Football participation categories", status: "Completed", type: "International Football Exposure", deadline: "Closed", fee: "Closed", documents: "Participation records to be verified", image: footballPhoto("football-game-action"), description: "International football exposure focused on competitive experience, teamwork, confidence, and player development." }
+  { title: "Goa Football Invitational Exposure", date: "2026-05-04", endDate: "2026-05-09", time: "Completed", venue: "Goa", sport: "Football", age: "Football team categories", status: "Completed", type: "Football Invitational", deadline: "Closed", fee: "Closed", documents: "Team and event records to be verified", image: footballPhoto("football-game-action"), description: "Football invitational exposure for player development, team experience, and competitive learning." },
+  { title: "International Football Exposure - Pokhara", date: "2025-12-31", endDate: "2026-01-03", time: "Completed", venue: "Pokhara, Nepal", sport: "Football", age: "Football participation categories", status: "Completed", type: "International Football Exposure", deadline: "Closed", fee: "Closed", documents: "Participation records to be verified", image: footballPhoto("yellow-team-pre-match"), description: "International football exposure focused on competitive experience, teamwork, confidence, and player development." }
 ];
 
 const galleryBase = [
@@ -171,19 +171,19 @@ export const gallery = galleryBase.map(([title, category, image, eventName, capt
 }));
 
 export const videoHighlights = [
-  { title: "YSDA football development highlights", tag: "Football", image: footballPhoto("football-team-briefing"), video: media.heroVideo },
-  { title: "Football training and fitness sessions", tag: "Training", image: footballPhoto("warmup-circle"), video: media.heroVideo },
-  { title: "Football match and academy highlights", tag: "Football", image: footballPhoto("football-game-action"), video: media.heroVideo }
+  { title: "YSDA football development highlights", tag: "Football", image: null, video: media.heroVideo },
+  { title: "Football training and fitness sessions", tag: "Training", image: null, video: media.heroVideo },
+  { title: "Football match and academy highlights", tag: "Football", image: null, video: media.heroVideo }
 ];
 
 export const news = [
-  { title: "YSDA Football Admissions Open", date: "2026-07-19", category: "Admissions", image: footballPhoto("team-blue-white"), summary: "Admissions are open for selected YSDA football training programmes with professional coaching, regular practice, fitness development, and match exposure." },
-  { title: "Upcoming Football Tournament Registrations", date: "2026-07-18", category: "Events", image: footballPhoto("small-sided-game"), summary: "Footballers, teams, schools, clubs, and academies can enquire for upcoming football tournaments, trials, camps, and match opportunities." },
-  { title: "School Football Partnerships", date: "2026-07-15", category: "Partnerships", image: footballPhoto("academy-team-group"), summary: "YSDA welcomes collaborations with schools and football academies interested in strengthening grassroots football." },
-  { title: "Football Player Trial Updates", date: "2026-07-12", category: "Trials", image: footballPhoto("youth-player"), summary: "Football trial reporting times, eligibility conditions, and player requirements will be published through official YSDA channels." },
-  { title: "Football Training Schedule Updates", date: "2026-07-10", category: "Training", image: footballPhoto("movement-drill"), summary: "Changes to football training timings, venues, batches, holidays, or match schedules will be announced through official channels." },
-  { title: "Football Match Results", date: "2026-06-01", category: "Results", image: footballPhoto("girls-free-kick"), summary: "Verified football match results, award winners, photographs, match reports, and player achievements will be published after events." },
-  { title: "Football Achievement Recognition", date: "2026-05-31", category: "Awards", image: footballPhoto("yellow-team-lineup"), summary: "YSDA recognises football players, coaches, teams, officials, and volunteers for participation, discipline, and achievement." }
+  { title: "YSDA Football Admissions Open", date: "2026-07-19", category: "Admissions", image: null, summary: "Admissions are open for selected YSDA football training programmes with professional coaching, regular practice, fitness development, and match exposure." },
+  { title: "Upcoming Football Tournament Registrations", date: "2026-07-18", category: "Events", image: null, summary: "Footballers, teams, schools, clubs, and academies can enquire for upcoming football tournaments, trials, camps, and match opportunities." },
+  { title: "School Football Partnerships", date: "2026-07-15", category: "Partnerships", image: null, summary: "YSDA welcomes collaborations with schools and football academies interested in strengthening grassroots football." },
+  { title: "Football Player Trial Updates", date: "2026-07-12", category: "Trials", image: null, summary: "Football trial reporting times, eligibility conditions, and player requirements will be published through official YSDA channels." },
+  { title: "Football Training Schedule Updates", date: "2026-07-10", category: "Training", image: null, summary: "Changes to football training timings, venues, batches, holidays, or match schedules will be announced through official channels." },
+  { title: "Football Match Results", date: "2026-06-01", category: "Results", image: null, summary: "Verified football match results, award winners, photographs, match reports, and player achievements will be published after events." },
+  { title: "Football Achievement Recognition", date: "2026-05-31", category: "Awards", image: null, summary: "YSDA recognises football players, coaches, teams, officials, and volunteers for participation, discipline, and achievement." }
 ];
 
 export const achievements = [
@@ -204,9 +204,9 @@ export const achievementTimeline = [
 ];
 
 export const achievementCards = [
-  { title: "Football Competition Participation", category: "Football Exposure", image: footballPhoto("team-blue-white"), text: "YSDA footballers receive opportunities to develop through structured training and competitive football experiences." },
-  { title: "Football Player Development", category: "Football Academy", image: footballPhoto("football-game-action"), text: "YSDA focuses on technical quality, tactical awareness, fitness, discipline, teamwork, and match readiness." },
-  { title: "School Football Development", category: "School Football", image: footballPhoto("football-team-briefing"), text: "YSDA encourages school-level football through coaching, matches, trials, and player-development programmes." }
+  { title: "Football Competition Participation", category: "Football Exposure", image: null, text: "YSDA footballers receive opportunities to develop through structured training and competitive football experiences." },
+  { title: "Football Player Development", category: "Football Academy", image: null, text: "YSDA focuses on technical quality, tactical awareness, fitness, discipline, teamwork, and match readiness." },
+  { title: "School Football Development", category: "School Football", image: null, text: "YSDA encourages school-level football through coaching, matches, trials, and player-development programmes." }
 ];
 
 export const certificateCategories = [
@@ -216,16 +216,16 @@ export const certificateCategories = [
 ];
 
 export const successStories = [
-  { name: "Football Competition Pathway", sport: "Football Achievement Gallery", achievement: "Competitive football opportunities", image: footballPhoto("shooting-practice"), journey: "YSDA contributes to grassroots football by preparing footballers for match and competition pathways through structured development.", testimonial: "Football progress is built through regular training, discipline, match experience, and feedback." },
-  { name: "Football Player Growth", sport: "Football Achievement Gallery", achievement: "Technical and tactical development", image: footballPhoto("movement-drill"), journey: "YSDA footballers work on technique, football intelligence, fitness, confidence, and teamwork.", testimonial: "Consistent football training creates stronger habits and better match decisions." },
-  { name: "School Football Development", sport: "Football Achievement Gallery", achievement: "School participation and talent identification", image: footballPhoto("small-sided-game"), journey: "YSDA supports school football programmes and player-identification activities to increase football participation.", testimonial: "School football creates an important pathway for young players to learn and compete." }
+  { name: "Football Competition Pathway", sport: "Football Achievement Gallery", achievement: "Competitive football opportunities", image: null, journey: "YSDA contributes to grassroots football by preparing footballers for match and competition pathways through structured development.", testimonial: "Football progress is built through regular training, discipline, match experience, and feedback." },
+  { name: "Football Player Growth", sport: "Football Achievement Gallery", achievement: "Technical and tactical development", image: null, journey: "YSDA footballers work on technique, football intelligence, fitness, confidence, and teamwork.", testimonial: "Consistent football training creates stronger habits and better match decisions." },
+  { name: "School Football Development", sport: "Football Achievement Gallery", achievement: "School participation and talent identification", image: null, journey: "YSDA supports school football programmes and player-identification activities to increase football participation.", testimonial: "School football creates an important pathway for young players to learn and compete." }
 ];
 
 export const testimonials = [
-  { name: "Football Player Community", role: "Footballers", image: footballPhoto("girls-match-duel"), rating: 5, text: "YSDA focuses on professional football guidance, structured training, fitness, confidence, teamwork, and competitive exposure." },
-  { name: "Parent Community", role: "Parents", image: footballPhoto("football-coaches-field"), rating: 5, text: "The academy aims to provide a safe, supportive, transparent, and player-focused football environment." },
-  { name: "School Football Partners", role: "Schools", image: footballPhoto("team-blue-white"), rating: 5, text: "YSDA welcomes school partnerships for football training, matches, trials, and talent identification." },
-  { name: "Football Coaching Community", role: "Coaches and officials", image: footballPhoto("coach-team-talk"), rating: 5, text: "YSDA works with football coaches and officials to strengthen grassroots player development." }
+  { name: "Football Player Community", role: "Footballers", image: null, rating: 5, text: "YSDA focuses on professional football guidance, structured training, fitness, confidence, teamwork, and competitive exposure." },
+  { name: "Parent Community", role: "Parents", image: null, rating: 5, text: "The academy aims to provide a safe, supportive, transparent, and player-focused football environment." },
+  { name: "School Football Partners", role: "Schools", image: null, rating: 5, text: "YSDA welcomes school partnerships for football training, matches, trials, and talent identification." },
+  { name: "Football Coaching Community", role: "Coaches and officials", image: null, rating: 5, text: "YSDA works with football coaches and officials to strengthen grassroots player development." }
 ];
 
 export const partners = [
