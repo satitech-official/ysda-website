@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
   pages: write
   id-token: write
 
@@ -32,152 +32,107 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Create sharp football media directly in source
-        run: |
-          set -euo pipefail
-          mkdir -p public/ysda-gallery public/ysda-football/replacements
-          cp public/ysdfi-gallery/ysdfi-113-gallery3-p49.jpg public/ysda-gallery/team-training.jpg
-          cp public/ysdfi-gallery/ysdfi-132-gallery2-p15.jpg public/ysda-gallery/football-team.jpg
-          cp public/ysdfi-gallery/ysdfi-089-gallery3-p25.jpg public/ysda-gallery/hero-squad.jpg
-          cp public/ysdfi-gallery/ysdfi-088-gallery3-p24.jpg public/ysda-gallery/hero-team.jpg
-          cp public/ysdfi-gallery/ysdfi-106-gallery3-p42.jpg public/ysda-gallery/fitness.jpg
-          cp public/ysdfi-gallery/ysdfi-135-gallery2-p18.jpg public/ysda-gallery/hero-action.jpg
-          cp public/ysdfi-gallery/ysdfi-136-gallery2-p19.jpg public/ysda-gallery/hero-match.jpg
-          cp public/ysdfi-gallery/ysdfi-107-gallery3-p43.jpg public/ysda-gallery/football-coach.jpg
-          cp public/ysdfi-gallery/ysdfi-141-gallery2-p24.jpg public/ysda-gallery/hero-development.jpg
-          cp public/ysdfi-gallery/ysdfi-140-gallery2-p23.jpg public/ysda-gallery/hero-training.jpg
-          cp public/ysdfi-gallery/ysdfi-008-gallery4-p08.jpg public/ysda-football/replacements/pdf-football-01.jpg
-          cp public/ysdfi-gallery/ysdfi-009-gallery4-p09.jpg public/ysda-football/replacements/pdf-football-02.jpg
-          cp public/ysdfi-gallery/ysdfi-138-gallery2-p21.jpg public/ysda-football/replacements/pdf-football-06.jpg
-          cp public/ysdfi-gallery/ysdfi-139-gallery2-p22.jpg public/ysda-football/replacements/pdf-football-07.jpg
-          rm -f public/ysda-football/replacements/pdf-football-03.jpg public/ysda-football/replacements/pdf-football-04.jpg public/ysda-football/replacements/pdf-football-05.jpg
-          test -s public/ysda-hero-football.mp4
-          test -s public/ysda-football-team-award.png
-          test -s public/ysda-president-rafik-raja.jpg
-          test -s public/ysda-secretary-ramiz-raja.png
-          for f in public/ysda-gallery/*.jpg public/ysda-football/replacements/*.jpg; do test -s "$f"; done
-
-      - name: Write final image mapping into GitHub source
+      - name: Validate football-only source media
         run: |
           node <<'NODE'
+          const crypto = require('crypto');
           const fs = require('fs');
-          const contentPath = 'lib/content.ts';
-          const pagePath = 'app/page.tsx';
-          let content = fs.readFileSync(contentPath, 'utf8');
-          let page = fs.readFileSync(pagePath, 'utf8');
-          content = content.replace(/const footballPhoto = [\s\S]*?;\n\n(?=export const media =)/, '');
-          const mediaBlock = [
-            'export const media = {',
-            '  heroVideo: "/ysda-hero-football.mp4",',
-            '  heroVideoFallback: "https://videos.pexels.com/video-files/31370183/13386254_3840_2160_24fps.mp4",',
-            '  heroPoster: "/ysda-football-team-award.png",',
-            '  fallback: "/brand/ysda-logo-white.png",',
-            '  heroAction: "/ysda-gallery/team-training.jpg",',
-            '  heroTeam: "/ysda-gallery/football-team.jpg",',
-            '  heroDevelopment: "/ysda-gallery/hero-development.jpg",',
-            '  heroSquad: "/ysda-gallery/hero-squad.jpg",',
-            '  heroMatch: "/ysda-gallery/hero-match.jpg",',
-            '  heroTraining: "/ysda-gallery/hero-training.jpg",',
-            '  footballWarmup: "/ysda-football/replacements/pdf-football-01.jpg",',
-            '  footballTeam: "/ysda-gallery/football-team.jpg",',
-            '  footballCoach: "/ysda-gallery/football-coach.jpg",',
-            '  fitness: "/ysda-gallery/fitness.jpg",',
-            '  teamTraining: "/ysda-gallery/team-training.jpg",',
-            '  trophy: "/ysda-football-team-award.png",',
-            '  leadership: "/ysda-president-rafik-raja.jpg",',
-            '  secretaryPortrait: "/ysda-secretary-ramiz-raja.png",',
-            '  officials: "/ysda-football/replacements/pdf-football-02.jpg",',
-            '  certificates: "/ysda-gallery/hero-squad.jpg",',
-            '  awards: "/ysda-football-team-award.png",',
-            '  girlsTeam: "/ysda-football/replacements/pdf-football-02.jpg",',
-            '  referee: "/ysda-football/replacements/pdf-football-06.jpg",',
-            '  schoolProgram: "/ysda-football/replacements/pdf-football-07.jpg",',
-            '  trials: "/ysda-gallery/hero-development.jpg",',
-            '  community: "/ysda-gallery/team-training.jpg"',
-            '};'
-          ].join('\n');
-          if (!/export const media = \{[\s\S]*?\n\};/.test(content)) throw new Error('Media block not found');
-          content = content.replace(/export const media = \{[\s\S]*?\n\};/, mediaBlock);
-          const galleryNeedle = 'title, category, image, eventName, date: "2026", location: index % 2 === 0 ? "Mhow, Indore" : "YSDA Football Academy", caption\n}));';
-          const galleryFixed = 'title, category, image, eventName, date: "2026", location: index % 2 === 0 ? "Mhow, Indore" : "YSDA Football Academy", caption, video: undefined as string | undefined\n}));';
-          if (content.includes(galleryNeedle)) content = content.replace(galleryNeedle, galleryFixed);
-          content = content.replace(/YSDFI/gi, 'YSDA');
-          page = page.replace(/YSDFI/gi, 'YSDA');
-          if (/footballPhoto\(/.test(content)) throw new Error('Old two-photo helper remains');
-          if (/pdf-football-0[345]\.jpg/.test(content)) throw new Error('Blurred or non-football replacement remains');
-          if (/ysdfi/i.test(content) || /ysdfi/i.test(page)) throw new Error('YSDFI runtime source reference remains');
-          if (!content.includes('footballWarmup: "/ysda-football/replacements/pdf-football-01.jpg"')) throw new Error('Sharp featured mapping missing');
-          if (!content.includes('leadership: "/ysda-president-rafik-raja.jpg"')) throw new Error('President photo changed');
-          if (!content.includes('secretaryPortrait: "/ysda-secretary-ramiz-raja.png"')) throw new Error('Secretary photo changed');
-          if (!content.includes('heroVideo: "/ysda-hero-football.mp4"')) throw new Error('Hero video changed');
-          fs.writeFileSync(contentPath, content, 'utf8');
-          fs.writeFileSync(pagePath, page, 'utf8');
-          NODE
+          const path = require('path');
 
-      - name: Commit real media changes to main source
-        run: |
-          set -euo pipefail
-          git config user.name "SatiTech"
-          git config user.email "www.satitechinfo@gmail.com"
-          git add lib/content.ts app/page.tsx public/ysda-gallery public/ysda-football/replacements
-          if ! git diff --cached --quiet; then
-            git commit -m "Fix blurry and repeated YSDA football photos [skip ci]"
-            git push origin HEAD:main
-          fi
+          const repo = process.cwd();
+          const photosDir = path.join(repo, 'public', 'ysda-football', 'photos');
+          const sourceText = [
+            fs.readFileSync(path.join(repo, 'lib', 'content.ts'), 'utf8'),
+            fs.readFileSync(path.join(repo, 'app', 'page.tsx'), 'utf8')
+          ].join('\n');
+          const legacyName = 'ys' + 'dfi';
+          const disallowedSports = ['basketball', 'volleyball', 'cricket', 'skating', 'karate', 'kho-kho'];
+          const violations = [];
+
+          if (sourceText.toLowerCase().includes(legacyName)) violations.push('Legacy federation name remains in runtime source.');
+          for (const sport of disallowedSports) {
+            if (sourceText.toLowerCase().includes(sport)) violations.push(`Non-football sport remains in runtime source: ${sport}`);
+          }
+          if (!sourceText.includes('leadership: "/ysda-president-rafik-raja.jpg"')) violations.push('President photo mapping changed.');
+          if (!sourceText.includes('secretaryPortrait: "/ysda-secretary-ramiz-raja.png"')) violations.push('Secretary photo mapping changed.');
+
+          const photos = fs.readdirSync(photosDir).filter((name) => /\.jpg$/i.test(name)).sort();
+          if (photos.length !== 26) violations.push(`Expected 26 curated football photos; found ${photos.length}.`);
+          const hashes = new Map();
+          for (const name of photos) {
+            const file = path.join(photosDir, name);
+            const bytes = fs.readFileSync(file);
+            if (bytes.length < 50_000) violations.push(`Photo is unexpectedly small: ${name}`);
+            const hash = crypto.createHash('sha256').update(bytes).digest('hex');
+            if (hashes.has(hash)) violations.push(`Exact duplicate photos: ${hashes.get(hash)} and ${name}`);
+            hashes.set(hash, name);
+          }
+
+          const publicEntries = [];
+          function walk(dir) {
+            for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+              const current = path.join(dir, entry.name);
+              if (entry.isDirectory()) walk(current);
+              else publicEntries.push(path.relative(path.join(repo, 'public'), current));
+            }
+          }
+          walk(path.join(repo, 'public'));
+          if (publicEntries.some((name) => name.toLowerCase().includes(legacyName))) violations.push('Legacy federation-named public asset remains.');
+
+          if (violations.length) throw new Error(violations.join('\n'));
+          console.log('Curated football-only source media passed validation.');
+          NODE
 
       - name: Build static website
         run: npm run build
 
-      - name: Validate sharp football-only live output
+      - name: Validate production artifact
         run: |
-          set -euo pipefail
-          rm -rf out/ysdfi-gallery
           node <<'NODE'
           const fs = require('fs');
           const path = require('path');
+
           const outDir = path.resolve('out');
-          const legacyPrefix = '/ysda-website';
-          const textExtensions = new Set(['.html','.js','.css','.json','.txt','.map','.xml','.webmanifest']);
+          const legacyName = 'ys' + 'dfi';
+          const disallowedSports = ['basketball', 'volleyball', 'cricket', 'skating', 'karate', 'kho-kho'];
+          const textExtensions = new Set(['.html', '.js', '.css', '.json', '.txt', '.xml', '.webmanifest']);
+          const files = [];
           function walk(dir) {
-            return fs.readdirSync(dir,{withFileTypes:true}).flatMap(e => {
-              const p=path.join(dir,e.name);
-              return e.isDirectory()?walk(p):[p];
-            });
+            for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+              const current = path.join(dir, entry.name);
+              if (entry.isDirectory()) walk(current);
+              else files.push(current);
+            }
           }
-          for (const file of walk(outDir)) {
-            if (!textExtensions.has(path.extname(file).toLowerCase())) continue;
-            const original=fs.readFileSync(file,'utf8');
-            const updated=original.split(legacyPrefix).join('').replace(/YSDFI/gi,'YSDA');
-            if(updated!==original) fs.writeFileSync(file,updated,'utf8');
+          walk(outDir);
+
+          const text = files
+            .filter((file) => textExtensions.has(path.extname(file).toLowerCase()))
+            .map((file) => fs.readFileSync(file, 'utf8'))
+            .join('\n')
+            .toLowerCase();
+          const violations = [];
+          if (text.includes(legacyName)) violations.push('Legacy federation name remains in live output.');
+          for (const sport of disallowedSports) {
+            if (text.includes(sport)) violations.push(`Non-football sport remains in live output: ${sport}`);
           }
-          const files=walk(outDir);
-          const combined=files.filter(f=>textExtensions.has(path.extname(f).toLowerCase())).map(f=>fs.readFileSync(f,'utf8')).join('\n');
-          const violations=[];
-          if (/ysdfi/i.test(combined)) violations.push('YSDFI remains in live runtime');
-          if (files.some(f=>/ysdfi/i.test(path.relative(outDir,f)))) violations.push('YSDFI-named file remains in live artifact');
-          if (/\b(basketball|volleyball|cricket|skating|karate|kho-kho)\b/i.test(combined)) violations.push('non-football sport content remains');
-          if (/pdf-football-0[345]\.jpg/.test(combined)) violations.push('blurred/non-football replacement remains');
-          for (const ref of ['/ysda-hero-football.mp4','/ysda-football-team-award.png','/ysda-president-rafik-raja.jpg','/ysda-secretary-ramiz-raja.png','/ysda-football/replacements/pdf-football-01.jpg','/ysda-gallery/football-team.jpg','/ysda-gallery/football-coach.jpg','/ysda-gallery/hero-training.jpg','/ysda-gallery/team-training.jpg']) {
-            if(!combined.includes(ref)) violations.push(`missing runtime reference: ${ref}`);
+          if (files.some((file) => path.relative(outDir, file).toLowerCase().includes(legacyName))) violations.push('Legacy federation-named file remains in live output.');
+          for (const rel of [
+            'ysda-president-rafik-raja.jpg',
+            'ysda-secretary-ramiz-raja.png',
+            'ysda-hero-football.mp4',
+            'ysda-football/photos/team-blue-white.jpg',
+            'ysda-football/photos/girls-free-kick.jpg',
+            'ysda-football/photos/football-game-action.jpg'
+          ]) {
+            if (!fs.existsSync(path.join(outDir, rel))) violations.push(`Missing production asset: ${rel}`);
           }
-          for (const rel of ['ysda-hero-football.mp4','ysda-football-team-award.png','ysda-president-rafik-raja.jpg','ysda-secretary-ramiz-raja.png','ysda-football/replacements/pdf-football-01.jpg','ysda-football/replacements/pdf-football-02.jpg','ysda-football/replacements/pdf-football-06.jpg','ysda-football/replacements/pdf-football-07.jpg','ysda-gallery/football-team.jpg','ysda-gallery/football-coach.jpg','ysda-gallery/fitness.jpg','ysda-gallery/team-training.jpg']) {
-            const p=path.join(outDir,rel);
-            if(!fs.existsSync(p)||fs.statSync(p).size===0) violations.push(`missing asset: ${rel}`);
-          }
-          if(violations.length) throw new Error(violations.join('\n'));
-          console.log('Sharp, distinct, football-only media validation passed.');
+          if (violations.length) throw new Error(violations.join('\n'));
+          console.log('Football-only production artifact passed validation.');
           NODE
 
-      - name: Ensure hero stats render correctly on mobile
-        run: |
-          node <<'NODE'
-          const fs=require('fs');
-          const indexPath=require('path').resolve('out/index.html');
-          let html=fs.readFileSync(indexPath,'utf8');
-          const script='<script id="ysda-hero-stats-mobile-fix">(function(){var expected={"Players Connected":"5000+","Football Events":"50+","Clubs and Academies":"70+","Coaches and Officials":"150+"};function fix(){var hero=document.getElementById("home");if(!hero)return;hero.querySelectorAll(".glass").forEach(function(card){var p=card.querySelector("p");var span=card.querySelector("span");if(!p||!span)return;var value=expected[p.textContent.trim()];if(value)span.textContent=value;});}[0,250,750,1500,3000].forEach(function(ms){setTimeout(fix,ms)});})();</script>';
-          if(!html.includes('ysda-hero-stats-mobile-fix')) html=html.replace('</body>',script+'</body>');
-          fs.writeFileSync(indexPath,html,'utf8');
-          NODE
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
@@ -194,3 +149,4 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
