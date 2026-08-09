@@ -106,7 +106,7 @@ type GalleryItem = (typeof gallery)[number];
 type EventItem = (typeof events)[number];
 type VideoHighlightItem = (typeof videoHighlights)[number];
 
-const staticBasePath = process.env.NODE_ENV === "production" ? "/ysda-website" : "";
+const staticBasePath = "";
 
 function resolvePublicAssetPath(src: string) {
   if (!src || /^(https?:|data:|blob:|mailto:|tel:)/.test(src)) {
@@ -649,7 +649,7 @@ function Hero() {
           <h1 className="font-display text-4xl font-black leading-[1.05] text-white drop-shadow-lg sm:text-6xl lg:text-7xl">
             {academyInfo.tagline}
           </h1>
-          <p className="mt-6 max-w-3xl text-base font-semibold leading-8 text-white/94 sm:text-xl">
+          <p className="mt-6 max-w-3xl text-base font-semibold leading-8 text-white/90 sm:text-xl">
             Professional football coaching, structured training, fitness development, tournaments,
             trials, camps, and youth-development pathways from Mhow, Indore.
           </p>
@@ -776,10 +776,10 @@ function AboutSection() {
           className="relative min-h-[520px]"
         >
           <div className="absolute left-0 top-8 h-72 w-[72%] overflow-hidden rounded-[2rem] shadow-glow">
-            <SmartImage src={media.footballTeam} alt="YSDA football training" className="object-cover" />
+            <SmartImage src={media.aboutPrimary} alt="YSDA football training" className="object-cover" />
           </div>
           <div className="absolute bottom-8 right-0 h-72 w-[70%] overflow-hidden rounded-[2rem] border-8 border-white shadow-warm">
-            <SmartImage src={media.teamTraining} alt="Football coaching" className="object-cover" />
+            <SmartImage src={media.aboutSecondary} alt="Football coaching" className="object-cover" />
           </div>
           <div className="glass absolute left-8 top-[80%] max-w-xs rounded-3xl p-5">
             <p className="text-sm font-black uppercase tracking-[0.16em] text-flame">{academyInfo.location}</p>
@@ -1056,7 +1056,7 @@ function FootballAcademySection() {
         <div className="mt-12 grid gap-6 lg:grid-cols-[1fr_0.82fr]">
           <div className="overflow-hidden rounded-[2rem] bg-white shadow-2xl shadow-blue-950/20">
             <div className="relative h-[390px]">
-              <SmartImage src={media.footballTeam} alt="Football match practice" className="object-cover" />
+              <SmartImage src={media.footballFeature} alt="Football match practice" className="object-cover" />
               <button
                 type="button"
                 onClick={() => document.getElementById("videos")?.scrollIntoView({ behavior: "smooth" })}
@@ -1865,7 +1865,7 @@ function CertificatesSection() {
 
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="relative min-h-[360px] overflow-hidden rounded-[2rem] shadow-warm sm:row-span-2">
-            <SmartImage src={media.certificates} alt="YSDA certificate records" className="object-cover" />
+            <SmartImage src={media.certificatePhoto} alt="YSDA certificate records" className="object-cover" />
             <div className="absolute inset-0 bg-gradient-to-t from-blue-950/72 via-transparent to-transparent" />
             <div className="absolute bottom-5 left-5 right-5 rounded-3xl bg-white/88 p-5 backdrop-blur">
               <p className="text-xs font-black uppercase tracking-[0.16em] text-flame">Verification first</p>
@@ -2194,7 +2194,7 @@ function AchievementsSection() {
 
         <div className="mt-12 grid gap-6 lg:grid-cols-[0.88fr_1.12fr]">
           <div className="relative min-h-[420px] overflow-hidden rounded-[2rem] shadow-warm">
-            <SmartImage src={media.trophy} alt="YSDA trophies and achievements" className="object-cover" />
+            <SmartImage src={media.achievementHero} alt="YSDA trophies and achievements" className="object-cover" />
           </div>
           <div className="space-y-5">
             {achievementTimeline.map((item) => (

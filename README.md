@@ -4,7 +4,7 @@ Football-focused academy website for Youth Sports Development Academy, Mhow, Ind
 
 ## Live Website
 
-https://satitech-official.github.io/ysda-website/
+https://ysdasports.com/
 
 ## Run locally
 
