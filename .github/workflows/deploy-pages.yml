@@ -57,7 +57,17 @@ jobs:
           if (!sourceText.includes('secretaryPortrait: "/ysda-secretary-ramiz-raja.png"')) violations.push('Secretary photo mapping changed.');
 
           const photos = fs.readdirSync(photosDir).filter((name) => /\.jpg$/i.test(name)).sort();
-          if (photos.length !== 26) violations.push(`Expected 26 curated football photos; found ${photos.length}.`);
+          const references = [...sourceText.matchAll(/footballPhoto\("([^"]+)"\)/g)].map((match) => `${match[1]}.jpg`);
+          const uniqueReferences = new Set(references);
+          if (photos.length !== 31) violations.push(`Expected 31 curated football photos; found ${photos.length}.`);
+          if (references.length !== 31) violations.push(`Expected 31 football photo references; found ${references.length}.`);
+          if (uniqueReferences.size !== references.length) violations.push('A football photo is referenced more than once in runtime source.');
+          for (const name of photos) {
+            if (!uniqueReferences.has(name)) violations.push(`Curated football photo is unused: ${name}`);
+          }
+          for (const name of uniqueReferences) {
+            if (!photos.includes(name)) violations.push(`Referenced football photo is missing: ${name}`);
+          }
           const hashes = new Map();
           for (const name of photos) {
             const file = path.join(photosDir, name);
@@ -149,4 +159,3 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-
