@@ -57,6 +57,7 @@ import {
   coachingPrograms,
   coreValues,
   events,
+  featuredNewsImage,
   footballPrograms,
   gallery,
   galleryCategories,
@@ -171,34 +172,6 @@ function SmartImage({
       unoptimized={currentSrc.startsWith("http")}
       onError={() => setCurrentSrc(media.fallback)}
     />
-  );
-}
-
-function FootballVisual({
-  label,
-  className = ""
-}: {
-  label: string;
-  className?: string;
-}) {
-  return (
-    <div
-      className={`relative grid h-full w-full place-items-center overflow-hidden bg-sport-gradient ${className}`}
-      data-football-visual={label}
-      role="img"
-      aria-label={`${label} football visual`}
-    >
-      <div className="absolute inset-0 sport-grid-bg opacity-35" />
-      <div className="absolute -left-12 -top-12 h-44 w-44 rounded-full border-[18px] border-white/10" />
-      <div className="absolute -bottom-16 -right-12 h-52 w-52 rounded-full border-[22px] border-white/10" />
-      <div className="relative z-10 flex max-w-[85%] flex-col items-center text-center text-white">
-        <span className="grid h-16 w-16 place-items-center rounded-full border-2 border-white/60 bg-white/15 shadow-xl backdrop-blur">
-          <CircleDot className="h-9 w-9" />
-        </span>
-        <span className="mt-4 font-display text-xl font-black leading-tight drop-shadow">{label}</span>
-        <span className="mt-2 text-xs font-black uppercase tracking-[0.2em] text-white/80">YSDA Football</span>
-      </div>
-    </div>
   );
 }
 
@@ -930,11 +903,7 @@ function SportsSection() {
             className="relative overflow-hidden rounded-[2rem] bg-white shadow-glow"
           >
             <div className="relative h-[400px]">
-              {featured.image ? (
-                <SmartImage src={featured.image} alt="Featured football academy program" className="object-cover" />
-              ) : (
-                <FootballVisual label={featured.name} />
-              )}
+              <SmartImage src={featured.image} alt="Featured football academy program" className="object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-blue-950/82 via-blue-800/20 to-transparent" />
             </div>
             <div className="absolute inset-x-0 bottom-0 p-6 sm:p-8">
@@ -983,11 +952,7 @@ function SportMiniCard({ sport }: { sport: (typeof sports)[number] }) {
       className="grid grid-cols-[112px_1fr] overflow-hidden rounded-3xl bg-white shadow-sm"
     >
       <div className="relative min-h-32">
-        {sport.image ? (
-          <SmartImage src={sport.image} alt={`${sport.name} training`} className="object-cover" />
-        ) : (
-          <FootballVisual label={sport.name} />
-        )}
+        <SmartImage src={sport.image} alt={`${sport.name} training`} className="object-cover" />
       </div>
       <div className="p-4">
         <div className="mb-3 flex items-center gap-2">
@@ -1014,11 +979,7 @@ function SportCard({ sport }: { sport: (typeof sports)[number] }) {
       className="overflow-hidden rounded-3xl bg-white shadow-sm"
     >
       <div className="relative h-52">
-        {sport.image ? (
-          <SmartImage src={sport.image} alt={`${sport.name} program`} className="object-cover" />
-        ) : (
-          <FootballVisual label={sport.name} />
-        )}
+        <SmartImage src={sport.image} alt={`${sport.name} program`} className="object-cover" />
       </div>
       <div className="p-5">
         <div className="mb-4 flex items-center justify-between gap-3">
@@ -1973,6 +1934,7 @@ function VideoHighlightCard({
   onPlay: () => void;
 }) {
   const videoSrc = usePublicAssetPath(video.video);
+  const coverImage = usePublicAssetPath(video.image);
 
   return (
     <motion.article
@@ -1988,6 +1950,7 @@ function VideoHighlightCard({
             muted
             playsInline
             preload="metadata"
+            poster={coverImage}
             className="h-full w-full object-cover"
           />
         ) : (
@@ -1997,7 +1960,11 @@ function VideoHighlightCard({
             className="group absolute inset-0 block w-full overflow-hidden text-left"
             aria-label={`Play ${video.title}`}
           >
-            <FootballVisual label={video.title} className="transition duration-700 group-hover:scale-105" />
+            <SmartImage
+              src={video.image}
+              alt={`${video.title} football video cover`}
+              className="object-cover transition duration-700 group-hover:scale-105"
+            />
             <span className="absolute inset-0 bg-gradient-to-t from-ink/72 via-ink/10 to-transparent" />
             <span className="absolute left-5 top-5 rounded-full bg-white/92 px-3 py-1 text-xs font-black uppercase tracking-[0.12em] text-ysdaBlue shadow-sm backdrop-blur">
               {video.tag}
@@ -2120,7 +2087,7 @@ function NewsSection() {
                     className="grid overflow-hidden rounded-[2rem] bg-white shadow-sm md:grid-cols-[260px_1fr]"
                   >
                     <div className="relative min-h-64">
-                      <FootballVisual label={item.category} />
+                      <SmartImage src={item.image} alt={`${item.title} football news`} className="object-cover" />
                     </div>
                     <div className="p-5">
                       <div className="flex flex-wrap items-center gap-3 text-xs font-black uppercase tracking-[0.13em] text-slate-500">
@@ -2167,7 +2134,7 @@ function NewsSection() {
           <aside className="space-y-6">
             <div className="overflow-hidden rounded-[2rem] bg-white shadow-sm">
               <div className="relative h-48">
-                <FootballVisual label={featured.category} />
+                <SmartImage src={featuredNewsImage} alt="Featured YSDA football news" className="object-cover" />
               </div>
               <div className="p-5">
                 <p className="inline-flex items-center gap-2 rounded-full bg-gold px-3 py-1 text-xs font-black uppercase tracking-[0.13em] text-ink">
@@ -2243,7 +2210,7 @@ function AchievementsSection() {
               className="overflow-hidden rounded-[2rem] bg-white shadow-sm"
             >
               <div className="relative h-56">
-                <FootballVisual label={item.category} />
+                <SmartImage src={item.image} alt={`${item.title} football achievement`} className="object-cover" />
               </div>
               <div className="p-6">
                 <p className="text-xs font-black uppercase tracking-[0.14em] text-flame">{item.category}</p>
@@ -2265,14 +2232,14 @@ function SuccessStoriesSection() {
         <SectionHeader
           kicker="Academy Achievements Gallery"
           title="Short stories of exposure, participation, and development pathways."
-          text="These cards are ready for verified photographs, event reports, player achievements, certificates, awards, testimonials, and media coverage as official records become available."
+          text="Football-focused visual stories highlight competition pathways, player growth, school participation, talent identification, and structured academy development."
           centered
         />
         <div className="mt-12 grid gap-6 lg:grid-cols-3">
           {successStories.map((story) => (
             <motion.article key={story.name} whileHover={{ y: -8 }} className="overflow-hidden rounded-[2rem] bg-white shadow-sm">
               <div className="relative h-64">
-                <FootballVisual label={story.achievement} />
+                <SmartImage src={story.image} alt={`${story.name} football success story`} className="object-cover" />
               </div>
               <div className="p-6">
                 <p className="text-xs font-black uppercase tracking-[0.14em] text-flame">{story.sport}</p>
