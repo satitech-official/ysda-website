@@ -41,6 +41,7 @@ jobs:
 
           const repo = process.cwd();
           const photosDir = path.join(repo, 'public', 'ysda-football', 'photos');
+          const generatedDir = path.join(repo, 'public', 'ysda-football', 'generated');
           const sourceText = [
             fs.readFileSync(path.join(repo, 'lib', 'content.ts'), 'utf8'),
             fs.readFileSync(path.join(repo, 'app', 'page.tsx'), 'utf8')
@@ -59,20 +60,40 @@ jobs:
           const photos = fs.readdirSync(photosDir).filter((name) => /\.jpg$/i.test(name)).sort();
           const references = [...sourceText.matchAll(/footballPhoto\("([^"]+)"\)/g)].map((match) => `${match[1]}.jpg`);
           const uniqueReferences = new Set(references);
+          const generated = fs.readdirSync(generatedDir).filter((name) => /\.jpg$/i.test(name)).sort();
+          const generatedReferences = [...sourceText.matchAll(/generatedFootballPhoto\("([^"]+)"\)/g)].map((match) => `${match[1]}.jpg`);
+          const uniqueGeneratedReferences = new Set(generatedReferences);
           if (photos.length !== 31) violations.push(`Expected 31 curated football photos; found ${photos.length}.`);
           if (references.length !== 31) violations.push(`Expected 31 football photo references; found ${references.length}.`);
           if (uniqueReferences.size !== references.length) violations.push('A football photo is referenced more than once in runtime source.');
+          if (generated.length !== 22) violations.push(`Expected 22 generated football photos; found ${generated.length}.`);
+          if (generatedReferences.length !== 22) violations.push(`Expected 22 generated football photo references; found ${generatedReferences.length}.`);
+          if (uniqueGeneratedReferences.size !== generatedReferences.length) violations.push('A generated football photo is referenced more than once in runtime source.');
           for (const name of photos) {
             if (!uniqueReferences.has(name)) violations.push(`Curated football photo is unused: ${name}`);
           }
           for (const name of uniqueReferences) {
             if (!photos.includes(name)) violations.push(`Referenced football photo is missing: ${name}`);
           }
+          for (const name of generated) {
+            if (!uniqueGeneratedReferences.has(name)) violations.push(`Generated football photo is unused: ${name}`);
+          }
+          for (const name of uniqueGeneratedReferences) {
+            if (!generated.includes(name)) violations.push(`Referenced generated football photo is missing: ${name}`);
+          }
           const hashes = new Map();
           for (const name of photos) {
             const file = path.join(photosDir, name);
             const bytes = fs.readFileSync(file);
             if (bytes.length < 50_000) violations.push(`Photo is unexpectedly small: ${name}`);
+            const hash = crypto.createHash('sha256').update(bytes).digest('hex');
+            if (hashes.has(hash)) violations.push(`Exact duplicate photos: ${hashes.get(hash)} and ${name}`);
+            hashes.set(hash, name);
+          }
+          for (const name of generated) {
+            const file = path.join(generatedDir, name);
+            const bytes = fs.readFileSync(file);
+            if (bytes.length < 50_000) violations.push(`Generated photo is unexpectedly small: ${name}`);
             const hash = crypto.createHash('sha256').update(bytes).digest('hex');
             if (hashes.has(hash)) violations.push(`Exact duplicate photos: ${hashes.get(hash)} and ${name}`);
             hashes.set(hash, name);
@@ -90,7 +111,7 @@ jobs:
           if (publicEntries.some((name) => name.toLowerCase().includes(legacyName))) violations.push('Legacy federation-named public asset remains.');
 
           if (violations.length) throw new Error(violations.join('\n'));
-          console.log('Curated football-only source media passed validation.');
+          console.log('All 53 unique football photos passed source validation.');
           NODE
 
       - name: Build static website
@@ -133,7 +154,10 @@ jobs:
             'ysda-hero-football.mp4',
             'ysda-football/photos/team-blue-white.jpg',
             'ysda-football/photos/girls-free-kick.jpg',
-            'ysda-football/photos/football-game-action.jpg'
+            'ysda-football/photos/football-game-action.jpg',
+            'ysda-football/generated/video-development.jpg',
+            'ysda-football/generated/news-featured.jpg',
+            'ysda-football/generated/success-school-talent.jpg'
           ]) {
             if (!fs.existsSync(path.join(outDir, rel))) violations.push(`Missing production asset: ${rel}`);
           }
