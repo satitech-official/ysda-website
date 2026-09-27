@@ -77,7 +77,8 @@ import {
   valueCards,
   videoHighlights,
   whyChoose
-} from "../lib/content";\nimport { useManagedSection } from "../lib/managedContent";
+} from "../lib/content";
+import { useManagedSection } from "../lib/managedContent";
 
 const sportIconMap: Record<string, LucideIcon> = {
   football: CircleDot,
