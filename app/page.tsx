@@ -583,6 +583,7 @@ function SocialIcon({
 }
 
 function Hero() {
+  const managedAcademyInfo = useManagedSection("academyInfo", academyInfo);
   const heroVideo = usePublicAssetPath(media.heroVideo);
   const [videoReady, setVideoReady] = useState(false);
   const [videoFailed, setVideoFailed] = useState(false);
@@ -644,10 +645,10 @@ function Hero() {
         >
           <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/60 bg-white/20 px-4 py-2 text-sm font-black uppercase tracking-[0.18em] text-white backdrop-blur-md">
             <Flame className="h-4 w-4 text-gold" />
-            Established {academyInfo.established} - Football Development Academy
+            Established {managedAcademyInfo.established} - Football Development Academy
           </div>
           <h1 className="font-display text-4xl font-black leading-[1.05] text-white drop-shadow-lg sm:text-6xl lg:text-7xl">
-            {academyInfo.tagline}
+            {managedAcademyInfo.tagline}
           </h1>
           <p className="mt-6 max-w-3xl text-base font-semibold leading-8 text-white/90 sm:text-xl">
             Professional football coaching, structured training, fitness development, tournaments,
@@ -717,6 +718,7 @@ function FloatingSportElements() {
 }
 
 function AboutSection() {
+  const managedAcademyInfo = useManagedSection("academyInfo", academyInfo);
   const focusAreas = [
     "Professional football coaching",
     "Grassroots player development",
@@ -729,11 +731,11 @@ function AboutSection() {
   ];
 
   const facts = [
-    `Established: ${academyInfo.established}`,
-    `Location: ${academyInfo.location}`,
-    `Associated with: ${academyInfo.organisation}`,
-    `President: ${academyInfo.president}`,
-    `Secretary: ${academyInfo.secretary}`
+    `Established: ${managedAcademyInfo.established}`,
+    `Location: ${managedAcademyInfo.location}`,
+    `Associated with: ${managedAcademyInfo.organisation}`,
+    `President: ${managedAcademyInfo.president}`,
+    `Secretary: ${managedAcademyInfo.secretary}`
   ];
 
   return (
@@ -743,11 +745,11 @@ function AboutSection() {
           <SectionHeader
             kicker="About YSDA"
             title="A professionally managed football-development academy in Mhow, Indore."
-            text={academyInfo.about}
+            text={managedAcademyInfo.about}
           />
 
           <p className="mt-6 rounded-3xl border border-blue-100 bg-white p-5 text-sm font-bold leading-7 text-slate-700 shadow-sm">
-            {academyInfo.belief}
+            {managedAcademyInfo.belief}
           </p>
 
           <div className="mt-6 flex flex-wrap gap-2">
@@ -782,7 +784,7 @@ function AboutSection() {
             <SmartImage src={media.aboutSecondary} alt="Football coaching" className="object-cover" />
           </div>
           <div className="glass absolute left-8 top-[80%] max-w-xs rounded-3xl p-5">
-            <p className="text-sm font-black uppercase tracking-[0.16em] text-flame">{academyInfo.location}</p>
+            <p className="text-sm font-black uppercase tracking-[0.16em] text-flame">{managedAcademyInfo.location}</p>
             <p className="mt-2 text-2xl font-black text-ink">Structured coaching. Fair opportunity. Bigger platforms.</p>
           </div>
         </motion.div>
@@ -2349,6 +2351,7 @@ function PartnersSection() {
 }
 
 function ContactSection() {
+  const managedAcademyInfo = useManagedSection("academyInfo", academyInfo);
   return (
     <section id="contact" className="relative overflow-hidden py-20 sm:py-28">
       <div className="absolute inset-0 field-gradient opacity-95" />
@@ -2364,9 +2367,9 @@ function ContactSection() {
           </p>
 
           <div className="mt-8 grid gap-4">
-            <ContactInfo icon={MapPinned} title="Academy Name" text={academyInfo.name} />
-            <ContactInfo icon={MapPin} title="Location" text={`${academyInfo.location}, India`} />
-            <ContactInfo icon={UsersRound} title="Academy" text={academyInfo.organisation} />
+            <ContactInfo icon={MapPinned} title="Academy Name" text={managedAcademyInfo.name} />
+            <ContactInfo icon={MapPin} title="Location" text={`${managedAcademyInfo.location}, India`} />
+            <ContactInfo icon={UsersRound} title="Academy" text={managedAcademyInfo.organisation} />
             <ContactInfo icon={Phone} title="WhatsApp Number" text="+91 9009071697" />
             <ContactInfo icon={Mail} title="Email" text="Info@ysdasports.com" />
             <ContactInfo icon={Clock} title="Timings" text="Morning and evening batches. Contact for current schedule." />
@@ -2436,6 +2439,7 @@ function SocialContact({ href, label, icon }: { href: string; label: string; ico
 }
 
 function Footer() {
+  const managedAcademyInfo = useManagedSection("academyInfo", academyInfo);
   return (
     <footer className="bg-white pt-14">
       <div className="section-wrap grid gap-8 pb-10 lg:grid-cols-[1.2fr_0.8fr_0.8fr_1fr]">
@@ -2445,13 +2449,13 @@ function Footer() {
             <div>
               <p className="font-display text-xl font-black">YSDA</p>
               <p className="text-xs font-black uppercase tracking-[0.14em] text-slate-500">
-                {academyInfo.name}
+                {managedAcademyInfo.name}
               </p>
             </div>
           </div>
           <p className="mt-5 max-w-sm text-sm leading-7 text-slate-600">
-            {academyInfo.name} is a professionally managed football academy established in {academyInfo.established},
-            based in {academyInfo.location}, and focused on professional football development.
+            {managedAcademyInfo.name} is a professionally managed football academy established in {managedAcademyInfo.established},
+            based in {managedAcademyInfo.location}, and focused on professional football development.
           </p>
           <div className="mt-5 flex gap-2">
             <SocialIcon href={links.instagram} label="Instagram" icon={<FaInstagram />} />
@@ -2467,9 +2471,9 @@ function Footer() {
         <div>
           <h3 className="font-display text-lg font-black">Contact Details</h3>
           <div className="mt-4 space-y-3 text-sm font-semibold text-slate-600">
-            <p>{academyInfo.location}, India</p>
-            <p>President: {academyInfo.president}</p>
-            <p>Secretary: {academyInfo.secretary}</p>
+            <p>{managedAcademyInfo.location}, India</p>
+            <p>President: {managedAcademyInfo.president}</p>
+            <p>Secretary: {managedAcademyInfo.secretary}</p>
             <p>WhatsApp: +91 9009071697</p>
             <p>Email: Info@ysdasports.com</p>
           </div>
@@ -2479,6 +2483,12 @@ function Footer() {
           >
             <ArrowUp className="h-4 w-4" />
             Back to Top
+          </a>
+          <a
+            href="/admin/"
+            className="mt-3 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-black text-slate-600 shadow-sm transition hover:border-blue-200 hover:text-ysdaBlue"
+          >
+            Admin Login
           </a>
         </div>
       </div>
