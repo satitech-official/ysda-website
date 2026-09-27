@@ -1175,6 +1175,7 @@ function WhyChooseSection() {
 }
 
 function CoachingProgramsSection() {
+  const managedPrograms = useManagedSection("programs", coachingPrograms);
   const [openIndex, setOpenIndex] = useState(0);
 
   return (
@@ -1239,6 +1240,7 @@ function CoachingProgramsSection() {
 }
 
 function CoachesSection() {
+  const managedCoaches = useManagedSection("coaches", coaches);
   const coachingApproach = [
     "Technical skill development",
     "Tactical awareness",
@@ -1438,6 +1440,7 @@ function Countdown() {
 }
 
 function EventsSection() {
+  const managedEvents = useManagedSection("events", events);
   const [status, setStatus] = useState("Upcoming");
   const [registrationEvent, setRegistrationEvent] = useState<EventItem | null>(null);
   const filtered = managedEvents.filter((event) => event.status === status);
@@ -1696,6 +1699,7 @@ function InfoRow({ icon: Icon, text }: { icon: LucideIcon; text: string }) {
 }
 
 function GallerySection() {
+  const managedGallery = useManagedSection("gallery", gallery);
   const [category, setCategory] = useState("All");
   const [active, setActive] = useState<GalleryItem | null>(null);
   const filtered = category === "All" ? managedGallery : managedGallery.filter((item) => item.category === category);
@@ -1999,6 +2003,7 @@ function VideoHighlightCard({
 }
 
 function NewsSection() {
+  const managedNews = useManagedSection("news", news);
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("All");
   const [page, setPage] = useState(1);
@@ -2165,6 +2170,7 @@ function NewsSection() {
 }
 
 function AchievementsSection() {
+  const managedAchievements = useManagedSection("achievements", achievements);
   return (
     <section id="achievements" className="bg-field-lines py-20 sm:py-28">
       <div className="section-wrap">
