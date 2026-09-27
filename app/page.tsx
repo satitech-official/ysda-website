@@ -502,13 +502,22 @@ function Header() {
           ))}
         </nav>
 
-        <div className="hidden shrink-0 items-center gap-2 2xl:flex">
-          <SocialIcon href={links.instagram} label="Instagram" icon={<FaInstagram />} />
+        <div className="hidden shrink-0 items-center gap-2 lg:flex">
+          <a
+            href="/admin/"
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-blue-100 bg-white px-4 py-2 text-xs font-black text-ysdaBlue shadow-sm transition hover:-translate-y-0.5 hover:border-ysdaBlue hover:shadow-md"
+          >
+            <ShieldCheck className="h-4 w-4" />
+            Admin Login
+          </a>
+          <div className="hidden items-center gap-2 2xl:flex">
+            <SocialIcon href={links.instagram} label="Instagram" icon={<FaInstagram />} />
           <SocialIcon href={links.youtube} label="YouTube" icon={<FaYoutube />} />
           <SocialIcon href={links.whatsapp} label="WhatsApp" icon={<FaWhatsapp />} />
-          <PrimaryButton href={links.whatsapp} icon={MessageCircle}>
-            WhatsApp
-          </PrimaryButton>
+            <PrimaryButton href={links.whatsapp} icon={MessageCircle}>
+              WhatsApp
+            </PrimaryButton>
+          </div>
         </div>
 
         <button
@@ -544,6 +553,14 @@ function Header() {
               ))}
             </div>
             <div className="mt-4 flex flex-wrap items-center gap-3">
+              <a
+                href="/admin/"
+                onClick={closeMenu}
+                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-ysdaBlue px-4 py-2 text-sm font-black text-white shadow-glow"
+              >
+                <ShieldCheck className="h-4 w-4" />
+                Admin Login
+              </a>
               <SocialIcon href={links.instagram} label="Instagram" icon={<FaInstagram />} />
               <SocialIcon href={links.youtube} label="YouTube" icon={<FaYoutube />} />
               <SocialIcon href={links.whatsapp} label="WhatsApp" icon={<FaWhatsapp />} />
