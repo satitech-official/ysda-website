@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import {
+  academyInfo,
   achievements,
   coaches,
   coachingPrograms,
@@ -14,10 +15,11 @@ import {
   YSDA_ADMIN_ENDPOINT
 } from "../../lib/managedContent";
 
-type SectionKey = "events" | "news" | "gallery" | "coaches" | "programs" | "achievements";
+type SectionKey = "academyInfo" | "events" | "news" | "gallery" | "coaches" | "programs" | "achievements";
 type JsonObject = Record<string, unknown>;
 
 const sections: Array<{ key: SectionKey; label: string; description: string }> = [
+  { key: "academyInfo", label: "Site Info", description: "Academy name, tagline, location, leadership and about text" },
   { key: "events", label: "Events", description: "Tournaments, camps, trials and course entries" },
   { key: "news", label: "News", description: "Announcements, results and academy updates" },
   { key: "gallery", label: "Gallery", description: "Gallery cards, captions and media paths" },
@@ -27,6 +29,7 @@ const sections: Array<{ key: SectionKey; label: string; description: string }> =
 ];
 
 const defaults: Record<SectionKey, unknown> = {
+  academyInfo,
   events,
   news,
   gallery,
