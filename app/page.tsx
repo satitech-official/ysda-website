@@ -77,7 +77,7 @@ import {
   valueCards,
   videoHighlights,
   whyChoose
-} from "../lib/content";
+} from "../lib/content";\nimport { useManagedSection } from "../lib/managedContent";
 
 const sportIconMap: Record<string, LucideIcon> = {
   football: CircleDot,
@@ -1185,7 +1185,7 @@ function CoachingProgramsSection() {
           text="Each course can display football focus, age group, level, duration, schedule, coach, venue, fee, capacity, equipment, certificate availability, registration, and WhatsApp enquiry details after verification."
         />
         <div className="space-y-3">
-          {coachingPrograms.map((program, index) => (
+          {managedPrograms.map((program, index) => (
             <div key={program.title} className="overflow-hidden rounded-3xl border border-slate-200 bg-slate-50">
               <button
                 type="button"
@@ -1285,7 +1285,7 @@ function CoachesSection() {
               1080: { slidesPerView: 4 }
             }}
           >
-            {coaches.map((coach) => (
+            {managedCoaches.map((coach) => (
               <SwiperSlide key={coach.name} className="pb-10">
                 <motion.article whileHover={{ y: -8 }} className="h-full overflow-hidden rounded-3xl bg-white shadow-sm">
                   <div className="relative h-72">
@@ -1439,7 +1439,7 @@ function Countdown() {
 function EventsSection() {
   const [status, setStatus] = useState("Upcoming");
   const [registrationEvent, setRegistrationEvent] = useState<EventItem | null>(null);
-  const filtered = events.filter((event) => event.status === status);
+  const filtered = managedEvents.filter((event) => event.status === status);
 
   return (
     <section id="events" className="bg-field-lines py-20 sm:py-28">
@@ -1697,13 +1697,13 @@ function InfoRow({ icon: Icon, text }: { icon: LucideIcon; text: string }) {
 function GallerySection() {
   const [category, setCategory] = useState("All");
   const [active, setActive] = useState<GalleryItem | null>(null);
-  const filtered = category === "All" ? gallery : gallery.filter((item) => item.category === category);
+  const filtered = category === "All" ? managedGallery : managedGallery.filter((item) => item.category === category);
   const activePoster = usePublicAssetPath(active?.image ?? media.fallback);
   const activeVideo = usePublicAssetPath(active?.video ?? "");
 
   const moveLightbox = (direction: 1 | -1) => {
     if (!active) return;
-    const list = filtered.length ? filtered : gallery;
+    const list = filtered.length ? filtered : managedGallery;
     const current = list.findIndex((item) => item.title === active.title);
     const nextIndex = (current + direction + list.length) % list.length;
     setActive(list[nextIndex]);
@@ -2005,7 +2005,7 @@ function NewsSection() {
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return news.filter((item) => {
+    return managedNews.filter((item) => {
       const matchesCategory = category === "All" || item.category === category;
       const matchesQuery =
         !q ||
@@ -2014,7 +2014,7 @@ function NewsSection() {
         item.category.toLowerCase().includes(q);
       return matchesCategory && matchesQuery;
     });
-  }, [category, query]);
+  }, [category, query, managedNews]);
 
   useEffect(() => {
     setPage(1);
@@ -2022,7 +2022,7 @@ function NewsSection() {
 
   const pageCount = Math.max(1, Math.ceil(filtered.length / pageSize));
   const paged = filtered.slice((page - 1) * pageSize, page * pageSize);
-  const featured = news[0];
+  const featured = managedNews[0] ?? news[0];
 
   const share = async (title: string) => {
     const payload = { title, text: title, url: window.location.href };
@@ -2148,7 +2148,7 @@ function NewsSection() {
             <div className="rounded-[2rem] bg-white p-5 shadow-sm">
               <h3 className="font-display text-xl font-black">Recent Posts</h3>
               <div className="mt-4 space-y-4">
-                {news.slice(0, 4).map((item) => (
+                {managedNews.slice(0, 4).map((item) => (
                   <a key={item.title} href="#news" className="block border-b border-slate-100 pb-4 last:border-b-0 last:pb-0">
                     <p className="text-xs font-black uppercase tracking-[0.13em] text-flame">{item.category}</p>
                     <p className="mt-1 text-sm font-black leading-6 text-slate-700">{item.title}</p>
@@ -2174,7 +2174,7 @@ function AchievementsSection() {
           centered
         />
         <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {achievements.map((item) => (
+          {managedAchievements.map((item) => (
             <div key={item.label} className="rounded-[2rem] bg-white p-6 text-center shadow-sm">
               <Trophy className="mx-auto h-9 w-9 text-gold" />
               <AnimatedCounter value={item.value} suffix={item.suffix} className="mt-4 block font-display text-4xl font-black text-ysdaBlue" />
